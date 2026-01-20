@@ -1,0 +1,355 @@
+---
+title: "Models with multiple predictors"
+subtitle: "<br><br> Environmental Data Science"
+author: "[https://enst222.github.io/website](https://enst222.github.io/website)"
+output:
+  xaringan::moon_reader:
+    css: ["../xaringan-themer.css", "../slides.css"]
+    lib_dir: libs
+    anchor_sections: FALSE
+    nature:
+      ratio: "16:9"
+      highlightLines: true
+      highlightStyle: solarized-light
+      countIncrementalSlides: false
+---
+
+```{r child = "../setup.Rmd"}
+```
+
+```{r packages, echo = FALSE, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(tidymodels)
+library(patchwork)
+set.seed(1234)
+options(dplyr.print_min = 10, dplyr.print_max = 6)
+```
+
+class: middle
+
+# The linear model with multiple predictors
+
+---
+
+## Data: Book weight and volume
+
+The `allbacks` data frame gives measurements on the volume and weight of 15 books, some of which are paperback and some of which are hardback
+
+.pull-left[
+- Volume - cubic centimetres
+- Area - square centimetres
+- Weight - grams
+]
+.pull-right[
+.small[
+```{r echo=FALSE}
+library(DAAG)
+as_tibble(allbacks) %>%
+  print(n = 15)
+```
+]
+]
+
+.footnote[
+.small[
+These books are from the bookshelf of J. H. Maindonald at Australian National University.
+]
+]
+
+---
+
+## Book weight vs. volume
+
+.pull-left[
+```{r}
+linear_reg() %>%
+  set_engine("lm") %>%
+  fit(weight ~ volume, data = allbacks) %>%
+  tidy()
+```
+]
+.pull-right[
+```{r out.width = "75%", echo = FALSE, fig.align = "right"}
+ggplot(allbacks, aes(x = volume, y = weight)) +
+  geom_point(alpha = 0.7, size = 3)
+```
+]
+
+---
+
+## Is the effect of volume on weight different for paperback vs. hardcover books?
+
+.pull-left[
+```{r}
+linear_reg() %>%
+  set_engine("lm") %>%
+  fit(weight ~ volume, data = allbacks) %>%
+  tidy()
+```
+]
+.pull-right[
+```{r out.width = "75%", echo = FALSE, fig.align = "right"}
+ggplot(allbacks, aes(x = volume, y = weight, color = cover)) +
+  geom_point(alpha = 0.7, size = 3) +
+  scale_color_manual(values = c("#E48957", "#071381"))
+```
+]
+
+---
+
+### We can *add* a categorical variable in our model formula to model the effets of an additional variable
+
+.pull-left[
+```{r}
+linear_reg() %>%
+  set_engine("lm") %>%
+  fit(weight ~ volume + cover, data = allbacks) %>%
+  tidy()
+```
+]
+.pull-right[
+```{r out.width = "75%", echo = FALSE, fig.align = "right"}
+mod <- linear_reg() %>%
+  set_engine("lm") %>%
+  fit(weight ~ volume + cover, data = allbacks) %>%
+  tidy()
+
+ggplot(allbacks, aes(x = volume, y = weight, color = cover, shape = cover)) +
+  geom_point(alpha = 0.7, size = 3) +
+  geom_abline(slope = mod$estimate[2], intercept = mod$estimate[1], color = "#E48957") +
+  geom_abline(slope = mod$estimate[2], intercept = mod$estimate[1]+mod$estimate[3], color = "#071381") +
+  theme(legend.position = "bottom") +
+  scale_color_manual(values = c("#E48957", "#071381"))
+```
+]
+
+Our model fits a line through observations where cover = `hb` and another line through observations where cover = `pb`
+---
+
+## Interpretation of estimates
+
+```{r echo=FALSE}
+linear_reg() %>%
+  set_engine("lm") %>%
+  fit(weight ~ volume + cover, data = allbacks) %>%
+  tidy()
+```
+
+--
+- **Intercept (when cover = `hc`):** Hardcover books with 0 volume are expected to weigh 198 grams, on average. (Doesn't make sense in context.)
+
+--
+
+- **Volume (slope):** *All else held constant*, for each additional cubic centimeter books are larger in volume, we would expect the weight to be higher, on average, by 0.718 grams.
+
+--
+
+- **Cover (intercept when cover = `pb`):** *All else held constant*, paperback books weigh, on average, 184 grams less than hardcover books.
+--
+
+---
+## *Adding* variables = "main effects"
+
+- **Main effect:** The effect of an independent variable on the dependent variable, averaging across the levels of any other independent variables
+
+--
+
+- In other words, the effect of the independent variable doesn't change depending on the value of other independent variables
+
+--
+
+- In our book example, the effect of volume on weight doesn't change depending on whether the book is hardcover or paperback.
+
+--
+
+- So the slopes of the best fit lines are the same for both paperback and hardcover books, but the intercepts are different.
+
+---
+
+### We can *multiply* by a categorical variable in our model formula to model the effets of an additional variable
+
+.pull-left[
+```{r}
+linear_reg() %>%
+  set_engine("lm") %>%
+  fit(weight ~ volume * cover, data = allbacks) %>%
+  tidy()
+```
+]
+.pull-right[
+```{r out.width = "75%", echo = FALSE, fig.align = "right"}
+mod <- linear_reg() %>%
+  set_engine("lm") %>%
+  fit(weight ~ volume * cover, data = allbacks) %>%
+  tidy()
+
+ggplot(allbacks, aes(x = volume, y = weight, color = cover, shape = cover)) +
+  geom_point(alpha = 0.7, size = 3) +
+  geom_smooth(method = "lm", se = FALSE) +
+  theme(legend.position = "bottom") +
+  scale_color_manual(values = c("#E48957", "#071381"))
+```
+]
+
+Our model fits a line through observations where cover = `hb` and another line through observations where cover = `pb`. **What is different this time?**
+---
+
+## Interpretation of estimates
+
+```{r echo=FALSE}
+linear_reg() %>%
+  set_engine("lm") %>%
+  fit(weight ~ volume * cover, data = allbacks) %>%
+  tidy()
+```
+
+--
+- **Intercept (when cover = `hc`):** Hardcover books with 0 volume are expected to weigh 162 grams, on average. (Doesn't make sense in context.)
+--
+
+- **Volume (slope when cover = `hc`):** *All else held constant*, for each additional cubic centimeter books are larger in volume, we would expect the weight to be higher, on average, by 0.762 grams.
+--
+
+- **Cover (intercept when cover = `pb`):** *All else held constant*, paperback books weigh, on average, 120 grams less than hardcover books.
+--
+
+- **volume (slope when cover = `pb`):** *All else held constant*, for each additional cubic centimeter books are larger in volume, we would expect the weight to be higher, on average, by 0.762 - 0.0757 grams (or 0.6863 g).
+---
+## *Multiplying by* variables = "interaction effects"
+
+- **Interaction effect:** The effect of an independent variable on the dependent variable, as a function of another independent variable
+
+--
+
+- In other words, the effect of the independent variable *does* change depending on the value of other independent variables
+
+--
+
+- In our book example, the effect of volume on weight is different depending on whether the book is hardcover or paperback.
+
+--
+
+- So both the slopes and the intercepts of the best fit lines are different for paperback and hardcover books.
+
+---
+class:inverse, middle
+
+# Which model should we use?
+
+---
+
+```{r book-main-int, echo=FALSE, out.width="65%", fig.asp = 0.8}
+book_main_fit <- linear_reg() %>%
+  set_engine("lm") %>%
+  fit(weight ~ volume + cover, data = allbacks)
+book_main_fit_aug <- augment(book_main_fit$fit)
+
+book_int_fit <- linear_reg() %>%
+  set_engine("lm") %>%
+  fit(weight ~ volume + cover + volume*cover, data = allbacks)
+book_int_fit_aug <- augment(book_int_fit$fit)
+
+p_main <- ggplot() +
+  geom_point(book_main_fit_aug, 
+             mapping = aes(x = volume, y = weight, color = cover, shape = cover), alpha = 0.7) +
+  geom_line(book_main_fit_aug, 
+            mapping = aes(x = volume, y = .fitted, color = cover)) +
+  labs(title = "Main effects, parallel slopes", 
+       subtitle = "weight = volume + cover") +
+  scale_color_manual(values = c("#E48957", "#071381"))
+
+p_int <- ggplot() +
+  geom_point(book_int_fit_aug, 
+             mapping = aes(x = volume, y = weight, color = cover, shape = cover), alpha = 0.7) +
+  geom_line(book_int_fit_aug, 
+            mapping = aes(x = volume, y = .fitted, color = cover)) +
+  labs(title = "Interaction effects, not parallel slopes", 
+       subtitle = "weight = volume + cover + volume * cover") +
+  scale_color_manual(values = c("#E48957", "#071381"))
+
+p_main /
+  p_int +
+  plot_layout(guides = "collect")
+```
+
+---
+
+## In pursuit of Occam's razor
+
+- Occam's Razor states that among competing hypotheses that predict equally well, the one with the fewest assumptions should be selected. 
+
+--
+
+--
+- Model selection follows this principle.
+
+--
+- We only want to add another variable to the model if the addition of that variable brings something valuable in terms of predictive power to the model.
+
+--
+- In other words, we prefer the simplest best model, i.e. **parsimonious** model.
+
+---
+
+## R-squared
+
+- $R^2$ is the percentage of variability in the response variable explained by 
+the regression model.
+
+```{r}
+glance(book_main_fit)$r.squared
+glance(book_int_fit)$r.squared
+```
+
+--
+- The model with interactions has a higher $R^2$, but only slightly
+
+--
+- In addition, using $R^2$ for model selection in models with multiple explanatory variables is not a good idea as $R^2$ increases when **any** variable is added to the model.
+
+---
+
+## Adjusted R-squared
+
+... a (more) objective measure for model selection
+
+- Adjusted $R^2$ doesn't increase if the new variable does not provide any new 
+informaton or is completely unrelated, as it applies a penalty for number of 
+variables included in the model.
+
+- This makes adjusted $R^2$ a preferable metric for model selection in multiple
+regression models.
+
+---
+
+## Comparing models
+
+.pull-left[
+```{r}
+glance(book_main_fit)$r.squared
+glance(book_int_fit)$r.squared
+```
+]
+.pull-right[
+```{r}
+glance(book_main_fit)$adj.r.squared
+glance(book_int_fit)$adj.r.squared
+```
+]
+
+--
+
+.pull-left-wide[
+.small[
+- Is R-sq higher for interaction model?
+```{r}
+glance(book_int_fit)$r.squared > glance(book_main_fit)$r.squared 
+```
+
+- Is R-sq adj. higher for interaction model?
+
+```{r}
+glance(book_int_fit)$adj.r.squared > glance(book_main_fit)$adj.r.squared
+```
+]
+]

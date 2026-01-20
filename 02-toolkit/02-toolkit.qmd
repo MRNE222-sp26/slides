@@ -1,0 +1,492 @@
+---
+title: "Meet the toolkit"
+subtitle: "<br><br> Environmental Data Analysis and Visualization"
+author: "[https://mrne222-sp25.github.io/website/](https://mrne222-sp25.github.io/website/)"
+format: 
+  revealjs:
+    theme: simple
+slide-number: c/t
+from: markdown+emoji
+---
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+
+library(tidyverse)
+library(viridis)
+library(sugrrants)
+library(lubridate)
+```
+
+
+# Course toolkit
+
+## Doing data science
+
+::: columns
+
+::: {.column width="50%"}
+
+**Programming:**
+
+  - R
+  - RStudio
+  - tidyverse
+  - R Markdown
+
+:::
+
+::: {.column width = "50%"}
+
+**Version control and collaboration:**
+
+  - Git
+  - GitHub
+  
+:::
+
+:::
+
+
+## Learning goals
+
+By the end of the course, you will be able to...
+
+::: incremental
+
+- gain insight from data
+
+- gain insight from data, **reproducibly**
+
+- gain insight from data, reproducibly, **using modern programming tools and techniques**
+
+- gain insight from data, reproducibly **and collaboratively**, using modern programming tools and techniques
+
+- gain insight from data, reproducibly **(with literate programming and version control)** and collaboratively, using modern programming tools and techniques
+
+:::
+
+
+# Reproducible data analysis
+
+
+## Reproducibility checklist
+
+::: {.callout-note icon=false}
+
+## Question:
+
+What does it mean for a data analysis to be "reproducible"?
+
+:::
+
+## Reproducibility checklist
+
+
+**Near-term goals:**
+
+- Are the tables and figures reproducible from the code and data?
+- Does the code actually do what you think it does?
+- In addition to what was done, is it clear *why* it was done? 
+
+**Long-term goals:**
+
+- Can the code be used for other data?
+- Can you extend the code to do other things?
+
+
+## Toolkit for reproducibility
+
+- Scriptability  :arrow_right: R
+
+- Literate programming (code, narrative, output in one place)  :arrow_right: R Markdown
+
+- Version control  :arrow_right: Git / GitHub
+
+
+# R and RStudio
+ 
+
+---
+
+::: columns
+
+::: {.column width="50%"}
+
+![](img/r-logo.png)
+
+- R: open-source statistical **programming language**
+- Environment for statistical computing and graphics
+- Easily extensible with *packages*
+- The engine that runs code
+
+:::
+
+::: {.column width = "50%"}
+
+![](img/rstudio-logo.png)
+
+- RStudio: convenient interface for R called an **IDE** (integrated development environment)
+- Not a requirement for programming with R, very commonly used 
+- The car that houses the engine
+
+:::
+
+:::
+
+---
+
+## R packages
+
+- **Packages**: fundamental units of reproducible R code. They include R functions, the documentation that describes how to use them, and sample data[^1]
+
+- As of January 2025, there are almost 22,000 R packages available on **CRAN** (the Comprehensive R Archive Network)[^2]
+
+- We're going to work with a small (but important) subset of these
+
+[^1]: Wickham and Bryan, [R Packages](https://r-pkgs.org/)
+
+[^2]: [CRAN contributed packages](https://cran.r-project.org/web/packages/)
+
+
+
+## Tour: R and RStudio
+
+
+![](img/tour-r-rstudio.png)
+
+
+
+## A short list (for now) of R essentials: *functions*
+
+<br>
+
+Functions are (most often) verbs, followed by what they will be applied to in parentheses:
+
+```{r eval=FALSE, echo=TRUE}
+
+do_this(to_this)
+do_that(to_this, to_that, with_those)
+```
+
+
+## A short list (for now) of R essentials: *packages*
+
+<br>
+
+Packages are installed with the `install.packages` function and loaded with the `library` function, once per session:
+
+```{r eval=FALSE, echo=TRUE}
+
+install.packages("package_name")
+library(package_name)
+```
+
+
+
+## R essentials (continued)
+
+<br>
+
+Columns (variables) in data frames are accessed with `$`:
+
+```{r eval=FALSE, echo=TRUE}
+dataframe$var_name
+```
+
+## R essentials (continued)
+
+<br>
+
+Function documentation can be accessed with `?`
+
+```{r eval=FALSE, echo=TRUE}
+?mean
+```
+
+
+
+## tidyverse
+
+::: columns
+:::{.column width = "50%"}
+
+![](img/tidyverse.png)
+
+:::
+
+:::{.column width = "50%"}
+
+
+[tidyverse.org](https://www.tidyverse.org/)
+
+- The **tidyverse** is an opinionated collection of R packages designed for data science
+- All packages share an underlying philosophy and a common grammar
+:::
+:::
+
+# Quarto
+
+## Quarto
+
+::: columns
+
+:::{.column width="70%"}
+
+[https://quarto.org/](https://quarto.org/)
+
+- **Quarto** and the various packages that support it enable R users to write their code and prose in reproducible computational documents
+- We will generally refer to quarto documents (with `.qmd` extension), e.g. *"Do this in your quarto document"* and rarely discuss loading the quarto package
+
+:::
+
+:::{.column width = "30%"}
+
+![](img/quarto-logo.png)
+
+:::
+
+:::
+
+
+## Quarto
+
+- Fully reproducible reports -- each time you render the analysis is ran from the beginning
+- Simple markdown syntax for text
+- Code goes in chunks, defined by three backticks, narrative goes outside of chunks
+
+
+
+## Tour: Quarto
+
+![](img/tour-rmarkdown.png)
+
+## Environments
+
+::: {.callout-note}
+The environment of your quarto document is separate from the console!
+:::
+
+* Remember this, and expect it to bite you a few times as you're learning to work 
+with quarto! 
+
+* When you render a document, quarto "forgets" what you already have saved in your environment and re-runs your entire document from scratch. Everything you need to run your code needs to be in your quarto doc in order for it to render correctly.
+
+
+## Environments
+
+::: columns
+
+:::{.column width = "50%"}
+
+First, run the following in the console
+
+```{r eval=FALSE, echo=TRUE}
+x <- 2
+x * 3
+```
+
+Looks good?
+
+:::
+
+:::{.column width = "50%"}
+
+Then, add the following in an R chunk in a blank quarto document and try to render it.
+
+```{r eval=FALSE, echo=TRUE}
+x * 3
+```
+
+What happens? Why the error?
+
+:::
+
+:::
+
+## Environments
+
+You didn't assign `x <- 2` as an object in your quarto document! 
+
+Rendering reruns everything from scratch, so it couldn't find an object called `x` in the environment.
+
+
+## Quarto help
+
+::: columns
+
+:::{.column width = "50%"}
+
+[Quarto Cheat Sheet]("https://rstudio.github.io/cheatsheets/quarto.pdf)
+
+![](img/quarto-cheatsheet.png)
+
+:::
+
+:::{.column width = "50%"}
+
+[Comprehensive Quarto guide]("https://quarto.org/docs/guide/")
+
+![](img/md-cheatsheet.png)
+
+:::
+:::
+
+
+## How will we use Quarto?
+
+- Every assignment / report / project / etc. is a Quarto document
+
+- You'll always have a template Quarto document to start with
+
+- The amount of scaffolding in the template will decrease over the semester
+
+
+
+## What's with all the hexes?
+
+![](img/hex-australia.png)
+
+Mitchell O'Hara-Wild, [useR! 2018 feature wall](https://www.mitchelloharawild.com/blog/user-2018-feature-wall/)
+
+
+
+
+# Course toolkit
+
+## Doing data science
+
+::: columns
+
+::: {.column width="50%"}
+
+**Programming:**
+
+  - R
+  - RStudio
+  - tidyverse
+  - R Markdown
+
+:::
+
+::: {.column width = "50%"}
+
+**Version control and collaboration:**
+
+  - Git
+  - GitHub
+  
+:::
+
+:::
+
+
+# Git and GitHub
+
+
+## Git and GitHub
+
+::: columns
+
+::: {.column width = "50%"}
+
+![](img/git-logo.png){height=1in}
+
+- Git is a version control system -- like “Track Changes” features from Microsoft Word, on steroids
+- It's not the only version control system, but it's a very popular one
+
+:::
+
+::: {.column width = "50%"}
+
+
+![](img/Github-Symbol.png){height=1in}
+
+- GitHub is the home for your Git-based projects on the internet -- like DropBox but much, much better
+
+- We will use GitHub as a platform for web hosting and collaboration (and as our course management system)
+
+:::
+
+:::
+
+## Versioning
+
+
+![](img/lego-steps.png)
+
+## Versioning 
+
+### with human readable messages
+
+
+![](img/lego-steps-commit-messages.png)
+
+
+## Why do we need version control?
+
+
+![](img/phd_comics_vc.gif)
+
+## How will we use Git and GitHub?
+
+
+![](img/whole-game-01.png)
+
+## How will we use Git and GitHub?
+
+
+![](img/whole-game-02.png)
+
+
+## How will we use Git and GitHub?
+
+
+![](img/whole-game-03.png)
+
+
+## How will we use Git and GitHub?
+
+
+![](img/whole-game-04.png)
+
+
+# Git and GitHub tips
+
+::: incremental 
+
+- There are a lot of git commands. 99% of the time you will use git to add, commit, push, and pull.
+
+- If you google for git help you might come across methods using the command line/terminal -- skip that and move on to the next resource unless you feel comfortable trying it out.
+
+- There is a great resource for working with git and R: [happygitwithr.com](http://happygitwithr.com/). Some of the content in there is beyond the scope of this course, but it's a good place to look for help.
+
+:::
+
+
+## In lab...
+
+Work with R, RStudio, Git, and GitHub together
+
+
+## First create a Github account
+
+- Go to [github.com](https://github.com/) and create an account
+- Verify your GitHub email
+- Adjust your GitHub settings for a more pleasant GitHub experience
+  - Settings > Emails > Uncheck "Keep my email address private"
+  - Settings > Emails > Update name and photo
+- Add your GitHub username to [this spreadsheet](https://docs.google.com/spreadsheets/d/1dA8SPka8X2ebYBgyXwiEAcDUQt45emLLciLyrUZMIT8/edit?gid=0#gid=0)
+
+
+*In lab...*
+
+*Work with R, RStudio, Git, and GitHub together!*
+
+
+
+
+
+

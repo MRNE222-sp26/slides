@@ -1,0 +1,569 @@
+---
+title: "Functions: The details"
+subtitle: "<br><br> Environmental Data Analysis and Visualization"
+format: 
+  revealjs:
+    theme: simple
+    width: 1500
+    margin: 0.05
+    scrollable: true
+slide-number: c/t
+from: markdown+emoji
+editor: 
+  markdown: 
+    wrap: 72
+execute:
+  echo: true
+---
+
+```{r packages, echo=FALSE, message=FALSE, warning=FALSE}
+library(tidyverse)
+```
+
+## Recall, to turn your code into a function you need three things:
+
+1. A **name**
+2. The **arguments**
+3. The **body**
+
+# Mutate functions
+
+## Mutate functions
+
+<br>
+Functions that work well inside of `mutate()` and `filter()` because they return output that is the same length as the input.
+
+## An example: calculate z-score
+
+Z-scores rescale a vector to have a mean of zero and a standard deviation of one. It can be useful when you want to do stats on datasets with very different value ranges.
+
+::: columns
+::: {.column width = "40%" .fragment}
+```{r}
+x <- c(0.01, 0.05, 0.004)
+
+y <- c(40402, 495993, 589290)
+```
+
+:::
+::: {.column width = "60%" .fragment}
+```{r}
+(x - mean(x, na.rm = TRUE)) / sd(x, na.rm = TRUE)
+```
+
+<br>
+
+```{r}
+(y - mean(x, na.rm = TRUE)) / sd(y, na.rm = TRUE)
+```
+
+::: 
+:::
+
+## An example: calculate z-score
+
+Turn it into a function:
+
+::: columns
+::: {.column width = "50%" .fragment}
+```{r}
+zscore <- function(x){
+  (x - mean(x, na.rm = TRUE)) / sd(x, na.rm = TRUE)
+}
+```
+
+:::
+::: {.column width = "50%" .fragment}
+```{r}
+zscore(x)
+zscore(y)
+```
+::: 
+:::
+
+
+## An example: recode values in a vector
+
+Create a function called `clamp()` that recodes values in a vector to be equal to some user-supplied minimum or maximum value if they are less than or greater than the min/max.
+
+::: columns
+::: {.column width = "50%"}
+**Have:**
+```{r echo=FALSE}
+1:10
+```
+
+:::
+::: {.column width = "50%"}
+**Want:**
+```{r echo=FALSE}
+clamp <- function(x, min, max) {
+  case_when(
+    x < min ~ min,
+    x > max ~ max,
+    .default = x
+  )
+}
+clamp(1:10, min = 3, max = 7)
+```
+::: 
+:::
+
+## An example: recode values in a vector
+
+Create a function called `clamp()` that recodes values in a vector to be equal to some user-supplied minimum or maximum value if they are less than or greater than the min/max.
+
+::: columns
+::: {.column width = "50%" .fragment}
+**Define the function:**
+```{r}
+clamp <- function(x, min, max) {
+  case_when(
+    x < min ~ min,
+    x > max ~ max,
+    TRUE ~ x
+  )
+}
+```
+
+:::
+::: {.column width = "50%" .fragment}
+**Execute the function:**
+```{r}
+clamp(1:10, min = 3, max = 7)
+```
+::: 
+:::
+
+## An example: mutate function with character data
+
+Make the first letter of each value upper case.
+
+::: columns
+::: {.column width = "50%"}
+**Have:**
+```{r echo=FALSE}
+c("hello", "goodbye", "see ya")
+```
+
+:::
+::: {.column width = "50%"}
+**Want:**
+```{r echo=FALSE}
+first_upper <- function(x) {
+  str_sub(x, 1, 1) <- str_to_upper(str_sub(x, 1, 1))
+  x
+}
+
+first_upper(c("hello", "goodbye", "see ya"))
+```
+::: 
+:::
+
+## An example: mutate function with character data
+
+This one's a bit more complicated. First work out the code outside of the function. 
+
+Ultimately, we can use the `str_sub()` function to sub out the lower case letter with an upper case letter.
+
+From the help file: 
+
+`str_sub(string, start = 1L, end = -1L, omit_na = FALSE) <- value`
+
+<br>
+
+::: columns
+::: {.column width = "50%"}
+```{r}
+word <- "hello"
+word
+```
+
+:::
+::: {.column width = "50%"}
+```{r}
+str_sub(word, 1, 1) <- "H"
+word
+```
+::: 
+:::
+
+
+## An example: mutate function with character data
+
+We can use the `str_sub()` and `str_to_upper()` functions to programatically determine the replacement value.
+
+::: columns
+::: {.column width = "50%"}
+```{r}
+word <- "hello"
+word
+```
+:::
+::: {.column width = "50%"}
+```{r}
+str_to_upper(str_sub(word, 1, 1))
+```
+::: 
+:::
+
+
+## An example: mutate function with character data
+
+Now put it all together.
+
+::: columns
+::: {.column width = "30%" .fragment}
+```{r}
+word
+```
+
+:::
+::: {.column width = "70%" .fragment}
+```{r}
+str_sub(word, 1, 1) <- str_to_upper(str_sub(word, 1, 1))
+word
+```
+
+::: 
+:::
+
+
+## An example: mutate function with character data
+
+It worked. NOW make it a function.
+
+::: columns
+::: {.column width = "55%" .fragment}
+**Define the function:**
+```{r}
+first_upper <- function(x) {
+  str_sub(x, 1, 1) <- str_to_upper(str_sub(x, 1, 1))
+  x
+}
+```
+
+
+:::
+::: {.column width = "45%" .fragment}
+**Execute the function:**
+```{r}
+first_upper(word)
+
+string <- c("hello", "goodbye", "see ya")
+first_upper(string)
+```
+::: 
+:::
+
+
+# Summary functions
+
+## Summary functions
+
+Return a single value for use in `summarize()`
+
+## An example: calculate standard error
+
+se = sd / $n^{2}$
+
+::: columns
+::: {.column width = "50%" .fragment}
+```{r}
+se <- function(x){
+  sd(x, na.rm = TRUE) / sqrt(length(x))
+}
+```
+
+:::
+::: {.column width = "50%" .fragment}
+```{r}
+x <- c(3, 6, 9)
+
+se(x)
+```
+
+::: 
+:::
+
+
+## An example: standard error
+
+::: columns
+::: {.column width = "50%" .fragment}
+```{r}
+data <- tibble(x = c(1, 3, 5),
+               y = c(6, 8, 9))
+
+data
+```
+
+:::
+::: {.column width = "50%" .fragment}
+```{r}
+data |> 
+  summarize(mean_x = mean(x), 
+            se_x = se(x),
+            mean_y = mean(y),
+            se_y = se(y))
+```
+::: 
+:::
+
+## Summary function with multiple vector inputs
+
+Mean absolute percent error to compare model predictions with absolute values:
+
+```{r}
+mape <- function(actual, predicted) {
+  sum(abs((actual - predicted) / actual)) / length(actual)
+}
+```
+
+
+# Data frame functions
+
+## Data frame functions
+
+* Take a data frame as the first argument, some extra arguments that say what to do with it, and return a data frame or a vector.
+
+* Useful if you find yourself using the same wrangling or plotting pipeline for different data or subsets of data.
+
+## Get to know tidy evaluation
+
+**Have:**
+```{r}
+diamonds
+```
+
+## Get to know tidy evaluation
+
+**Want:** Calculate the mean of a variable (`mean_var`) based on a grouping variable (`group_var`) from a dataframe `df`. 
+```{r}
+grouped_mean <- function(df, group_var, mean_var) {
+  df |> 
+    group_by(group_var) |> 
+    summarize(mean(mean_var))
+}
+```
+
+
+## Get to know tidy evaluation
+
+Why do we get an error?
+
+![](img/indirection_error.png)
+
+## Get to know tidy evaluation
+
+Why do we get an error?
+
+![](img/indirection_error.png)
+
+When function arguments indirectly refer to the name of a column, R takes it literally.
+
+## Get to know tidy evaluation
+
+::: columns
+::: {.column width = "50%" .fragment}
+What we want to happen: 
+```{r eval = FALSE}
+diamonds |> 
+  group_by(cut) |> 
+  summarize(mean(carat))
+```
+
+* group by `cut` (or any other grouping variable)
+* calculate mean `carat` (or any other numeric variable)
+
+:::
+::: {.column width = "50%" .fragment}
+What is actually happening:
+```{r eval = FALSE}
+diamonds |> 
+  group_by(group_var) |> 
+  summarize(mean(mean_var))
+```
+
+`group_var` and `mean_var` aren't column names, they are the names of the arguments we defined in the `grouped_mean()` function.
+
+::: 
+:::
+
+## Get to know tidy evaluation
+
+* Tidy evaluation allows us to refer to variable names directly when using tidyverse functions. However, special treatment is required when you use functions that use tidy evaluation. 
+
+* `{{}}` are the special treatment we need to apply
+
+* How do you know which functions use tidy evaluation? You'll know if you get an the error that your variable wasn't found. You can also look in a function's help file. Under **Arguments**, `<tidy-select>` or `<data-masking>` will be listed.
+
+
+## Proper data frame function with `{{}}`
+
+**Want:** Calculate the mean of a variable (`mean_var`) based on a grouping variable (`group_var`) from the dataframe `df`. 
+
+```{r}
+grouped_mean <- function(df, group_var, mean_var) {
+  df |> 
+    group_by({{group_var}}) |> 
+    summarize(mean({{mean_var}}))
+}
+```
+
+The `{{}}` tells R to use the value you supplied for the `grouped_var` and `mean_var` arguments, not the literal argument names.
+
+## Proper data frame function with `{{}}`
+
+**Want:** Calculate the mean of a variable (`mean_var`) based on a grouping variable (`group_var`) from the dataframe `df`. 
+
+```{r}
+diamonds |> 
+  grouped_mean(cut, carat)
+```
+
+# Plot functions
+
+## Plot functions
+
+**Want:** I need to make a lot of histograms with different binwidths.
+
+::: columns
+::: {.column width = "50%"}
+
+```{r}
+diamonds |> 
+  ggplot(aes(x = carat)) +
+  geom_histogram(binwidth = 0.5)
+```
+:::
+::: {.column width = "50%"}
+```{r}
+diamonds |> 
+  ggplot(aes(x = carat)) +
+  geom_histogram(binwidth = 0.05)
+```
+::: 
+:::
+
+## Make a plot function
+
+::: columns
+::: {.column width = "50%" .fragment}
+
+Define the function. Put arguments that indirectly refer to column names in `{{}}`.
+```{r}
+histogram <- function(df, var, binwidth){
+  df |> 
+    ggplot(aes(x = {{ var }})) +
+    geom_histogram(binwidth = binwidth)
+}
+```
+:::
+::: {.column width = "50%" .fragment}
+
+Use the function to make a plot.
+```{r}
+diamonds |> 
+  histogram(carat, 0.1)
+```
+::: 
+:::
+
+## Optional: Add components after running plot function
+
+Our `histogram()` function returns a ggplot2 plot, meaning you can still add additional components if you want. Just remember to switch from |> to +:
+```{r}
+#| code-line-numbers: "3"
+
+diamonds |> 
+  histogram(carat, 0.1) +
+  labs(x = "Size (in carats)", y = "Number of diamonds")
+
+```
+
+## Plot function with more variables
+
+Function to eyeball whether or not a dataset is linear by overlaying a smooth line and a straight line:
+
+::: columns
+::: {.column width = "60%" .fragment}
+```{r}
+linearity_check <- function(df, x, y) {
+  df |>
+    ggplot(aes(x = {{ x }}, y = {{ y }})) +
+    geom_point() +
+    geom_smooth(method = "loess", formula = y ~ x, color = "red", se = FALSE) +
+    geom_smooth(method = "lm", formula = y ~ x, color = "blue", se = FALSE) 
+}
+```
+
+:::
+::: {.column width = "40%" .fragment}
+Run the function using the `starwars` dataset:
+```{r}
+starwars |> 
+  filter(mass < 1000) |> 
+  linearity_check(mass, height)
+```
+::: 
+:::
+
+## Make a function to wrangle then plot
+
+::: columns
+::: {.column width = "60%" .fragment}
+Use the `fct_infreq()` function to sort factor levels according to frequency, then plot in a horizontal bar chart:
+```{r}
+sorted_bars <- function(df, var) {
+  df |> 
+    mutate({{ var }} := fct_rev(fct_infreq({{ var }})))  |>
+    ggplot(aes(y = {{ var }})) +
+    geom_bar()
+}
+```
+
+:::
+::: {.column width = "40%" .fragment}
+Use the function to wangle + plot:
+```{r}
+diamonds |> 
+  sorted_bars(clarity)
+```
+
+::: 
+:::
+
+## `:=` The "walrus operator"
+
+* You can only use `=` in a tidy function like `mutate()` when referring directly to a variable name: <br>
+`mutate(new_variable = ...)`
+<br>
+* If you want to indirectly use a user-supplied variable name as an argument in your function, `:=` let's R know to look for the argument name supplied: <br>
+`mutate({{var}} := ...)` 
+
+## Label plots in a function based on user inputs
+
+::: columns
+::: {.column width = "60%" .fragment}
+Add a plot title that labels the variable and binwidth:
+```{r}
+#| code-line-numbers: "2,3|7"
+
+histogram <- function(df, var, binwidth) {
+  label <- rlang::englue("A histogram of {{var}} with binwidth {binwidth}")
+  
+  df |> 
+    ggplot(aes(x = {{ var }})) + 
+    geom_histogram(binwidth = binwidth) + 
+    labs(title = label)
+}
+```
+:::
+::: {.column width = "40%" .fragment}
+Make a plot:
+```{r}
+diamonds |> histogram(carat, 0.1)
+```
+::: 
+:::

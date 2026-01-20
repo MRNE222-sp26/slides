@@ -1,0 +1,120 @@
+---
+title: "Lab 04 - git merge conflicts"
+output: 
+  tufte::tufte_html:
+    css: ../lab.css
+    tufte_variant: "envisioned"
+    highlight: pygments
+link-citations: yes
+---
+# Objectives
+
+After completing this exercise, you should be able to 
+
+- pull a colaborator's code changes into your local project repo
+- resolve simple merge conflicts in GitHub. 
+
+# Overview
+
+- Pushing to a repo replaces the code on GitHub with the code you have on your computer. 
+- If a collaborator has made a change to your repo on GitHub that you haven’t incorporated into your local work, GitHub will stop you from pushing to the repo because this could overwrite your collaborator’s work! 
+- So you need to explicitly “merge” your collaborator’s work before you can push. 
+- If your and your collaborator’s changes are in different files or in different parts of the same file, git merges the work for you automatically when you pull. 
+- If you both changed the same part of a file, git will produce a **merge conflict** because it doesn’t know which change you want to keep and which change you want to overwrite.
+
+Git will put conflict markers in your code that look like:
+```
+<<<<<<< HEAD 
+
+See also: [dplyr documentation](https://dplyr.tidyverse.org/)   
+
+======= 
+
+See also [ggplot2 documentation](https://ggplot2.tidyverse.org/)  
+
+>>>>>>> some1alpha2numeric3string4
+```
+The `===` separates *your* changes (top) from *their* changes (bottom).
+
+On top you see the word `HEAD`, which indicates that these are your changes.
+
+And at the bottom you see `some1alpha2numeric3string4` (it probably looks more like `28e7b2ceb39972085a0860892062810fb812a08f`).
+
+This is the **hash** (a unique identifier) of the commit your collaborator made with the conflicting change.
+
+Your job is to *reconcile* the changes: edit the file so that it incorporates the best of both versions and delete the `<<<`, `===`, and `>>>` lines.
+Then you can stage and commit the result.
+
+# Exercise
+
+## 1. Setup
+
+Each member of your team should open up your project proposal .Rmd file. Assign yourselves numbers (i.e., student 1, student 2, etc.). Everyone should do a pull now for good measure.
+
+## 2. Avoiding conflicts from the start
+
+- Student 1: Make some minor edits in one line of the file. Save those edits, stage, commit, and push to github. 
+- Student 2 (and 3): Click "Pull" in the Git panel. You should see Student 1's changes appear. 
+- Student 2: Make a change to the same line of the file. Save those edits, stage, commit, and push to github.
+- Student 1 (and 3): Click "Pull" in the Git panel. You should see Student 2's changes appear. 
+
+Yay no conflicts! That's because everyone pulled the most up-to-date changes into their local project before making any additional changes. This is why you should always pull first whenever you open a new project session.
+
+
+## 3. Easily fixable conflict
+
+- Student 2: Make a change to another line of the .Rmd file. Save, stage, commit, and push.
+- Student 1: **Without first pulling** make a change to **a different line** of the .Rmd file. Save, stage, commit, and push.
+
+You will get an error message that looks like this:
+```
+To [your github repo]
+! [rejected]        HEAD -> main (fetch first)
+error: failed to push some refs to '[your github repo]'
+hint: Updates were rejected because the remote contains work that you do
+hint: not have locally. This is usually caused by another repository pushing
+hint: to the same ref. You may want to first integrate the remote changes
+hint: See the 'Note about fast-forwards' in 'git push --help' for details.
+```
+- Student 1 didn't first pull in Student 2's changes, so they attempted to add their changes to an *old* version of the file (the "remote" - meaning the content of the GitHub repository - contains changes that are not in Student 1's local version of the repository). However, since the changes were made in a separate part of the file, Student 1 can now simply close the error message, click "Pull", and then they should be able to push their changes to GitHub.
+- Everyone else should now pull Student 1's changes.
+
+
+## 4. Harder to fix merge conflict
+
+- Student 1: Make some changes to a line in your .Rmd file. Save, stage, commit, and push.
+- Student 2: **Without first pulling**, make a different change to **the same line** of the .Rmd file. Save, stage, commit, and push. You will get the same error message as above. Click "Pull." You should get another error message:
+```
+From [your github repo]
+5312a1a..f26cd78  main       -> origin/main
+Auto-merging Code/analyses.Rmd
+CONFLICT (content): Merge conflict in Code/analyses.Rmd
+Automatic merge failed; fix conflicts and then commit the result.
+```
+- Student 2 has created a merge conflict. You need to close the Git window and go to your .Rmd file. You should now see:
+```
+<<<<<<< HEAD 
+
+Student 2's work   
+
+======= 
+
+Student 1's work  
+
+>>>>>>> some1alpha2numeric3string4
+```
+- Student 2 needs to remove the `<<<`, `===`, and `>>>` lines and choose which changes should ultimately be incorporated into the file. You can keep your version, Student 1's version, or some hybrid of the two. Then *save, stage, commit, and push.* This should resolve your conflict.
+- Student 1 (and 3) should now click pull to pull the resolved version of the file into their local workspace.
+
+
+## Conclusion: Follow these instructions carefully and always pull first
+
+Git is very picky about the order in which follow the steps above. If you miss one step (like forgetting to check the stage box) or if you are many steps in front of or behind the remote repository, conflicts become more difficult to merge and they may need to be resolved by command line in the Terminal. We want to avoid this. The morals of the story are:
+
+- Try to avoid merge conflicts to begin with by **always pulling before you do anything else.**
+- Follow the instructions above very carefully when you do get a merge conflict.
+
+Here are some additional resources on resolving merge conflicts:
+
+- [Happy with Git R](https://happygitwithr.com/git-branches.html)
+- [How to resolve a git merge conflict](https://opensource.com/article/20/4/git-merge-conflict)

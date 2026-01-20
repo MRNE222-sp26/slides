@@ -1,0 +1,381 @@
+---
+title: "Welcome to ENST/MRNE 222!"
+subtitle: "<br><br> Environmental Data Analysis and Visualization"
+author: "[https://mrne222-sp25.github.io/website/](https://mrne222-sp25.github.io/website/)"
+format: 
+  revealjs:
+    theme: simple
+slide-number: c/t
+from: markdown+emoji
+---
+
+```{r packages, echo=FALSE, message=FALSE, warning=FALSE}
+library(tidyverse)
+```
+
+# Hello world!
+
+## About me
+
+-   Dr. Cassie Gurbisz, she/her (you can call me Cassie)
+
+-   Expertise is in estuarine ecology, seagrass ecology, and coastal monitoring
+
+- My work generates a lot of data!
+
+-   I :heart: all things R, tidy data, and data visualization
+
+## About you
+
+::: incremental
+-   Share your:
+    -   first and last name
+    -   pronouns
+    -   your proudest data moment or your biggest data fail
+-   In groups discuss: What are your thoughts on/experiences with "fear of math"?
+:::
+
+## What is data science?
+
+::: incremental
+
+-   Data science is an exciting discipline that allows you to turn raw data into understanding, insight, and knowledge.
+
+-   We're going to learn to do this in a `tidy` way -- more on that later!
+
+-   This is a course on introduction to data science, with an emphasis on statistical thinking.
+
+:::
+
+## Environmental data science
+
+![](img/env-data-sci.png){fig-align="center"}
+
+## What can you expect to learn?
+
+From the syllabus: *At the completion of this course, students will be able to gain insight from environmental data reproducibly and collaboratively using modern programming tools and techniques.*
+
+## Specific outcomes include being able to:
+
+::: incremental 
+-   visualize environmental data 
+-   wrangle and tidy data 
+-   use functions and iterative programming 
+-   define research questions and hypotheses
+-   construct statistical models to test hypotheses
+-   interpret data in environmental context
+-   communicate results 
+-   keep data and code organized
+-   use collaborative version control tools 
+
+:::
+
+
+# Software
+
+## Excel
+
+![](img/excel.png)
+
+## R
+
+![](img/r.png)
+
+## RStudio
+
+![](img/rstudio.png)
+
+## Posit Cloud
+
+![](img/cloud.png)
+
+
+# Data science life cycle
+
+## Data science life cycle
+
+![](img/data-science-cycle/data-science-cycle.001.png)
+
+<!--- #from IDS textbook --->
+
+## Import data
+
+![](img/data-science-cycle/data-science-cycle.002.png)
+
+## Tidy and transform data
+
+![](img/data-science-cycle/data-science-cycle.003.png)
+
+## Visualize
+
+![](img/data-science-cycle/data-science-cycle.004.png)
+
+## Model
+
+![](img/data-science-cycle/data-science-cycle.005.png)
+
+## Understand
+
+![](img/data-science-cycle/data-science-cycle.006.png)
+
+------------------------------------------------------------------------
+
+::: columns
+::: {.column width="50%"}
+![](img/google-trend-index.png)
+:::
+
+::: {.column width="50%"}
+![](img/data-science-cycle/data-science-cycle.006.png)
+
+```{r echo=FALSE}
+travel <- tribble(
+  ~date,              ~season,
+  "23 January 2017",  "winter",
+  "4 March 2017",     "spring",
+  "14 June 2017",     "summer",
+  "1 September 2017", "fall",
+  "...", "..."
+)
+travel
+```
+:::
+:::
+
+------------------------------------------------------------------------
+
+## Communicate
+
+![](img/data-science-cycle/data-science-cycle.007.png)
+
+------------------------------------------------------------------------
+
+## Program
+
+![](img/data-science-cycle/data-science-cycle.009.png)
+
+# Let's give it a try!
+
+## Join our Posit Cloud computing space
+
+-   We will use Posit Cloud, a cloud computing platform for all work in this course.
+
+-   Join the space using [this link](https://posit.cloud/spaces/598435/join?access_code=dt0_o-ZKghnJDu2gvF5S3GTKc5GLRSf8QWGAfELr)
+
+-   Select "Log in with Google" and use your SMCM credentials.
+
+-   Select "Yes" when asked if you want to join the space.
+
+## Application exercise code-along
+
+-   Application exercises are designed to give you practice applying new concepts
+
+-   Early in the semester, I will provide most of the code. Later in the semester, the exercises will be more open-ended as you learn to code.
+
+-   First I'll walk you through Application Exercise 1 (ae-01).
+
+-   When prompted, you'll have a chance to run some of the code yourself
+
+# About this course
+
+## Class website
+
+<https://mrne222-sp25.github.io/website/>
+
+-   Contains course materials (slides, schedule, etc.)
+
+-   Links to everything else you need (readings, our GitHub organiation, Posit Cloud, etc.)
+
+## What will we do?
+
+- Prep for class with **data science readings**
+
+-   **Short lectures** introduce you to concepts
+
+-   **Application exercises** help you practice new concepts
+
+-   **Labs** help you apply new concepts with lots of structured guidance
+
+-   The final **project** sets you free into the wild! You will choose any dataset, ask a question, and answer it using the tools you have learned to use throughout the semester
+
+---
+
+### Class prep
+
+- There will be a reading to prepare for most classes.
+
+- Goal of readings is to introduce you to general concepts and make you aware of very helpful resources
+
+- I will have an ungraded "quiz" at the begining of class as incentive for you to read and to help me gauge who is preparing for class
+
+---
+
+### Application exercises
+
+- Designed to help you practice new concepts
+
+- Usually fairly short
+
+- We usually start them in class, and they must be submitted by the end of the week in which they were assigned
+
+- I will check that you completed the exercises but will not provide feedback - these are for practice. I generally want to see that you've made a good faith effort to complete the exercise.
+
+---
+
+### Labs
+
+- More in-depth than application exercises
+
+- Designed to help you "learn through doing"
+
+- Typically 1/week
+
+- Must be submitted by the end of the week in which they were assigned
+
+- You can (and should!) discuss the labs with your peers but everyone needs to submit their own work
+
+---
+
+### Project
+
+- We will complete a collaborative group project during the second half of the semester 
+
+- Designed to help you put all of the skills you have developed to use and demonstrate your learning
+
+- In a nutshell: Find a dataset that interests you, ask a question groudned in the environmental domain, and answer it using compelling data analyses and visualizations
+
+- Final products: written report and an oral presentation
+
+- More on this later!
+
+---
+
+## This course is "ungraded"
+
+- I want you to focus on learning R and developing your quantitative reasoning skills without the stress of losing points over minor mistakes. 
+
+- Mistakes are inevitable in this type of course. In fact, making mistakes and fixing them is the best way to learn! 
+
+- Furthermore, [research has shown](https://www.alfiekohn.org/article/case-grades/) that grading doesn’t improve learning and can sometimes even harm learning.
+
+---
+
+### How does ungrading work?
+
+- You evaluate your own learning through frequent written reflections and a mid-term and final portfolio
+
+- You will give yourself a grade at the end of the semester 
+
+- I have the right to disagree with your final grade. This usually isn't a problem, though, since we will meet at the middle and end of the semester to discuss your progress.
+
+:::{.callout-important}
+
+You must meet *all* specifications on the final project to earn at least a C in the course.
+
+:::
+
+# Course policies
+
+## Attendance
+
+- I take attendance but you won't "lose points" for missing class
+
+- **Come to class!** You will fall behind if you miss too many classes and that will be reflected in your learning and, therefore, your grade
+
+- However, **if you're sick, stay home**!
+
+
+## Late work - application exercises and labs
+
+- Application exercises and labs are due on Fridays. You have an automatic 2-day extension (Sunday) if needed - you don't even have to ask. 
+
+- Solutions will be posted on Mondays and we will go over them in class on Tuesday, so you really need to have them submitted by then.
+
+- You won't "lose points" for late work, but you're not going to learn as much if you already know the answers to the problems in the assignments. Therefore, late submissions should be factored in when determining your final grade.
+
+## Late work - labs
+
+:::{.callout-important}
+
+You need to submit all of the labs assigned before the start of the group project in order to qualify to participate in the group project.
+
+:::
+
+It wouldn’t be fair to your group members if you are not prepared to contribute meaningfully to the project. If you do not complete all of the labs leading up the the group project, you’ll need to complete the project on your own, which means you won’t be able to demonstrate one of the central course learning outcomes: collaborative coding. 
+
+## Late work - project
+
+- The project will have several milestone components and due dates. 
+
+- You really need to stick to these in order to stay on track with the project and participate meaningfully in peer review
+
+- However if you'd like to request an extension due to extenuating circumstances, just let me know
+
+
+## Communication
+
+- I will make announcements via email, so **check your email daily** if you don't already.
+
+- If you have a coding question, please don't ask via email - come to office hours, ask during class or lab, or make an appointment to meet with me. 
+
+- Feel free to email me about anything else
+
+- Don't wait till the last minute to complete assignemnts b/c I might not be able to help you in time!
+
+
+## AI and other online help
+
+:::: {.columns}
+
+::: {.column width = "60%"}
+
+- Google is your friend and you should absolutely use it!
+
+- I'm wary of ChatGPT...How much are you really going to learn if you blindly copy and paste whatever code ChatGPT generates? 
+
+:::
+
+::: {.column width = "40%"}
+
+![](img/chatgpt1.jpg)
+
+:::
+
+::::
+
+
+## AI and other online help
+
+:::: {.columns}
+
+::: {.column width = "40%"}
+
+- Be cognizant of your learning. Don't let ChatGPT make you dumb!
+
+- Give attribution to any code that isn't your own (regardless of the source).
+
+:::
+
+::: {.column width = "60%"}
+
+![](img/chatgpt2.jpg)
+
+:::
+
+::::
+
+---
+:::{.column width = "30%"}
+
+It me?
+
+:::
+
+:::{.column width = "70%"}
+
+![](img/chatgpt3.jpg)
+:::
+
+## All of this is in the syllabus
+
+![](img/syllabus.jpg)

@@ -1,0 +1,573 @@
+---
+title: "More iteration use cases that can come in handy"
+subtitle: "<br><br> ENST/MRNE 222 Environmental Data Analysis and Visualization"
+format: 
+  revealjs:
+    theme: simple
+    width: 1500
+    margin: 0.05
+    scrollable: true
+slide-number: c/t
+from: markdown+emoji
+editor: 
+  markdown: 
+    wrap: 72
+execute:
+  echo: true
+---
+
+```{r packages, echo=FALSE, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(patchwork)
+library(gghighlight)
+
+theme_set(theme_light() + theme(text = element_text(size = 15)))
+```
+
+## Before we begin
+
+<br>
+
+Compare your responses to ae-12-iteration to the solutions file, now available on GitHub: [https://github.com/MRNE222-sp25-activities/ae-12-iteraton/blob/main/ae-12-iteration_solutions.md](https://github.com/MRNE222-sp25-activities/ae-12-iteraton/blob/main/ae-12-iteration_solutions.md)
+
+## Recall last time...
+
+We used `purrr::map()` to iteratively read in multiple .csv files:
+
+```{r eval=FALSE}
+list.files("data/no_sitenames", full.names = TRUE) |> 
+  map(read_csv) |> 
+  list_rbind()
+```
+
+# You can use the `map()` family of functions to apply *any* function iteratively over your data
+
+## `purrr::map()` function
+
+**Usage:**
+
+`map(.x, .f, ...)`
+
+-   `.x`: The input object. Can be:
+
+    -   a *vector*, in which case the iteration is done over each entry
+        of the vector
+    -   a *list*, where iteration is done over each element of the list
+    -   a *data frame*, where the iteration is done over the columns of
+        the data frame
+
+-   `.f`: a function that is applied to each element of `.x`
+
+## `purrr::map()` function
+
+::: {.columns}
+::: {.column width="60%"} 
+![](img/map_advancedr.png)
+:::
+
+::: {.column width="40%"} 
+
+- `map()` executes a function (`.f`) for each element of your input data (`.x`) 
+- A list is always returned -
+- Since the first argument is always the data (`.x`), `map()` functions work well with piping (`|>`)
+
+::: 
+:::
+
+
+## A trivial example to show you how map works
+
+::: {.columns}
+::: {.column width="50%"} 
+
+The data:
+
+```{r}
+x <- c(3, 5, 9)
+
+x
+```
+:::
+
+::: {.column width="50%"} 
+The function:
+
+```{r}
+add10 <- function(x) x + 10
+```
+
+::: 
+:::
+
+## Usage: `map(.x, .f, ...)`
+
+```{r eval=FALSE}
+x <- c(3, 5, 9)
+```
+
+::: {.columns}
+::: {.column width="50%" .fragment} 
+`map()` without piping
+
+```{r}
+map(x, add10)
+```
+:::
+
+::: {.column width="50%" .fragment} 
+`map()` with piping
+
+```{r}
+x |> 
+  map(add10)
+```
+
+::: 
+:::
+
+## How to `map()` columns of a data frame
+
+Usage: `map(.x, .f, ...)`
+
+::: {.columns}
+::: {.column width="50%" .fragment} 
+The `add10()` function will be applied to each column.
+
+```{r}
+x <- tibble(a = c(1, 5, 8), 
+            b = c(5, 8, 1), 
+            c = c(6, 9, 2))
+x
+```
+:::
+
+::: {.column width="50%" .fragment} 
+The output is a list, where each element is the output of `add10()` applied to each column.
+
+```{r}
+x |> 
+  map(add10)
+```
+
+::: 
+:::
+
+## `map()` elements of a list
+
+Usage: `map(.x, .f, ...)`
+
+::: {.columns}
+::: {.column width="50%" .fragment} 
+The `add10()` function will be applied to each element of the list.
+
+```{r}
+x <- list(a = 1:4,
+          b = 4:7,
+          c = 6:9)
+x
+```
+:::
+
+::: {.column width="50%" .fragment} 
+In the resulting list, each element is the output of `add10()` applied to each element of the list,
+`x`.
+
+```{r}
+x |> 
+  map(add10)
+```
+
+::: 
+:::
+
+## Other map functions are available if you want the output to be something besides a list
+
+::: {.columns}
+::: {.column width="50%"}
+
+Map to numeric vector:
+
+```{r}
+x <- c(4, 7, 1, 6)
+
+x |> 
+  map_dbl(add10)
+```
+:::
+
+::: {.column width="50%"} 
+Map to character vector:
+
+```{r}
+x <- c(4, 7, 1, 6)
+
+x |> 
+  map_chr(add10)
+```
+
+::: 
+:::
+
+## Other map functions are available if you want the output to be something besides a list
+
+Map to dataframe:
+
+```{r}
+map_dfr(c(4, 7, 1, 6), \(x){
+  return(tibble(old_number = x,
+                new_number = add10(x)))
+})
+```
+
+Recall `\(x)` is and anonymous function--it does the same thing as
+`function(x)`
+
+# `map()` use case: Plot all variables in a dataframe for preliminary exploratory analysis
+
+## Plot all variables in `mtcars` for preliminary exploratory analysis
+
+::: {.columns}
+::: {.column width="70%"} 
+Have: `mtcars` dataset
+
+```{r}
+mtcars
+```
+:::
+
+::: {.column width="30%"} 
+Want: A density plot for each column
+(variable) to explore data distributions 
+::: 
+:::
+
+## `map()` over columns to iteratively create plots
+
+-   If `map()` is supplied with a dataframe, it will iterate over each
+    column.
+-   We need to write a function that takes each column (aka variable) as
+    the argument.
+
+::: {.columns}
+::: {.column width="50%" .fragment}
+
+```{r}
+density_plot <- function(variable){
+  ggplot(mtcars, aes(x = variable)) +
+    geom_density()
+}
+```
+:::
+
+::: {.column width="50%" .fragment}
+
+```{r}
+plot_list <- mtcars |> 
+  map(density_plot)
+
+plot_list[[1]]
+```
+
+::: 
+:::
+
+## Make it more concise with an **anonymous function**
+
+::: {.columns}
+::: {.column width="50%"}
+
+```{r}
+plot_list <- mtcars |> 
+  map(\(col) ggplot(mtcars, aes(x = col)) +
+        geom_density() +
+        theme(text = element_text(size = 15)))
+```
+:::
+
+::: {.column width="50%"}
+
+```{r}
+plot_list[[1]]
+```
+
+::: 
+:::
+
+## Use `patchwork::wrap_plots()` to view all plots in `plot_list`
+
+```{r}
+wrap_plots(plot_list)
+```
+
+The problem is we don't know what variables are mapped to the x-axes :weary:
+
+# `map2()` when you need to use a function that takes two arguments
+
+## Use `map2()` when you need to use a function that takes two arguments
+
+::: {.columns}
+::: {.column width="40%"}
+**Usage:**
+
+`map2(.x, .y, .f)`
+
+-   `.x`, `.y` A pair of vectors, usually the same length
+
+-   `.f` A function that is takes `.x` and `.y` as arguments
+:::
+::: {.column width="60%"}
+![](img/map2_advancedr.png)
+::: 
+:::
+
+
+## Here, we need a function that takes column (`variable`) *and* label (`lab`) as arguments so we can properly label our x-axes
+
+```{r}
+density_plot2 <- function(variable, lab){
+  ggplot(mtcars, aes(x = variable)) +
+    geom_density() +
+        labs(x = lab) +
+    theme(text = element_text(size = 15))
+}
+```
+
+## How do we get a vector of variable names?
+
+-   The `names()` function takes a data frame as input and outputs a
+    vector of column names.
+-   The column names are the names of the variables we will be plotting!
+
+```{r}
+labels <- names(mtcars) 
+
+labels 
+```
+
+## Use `map2()` to execute the `density_plot2()` function
+
+```{r}
+plot_list <- mtcars |> 
+  map2(.y = labels, .f = density_plot2)
+```
+
+::: {.incremental}
+-   The `mtcars` data frame is piped down as the `.x` argument
+-   Since we are mapping, each
+    column is supplied to our `density_plot2()` function as the `variable` argument 
+-   `.y` is the `labels` vector we created above.
+-   `.f` is the `density_plot2()` function.
+-   `map2` takes each element of `.x` and `.y` and iteratively applies
+    the plotting function to each `.x` and `.y` combination.
+:::
+
+## Use `map2()` to execute the `density_plot2()` function
+
+::: {.columns}
+::: {.column width="40%"}
+<br>
+```{r}
+plot_list <- mtcars |> 
+  map2(.y = labels, .f = density_plot2)
+```
+:::
+::: {.column width="60%"}
+![](img/map2_advancedr.png)
+::: 
+:::
+
+
+## Now we have an informative x-axis label!
+
+```{r}
+plot_list[[1]]
+```
+
+------------------------------------------------------------------------
+
+```{r echo=FALSE}
+wrap_plots(plot_list)
+```
+
+# More `map()` use cases
+
+## Want: using `mpg` dataset, plot highway mpg vs displacement, with points highlighted for each manufacturer
+
+```{r}
+mpg
+```
+
+## Want: using `mpg` dataset, plot highway mpg vs displacement, with points highlighted for each manufacturer
+
+::: {.columns}
+::: {.column width="50%"}
+
+```{r eval = FALSE}
+ggplot(mpg, aes(x = hwy, y = displ)) +
+  geom_point() +
+  gghighlight(manufacturer == "audi") +
+  labs(title = "Audi")
+```
+:::
+::: {.column width="50%"}
+
+```{r echo = FALSE}
+ggplot(mpg, aes(x = hwy, y = displ)) +
+  geom_point() +
+  gghighlight(manufacturer == "audi") +
+  labs(title = "Audi") +
+  theme(text = element_text(size = 15))
+```
+
+::: 
+:::
+
+## We *could* facet, but with 15 manufacturers the panels are hard to read and we can't use the `gghighlight` function
+
+::: {.columns}
+::: {.column width="40%"}
+
+```{r eval=FALSE}
+ggplot(mpg, aes(x = hwy, y = displ)) +
+  geom_point() +
+  facet_wrap(~manufacturer)
+```
+:::
+
+::: {.column width="60%"}
+
+```{r echo=FALSE}
+ggplot(mpg, aes(x = hwy, y = displ)) +
+  geom_point() +
+  facet_wrap(~manufacturer)
+```
+
+::: 
+:::
+
+## 1. Create a function to make a plot for each manufacturer
+
+```{r}
+mpg_plot <- function(mfr){
+  ggplot(mpg, aes(x = hwy, y = displ)) +
+  geom_point() +
+  gghighlight(manufacturer == {{mfr}}) +
+  labs(title = {{mfr}})
+}
+```
+
+-   The only thing that changes is manufacturer (`mfr`)
+-   Remember to "embrace" when you want R to use the value supplied by
+    the `mfr` argument and not literally `mfr`
+
+## 2. Create vector of manufacturers (`makes`) to iterate over
+
+`distinct()` finds unique values of the manufacturer column in the `mpg` dataset. We need to use the `unlist()` function to make `mfrs` a one-dimensional vector.
+
+```{r}
+makes <- mpg |> 
+  distinct(manufacturer) |> 
+  unlist()
+
+makes
+```
+
+## 3. Use `map()` to execute the function iteratively over each manufacturer. Assign the output to a list called `plot_list`.
+
+```{r}
+plot_list <- makes |> 
+  map(mpg_plot)
+
+plot_list[[3]]
+```
+
+------------------------------------------------------------------------
+
+```{r}
+wrap_plots(plot_list)
+```
+
+
+## We can also split a data frame into a list by a grouping variable using `group_split()` and apply a function to each element of the list.
+
+Here, let's create a density plot of highway mileage for each class of
+cars in the `mpg` dataset
+
+```{r}
+mpg
+```
+
+## 1. Split `mpg` into a list of data frames
+
+Each data frame in the list represents a different class
+
+```{r}
+data_list <- mpg |> 
+  group_split(class)
+
+data_list[[1]]
+```
+
+## 2. Write a function that takes a data frame as the argument
+
+```{r}
+mpg_plot <- function(data){
+  ggplot(data, aes(x = hwy)) +
+        geom_density() +
+        labs(title = unique(data$class))
+}
+```
+
+- To get class labels, use `unique()` function. 
+- The data frames are grouped by class, so each data frame in `data_list` will only have 1 unique class value.
+
+
+## 3. `map()` the function over each data frame in `data_list`
+
+```{r}
+plot_list <- data_list |> 
+  map(mpg_plot)
+
+plot_list[[1]]
+```
+
+## Make it more efficient with an anonymous function
+
+```{r}
+max_hwy <- max(mpg$hwy) # get max hwy value
+min_hwy <- min(mpg$hwy) #get min hwy value
+
+plot_list <- mpg |> 
+  group_split(class) |> 
+  map(\(data) ggplot(data, aes(x = hwy)) +
+        geom_density() +
+        labs(title = unique(data$class)) +
+        xlim(min_hwy, max_hwy)) #scale x axes so each plot has same min and max
+```
+
+## Check to make sure it worked
+
+```{r}
+plot_list[[1]]
+```
+
+------------------------------------------------------------------------
+
+```{r echo=FALSE}
+wrap_plots(plot_list)
+```
+
+## `map()` wrapup
+
+::: {.incremental}
+-   Think carefully about what you want to do:
+
+    -   What element(s) of your data do you want to iterate over?
+    -   Make sure the function you write takes this element as an argument
+    -   The output of `map()` is a list, but other map functions have different outputs
+
+-   There are many other use cases for `map()` functions! 
+
+    - Any time you find yourself copying and pasting the same code, write a function
+    - If you are still copying and pasting the code to execute your function, you can probably `map()` it to automate the execution
+:::

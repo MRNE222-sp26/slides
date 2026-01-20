@@ -1,0 +1,1400 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<script src="10-data-import_files/libs/clipboard/clipboard.min.js"></script>
+<script src="10-data-import_files/libs/quarto-html/tabby.min.js"></script>
+<script src="10-data-import_files/libs/quarto-html/popper.min.js"></script>
+<script src="10-data-import_files/libs/quarto-html/tippy.umd.min.js"></script>
+<link href="10-data-import_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="10-data-import_files/libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="10-data-import_files/libs/quarto-html/quarto-syntax-highlighting-e26003cea8cd680ca0c55a263523d882.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.6.39">
+
+  <meta name="author" content="https://mrne222-sp25.github.io/website/">
+  <title>Importing data</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="10-data-import_files/libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="10-data-import_files/libs/revealjs/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      { color: #003b4f; background-color: #f1f3f5; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span { color: #003b4f; } /* Normal */
+    code span.al { color: #ad0000; } /* Alert */
+    code span.an { color: #5e5e5e; } /* Annotation */
+    code span.at { color: #657422; } /* Attribute */
+    code span.bn { color: #ad0000; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #003b4f; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #20794d; } /* Char */
+    code span.cn { color: #8f5902; } /* Constant */
+    code span.co { color: #5e5e5e; } /* Comment */
+    code span.cv { color: #5e5e5e; font-style: italic; } /* CommentVar */
+    code span.do { color: #5e5e5e; font-style: italic; } /* Documentation */
+    code span.dt { color: #ad0000; } /* DataType */
+    code span.dv { color: #ad0000; } /* DecVal */
+    code span.er { color: #ad0000; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #ad0000; } /* Float */
+    code span.fu { color: #4758ab; } /* Function */
+    code span.im { color: #00769e; } /* Import */
+    code span.in { color: #5e5e5e; } /* Information */
+    code span.kw { color: #003b4f; font-weight: bold; } /* Keyword */
+    code span.op { color: #5e5e5e; } /* Operator */
+    code span.ot { color: #003b4f; } /* Other */
+    code span.pp { color: #ad0000; } /* Preprocessor */
+    code span.sc { color: #5e5e5e; } /* SpecialChar */
+    code span.ss { color: #20794d; } /* SpecialString */
+    code span.st { color: #20794d; } /* String */
+    code span.va { color: #111111; } /* Variable */
+    code span.vs { color: #20794d; } /* VerbatimString */
+    code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="10-data-import_files/libs/revealjs/dist/theme/quarto-423d414d36ce366a9d05f36d06304417.css">
+  <link href="10-data-import_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="10-data-import_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="10-data-import_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="10-data-import_files/libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <style type="text/css">
+    .reveal div.sourceCode {
+      margin: 0;
+      overflow: auto;
+    }
+    .reveal div.hanging-indent {
+      margin-left: 1em;
+      text-indent: -1em;
+    }
+    .reveal .slide:not(.center) {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide.scrollable {
+      overflow-y: auto;
+    }
+    .reveal .footnotes {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide .absolute {
+      position: absolute;
+      display: block;
+    }
+    .reveal .footnotes ol {
+      counter-reset: ol;
+      list-style-type: none; 
+      margin-left: 0;
+    }
+    .reveal .footnotes ol li:before {
+      counter-increment: ol;
+      content: counter(ol) ". "; 
+    }
+    .reveal .footnotes ol li > p:first-child {
+      display: inline-block;
+    }
+    .reveal .slide ul,
+    .reveal .slide ol {
+      margin-bottom: 0.5em;
+    }
+    .reveal .slide ul li,
+    .reveal .slide ol li {
+      margin-top: 0.4em;
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide ul[role="tablist"] li {
+      margin-bottom: 0;
+    }
+    .reveal .slide ul li > *:first-child,
+    .reveal .slide ol li > *:first-child {
+      margin-block-start: 0;
+    }
+    .reveal .slide ul li > *:last-child,
+    .reveal .slide ol li > *:last-child {
+      margin-block-end: 0;
+    }
+    .reveal .slide .columns:nth-child(3) {
+      margin-block-start: 0.8em;
+    }
+    .reveal blockquote {
+      box-shadow: none;
+    }
+    .reveal .tippy-content>* {
+      margin-top: 0.2em;
+      margin-bottom: 0.7em;
+    }
+    .reveal .tippy-content>*:last-child {
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide > img.stretch.quarto-figure-center,
+    .reveal .slide > img.r-stretch.quarto-figure-center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-left,
+    .reveal .slide > img.r-stretch.quarto-figure-left  {
+      display: block;
+      margin-left: 0;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-right,
+    .reveal .slide > img.r-stretch.quarto-figure-right  {
+      display: block;
+      margin-left: auto;
+      margin-right: 0; 
+    }
+  </style>
+</head>
+<body class="quarto-light">
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide" class="quarto-title-block center">
+  <h1 class="title">Importing data</h1>
+  <p class="subtitle"><br><br> Environmental Data Analysis and Visualization</p>
+
+<div class="quarto-title-authors">
+<div class="quarto-title-author">
+<div class="quarto-title-author-name">
+<a href="https://mrne222-sp25.github.io/website/">https://mrne222-sp25.github.io/website/</a> 
+</div>
+</div>
+</div>
+
+</section>
+<section>
+<section id="reading-rectangular-data-into-r" class="title-slide slide level1 center">
+<h1>Reading rectangular data into R</h1>
+
+</section>
+<section id="reading-rectangular-data-into-r-1" class="slide level2">
+<h2>Reading rectangular data into R</h2>
+<div class="columns">
+<div class="column">
+<p><img data-src="img/readr.png" style="width:60.0%"></p>
+</div><div class="column">
+<p><img data-src="img/readxl.png" style="width:60.0%"></p>
+</div></div>
+</section>
+<section id="functions-for-reading-rectangular-data-into-r" class="slide level2">
+<h2>Functions for reading rectangular data into R</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<h3 id="readr">readr</h3>
+<ul>
+<li><code>read_csv()</code> - comma delimited files</li>
+<li><code>read_csv2()</code> - semicolon separated files (common in countries where , is used as the decimal place)</li>
+<li><code>read_tsv()</code> - tab delimited files</li>
+<li><code>read_delim()</code> - reads in files with any delimiter</li>
+<li><code>read_fwf()</code> - fixed width files</li>
+<li>…</li>
+</ul>
+</div><div class="column" style="width:50%;">
+<h3 id="readxl">readxl</h3>
+<ul>
+<li><code>read_excel()</code> - read xls or xlsx files</li>
+<li>…</li>
+</ul>
+</div></div>
+</section>
+<section id="reading-data" class="slide level2">
+<h2>Reading data</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href=""></a>nobel <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="at">file =</span> <span class="st">"data/nobel.csv"</span>)</span>
+<span id="cb1-2"><a href=""></a>nobel</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 935 × 26
+      id firstname   surname  year category affiliation city  country born_date 
+   &lt;dbl&gt; &lt;chr&gt;       &lt;chr&gt;   &lt;dbl&gt; &lt;chr&gt;    &lt;chr&gt;       &lt;chr&gt; &lt;chr&gt;   &lt;date&gt;    
+ 1     1 Wilhelm Co… Röntgen  1901 Physics  Munich Uni… Muni… Germany 1845-03-27
+ 2     2 Hendrik A.  Lorentz  1902 Physics  Leiden Uni… Leid… Nether… 1853-07-18
+ 3     3 Pieter      Zeeman   1902 Physics  Amsterdam … Amst… Nether… 1865-05-25
+ 4     4 Henri       Becque…  1903 Physics  École Poly… Paris France  1852-12-15
+ 5     5 Pierre      Curie    1903 Physics  École muni… Paris France  1859-05-15
+ 6     6 Marie       Curie    1903 Physics  &lt;NA&gt;        &lt;NA&gt;  &lt;NA&gt;    1867-11-07
+ 7     6 Marie       Curie    1911 Chemist… Sorbonne U… Paris France  1867-11-07
+ 8     8 Lord        Raylei…  1904 Physics  Royal Inst… Lond… United… 1842-11-12
+ 9     9 Philipp     Lenard   1905 Physics  Kiel Unive… Kiel  Germany 1862-06-07
+10    10 J.J.        Thomson  1906 Physics  University… Camb… United… 1856-12-18
+# ℹ 925 more rows
+# ℹ 17 more variables: died_date &lt;date&gt;, gender &lt;chr&gt;, born_city &lt;chr&gt;,
+#   born_country &lt;chr&gt;, born_country_code &lt;chr&gt;, died_city &lt;chr&gt;,
+#   died_country &lt;chr&gt;, died_country_code &lt;chr&gt;, overall_motivation &lt;chr&gt;,
+#   share &lt;dbl&gt;, motivation &lt;chr&gt;, born_country_original &lt;chr&gt;,
+#   born_city_original &lt;chr&gt;, died_country_original &lt;chr&gt;,
+#   died_city_original &lt;chr&gt;, city_original &lt;chr&gt;, country_original &lt;chr&gt;</code></pre>
+</div>
+</div>
+</section>
+<section id="writing-data" class="slide level2">
+<h2>Writing data</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<ul>
+<li>Write a file</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href=""></a>df <span class="ot">&lt;-</span> <span class="fu">tribble</span>(</span>
+<span id="cb3-2"><a href=""></a>  <span class="sc">~</span>x, <span class="sc">~</span>y,</span>
+<span id="cb3-3"><a href=""></a>  <span class="dv">1</span>,  <span class="st">"a"</span>,</span>
+<span id="cb3-4"><a href=""></a>  <span class="dv">2</span>,  <span class="st">"b"</span>,</span>
+<span id="cb3-5"><a href=""></a>  <span class="dv">3</span>,  <span class="st">"c"</span></span>
+<span id="cb3-6"><a href=""></a>)</span>
+<span id="cb3-7"><a href=""></a></span>
+<span id="cb3-8"><a href=""></a><span class="fu">write_csv</span>(df, <span class="at">file =</span> <span class="st">"data/df.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div><div class="column" style="width:50%;">
+<ul>
+<li>Read it back in to inspect</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href=""></a><span class="fu">read_csv</span>(<span class="st">"data/df.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 2
+      x y    
+  &lt;dbl&gt; &lt;chr&gt;
+1     1 a    
+2     2 b    
+3     3 c    </code></pre>
+</div>
+</div>
+</div></div>
+</section>
+<section id="take-charge-of-your-files" class="slide level2">
+<h2>Take charge of your files</h2>
+<p>Be aware that these things exist:</p>
+<ul>
+<li>Working directory</li>
+<li>File folders</li>
+<li>RStudio projects</li>
+</ul>
+</section>
+<section id="working-directory" class="slide level2">
+<h2>Working directory</h2>
+<ul>
+<li>Where R will look, by default, for files you ask it to load</li>
+<li>Where files you write to disk will go, by default</li>
+<li>You can type <code>getwd()</code> into the console to check the working directory</li>
+</ul>
+<p><br></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href=""></a><span class="fu">getwd</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "/Users/cbgurbisz/Documents/Teaching/MRNE222-sp25/slides/10-data-import"</code></pre>
+</div>
+</div>
+</section>
+<section id="file-folders" class="slide level2">
+<h2>File folders</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><img data-src="img/verge-files.jpg"></p>
+</div><div class="column" style="width:50%;">
+<ul>
+<li>“file folders” are like a physical folder in a filing cabinet - they are containers to store multiple files together</li>
+<li>organized by topic or project</li>
+<li>USE THEM and know where to find them on your computer</li>
+</ul>
+</div></div>
+</section>
+<section id="rstudio-projects" class="slide level2">
+<h2>RStudio projects</h2>
+<div class="columns">
+<div class="column" style="width:60%;">
+<ul>
+<li>Feature for keeping all files associated with project together</li>
+<li>Our labs and exercises are each associated with a project</li>
+<li>Always start a new analysis by creating a new project. Keep all data and .qmd files associated with that project in your project folder.</li>
+<li>Open the project by double-clicking on your project file - R now knows that the folder containing your project file is the working directory.</li>
+</ul>
+</div><div class="column" style="width:40%;">
+<p><img data-src="img/projects.png"></p>
+</div></div>
+</section>
+<section id="project-organization" class="slide level2">
+<h2>Project organization</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<ul>
+<li>Save .Rproj file in main project folder</li>
+<li>Make folders for data, scripts (.qmd files), figures, and docs (reports, etc.)</li>
+</ul>
+</div><div class="column" style="width:50%;">
+<p><img data-src="img/rproj-organization.png"></p>
+</div></div>
+</section>
+<section id="projects-are-key-to-reproducibility" class="slide level2">
+<h2>Projects are key to reproducibility</h2>
+<p>Without .Rproj, you’d need to read and write files using your entire directory structure. Is this reproducible? Also, who wants to type all of that out?</p>
+<p><br></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href=""></a><span class="fu">read_csv</span>(<span class="st">"/users/cbgurbisz/documents/project/data/biomass.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="projects-are-key-to-reproducibility-1" class="slide level2" data-visibility="uncounted">
+<h2>Projects are key to reproducibility</h2>
+<ul>
+<li>.Rproj tells R that your base project folder is the working directory.</li>
+<li>You (and other users who clone your entire project and associated files and folders) now only need to tell R how to access files and folders within your project folder.</li>
+</ul>
+<p><br></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href=""></a><span class="fu">read_csv</span>(<span class="st">"data/biomass.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section></section>
+<section>
+<section id="try-it" class="title-slide slide level1 center">
+<h1>Try it</h1>
+
+</section>
+<section id="ae-09-nobels-csv.qmd" class="slide level2">
+<h2>ae-09 nobels-csv.qmd</h2>
+<ul>
+<li>Posit Cloud &gt; open <code>nobels-csv.qmd</code></li>
+<li>Read in the <code>nobels.csv</code> file from the <code>data-raw/</code> folder.</li>
+<li>Split into two (STEM and non-STEM):
+<ul>
+<li>Create a new data frame, <code>nobel_stem</code>, that filters for the STEM fields (Physics, Medicine, Chemistry, and Economics).</li>
+<li>Create another data frame, <code>nobel_nonstem</code>, that filters for the remaining fields.<br>
+</li>
+</ul></li>
+<li>Write the two data frames to <code>nobel-stem.csv</code> and <code>nobel-nonstem.csv</code>, respectively, to <code>data/</code>.</li>
+</ul>
+<p><strong>Hint:</strong> Use the <code>%in%</code> operator when <code>filter()</code>ing.</p>
+</section>
+<section id="filtering-with-in" class="slide level2">
+<h2>Filtering with <code>%in%</code></h2>
+<p>The <code>%in%</code> operator is used to filter rows that contain a value in a vector</p>
+<p><br></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href=""></a>penguins <span class="sc">|&gt;</span> </span>
+<span id="cb10-2"><a href=""></a>  <span class="fu">distinct</span>(island)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 1
+  island   
+  &lt;fct&gt;    
+1 Torgersen
+2 Biscoe   
+3 Dream    </code></pre>
+</div>
+</div>
+</section>
+<section id="filtering-with-in-1" class="slide level2" data-visibility="uncounted">
+<h2>Filtering with <code>%in%</code></h2>
+<p>Keep rows containing values of <code>island</code> are in the vector of islands supplied - here just “Torgersen” <br></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href=""></a>penguins <span class="sc">|&gt;</span> </span>
+<span id="cb12-2"><a href=""></a>  <span class="fu">filter</span>(island <span class="sc">%in%</span> <span class="st">"Torgersen"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb12-3"><a href=""></a>  <span class="fu">distinct</span>(island)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 1
+  island   
+  &lt;fct&gt;    
+1 Torgersen</code></pre>
+</div>
+</div>
+</section>
+<section id="filtering-with-in-2" class="slide level2" data-visibility="uncounted">
+<h2>Filtering with <code>%in%</code></h2>
+<p>Keep rows where values of <code>island</code> are in the vector of islands supplied - “Torgersen” and “Dream”.</p>
+<p><br></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href=""></a>penguins <span class="sc">|&gt;</span> </span>
+<span id="cb14-2"><a href=""></a>  <span class="fu">filter</span>(island <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Torgersen"</span>, <span class="st">"Dream"</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb14-3"><a href=""></a>  <span class="fu">distinct</span>(island)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 1
+  island   
+  &lt;fct&gt;    
+1 Torgersen
+2 Dream    </code></pre>
+</div>
+</div>
+</section>
+<section id="filtering-with-in-3" class="slide level2" data-visibility="uncounted">
+<h2>Filtering with <code>%in%</code></h2>
+<p>This can also be done with the <code>==</code> and <code>|</code> operators but <code>%in%</code> becomes useful when you have a longer list of values that you want to include.</p>
+<p><br></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href=""></a>penguins <span class="sc">|&gt;</span> </span>
+<span id="cb16-2"><a href=""></a>  <span class="fu">filter</span>(island <span class="sc">==</span> <span class="st">"Torgersen"</span> <span class="sc">|</span></span>
+<span id="cb16-3"><a href=""></a>         island <span class="sc">==</span> <span class="st">"Dream"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb16-4"><a href=""></a>  <span class="fu">distinct</span>(island)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 1
+  island   
+  &lt;fct&gt;    
+1 Torgersen
+2 Dream    </code></pre>
+</div>
+</div>
+</section></section>
+<section>
+<section id="variable-names" class="title-slide slide level1 center">
+<h1>Variable names</h1>
+
+</section>
+<section id="data-with-bad-names" class="slide level2">
+<h2>Data with bad names</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href=""></a>edibnb_badnames <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/edibnb-badnames.csv"</span>)</span>
+<span id="cb18-2"><a href=""></a><span class="fu">names</span>(edibnb_badnames)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "ID"                   "Price"                "neighbourhood"       
+ [4] "accommodates"         "Number of bathrooms"  "Number of Bedrooms"  
+ [7] "n beds"               "Review Scores Rating" "Number of reviews"   
+[10] "listing_url"         </code></pre>
+</div>
+</div>
+</section>
+<section id="r-doesnt-allow-spaces-in-variable-names" class="slide level2">
+<h2>R doesn’t allow spaces in variable names</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href=""></a><span class="fu">ggplot</span>(edibnb_badnames, <span class="fu">aes</span>(<span class="at">x =</span> Number of bathrooms, <span class="at">y =</span> Price)) <span class="sc">+</span></span>
+<span id="cb20-2"><a href=""></a>  <span class="fu">geom_point</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-error">
+<pre><code>Error: &lt;text&gt;:1:40: unexpected symbol
+1: ggplot(edibnb_badnames, aes(x = Number of
+                                           ^</code></pre>
+</div>
+</div>
+</section>
+<section id="option-1---you-define-the-column-names-when-you-read-in-the-data" class="slide level2">
+<h2>Option 1 - You define the column names when you read in the data</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href=""></a>edibnb_col_names <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/edibnb-badnames.csv"</span>,</span>
+<span id="cb22-2"><a href=""></a>                             <span class="at">col_names =</span> <span class="fu">c</span>(<span class="st">"id"</span>, <span class="st">"price"</span>, </span>
+<span id="cb22-3"><a href=""></a>                                           <span class="st">"neighborhood"</span>, <span class="st">"accommodates"</span>,</span>
+<span id="cb22-4"><a href=""></a>                                           <span class="st">"bathroom"</span>, <span class="st">"bedroom"</span>, </span>
+<span id="cb22-5"><a href=""></a>                                           <span class="st">"bed"</span>, <span class="st">"review_scores_rating"</span>, </span>
+<span id="cb22-6"><a href=""></a>                                           <span class="st">"n_reviews"</span>, <span class="st">"url"</span>))</span>
+<span id="cb22-7"><a href=""></a></span>
+<span id="cb22-8"><a href=""></a><span class="fu">names</span>(edibnb_col_names)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "id"                   "price"                "neighborhood"        
+ [4] "accommodates"         "bathroom"             "bedroom"             
+ [7] "bed"                  "review_scores_rating" "n_reviews"           
+[10] "url"                 </code></pre>
+</div>
+</div>
+</section>
+<section id="option-2---format-text-to-snake_case-using-the-clean_names-function-from-the-janitor-package" class="slide level2">
+<h2>Option 2 - Format text to snake_case using the <code>clean_names</code> function (from the <code>janitor</code> package)</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href=""></a><span class="fu">library</span>(janitor)</span>
+<span id="cb24-2"><a href=""></a></span>
+<span id="cb24-3"><a href=""></a>edibnb_clean_names <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/edibnb-badnames.csv"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb24-4"><a href=""></a>  <span class="fu">clean_names</span>()</span>
+<span id="cb24-5"><a href=""></a></span>
+<span id="cb24-6"><a href=""></a><span class="fu">names</span>(edibnb_clean_names)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "id"                   "price"                "neighbourhood"       
+ [4] "accommodates"         "number_of_bathrooms"  "number_of_bedrooms"  
+ [7] "n_beds"               "review_scores_rating" "number_of_reviews"   
+[10] "listing_url"         </code></pre>
+</div>
+</div>
+</section></section>
+<section>
+<section id="variable-types" class="title-slide slide level1 center">
+<h1>Variable types</h1>
+
+</section>
+<section id="which-type-is-x-why" class="slide level2">
+<h2>Which type is <code>x</code>? Why?</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><img data-src="img/df-na.png"></p>
+</div><div class="column" style="width:50%;">
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 9 × 3
+  x     y              z     
+  &lt;chr&gt; &lt;chr&gt;          &lt;chr&gt; 
+1 1     a              hi    
+2 &lt;NA&gt;  b              hello 
+3 3     Not applicable 9999  
+4 4     d              ola   
+5 5     e              hola  
+6 .     f              whatup
+7 7     g              wassup
+8 8     h              sup   
+9 9     i              &lt;NA&gt;  </code></pre>
+</div>
+</div>
+</div></div>
+</section>
+<section id="option-1.-be-explicit-about-observations-that-are-actually-nas" class="slide level2">
+<h2>Option 1. Be explicit about observations that are actually NAs</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href=""></a><span class="fu">read_csv</span>(<span class="st">"data/df-na.csv"</span>, </span>
+<span id="cb27-2"><a href=""></a>         <span class="at">na =</span> <span class="fu">c</span>(<span class="st">""</span>, <span class="st">"NA"</span>, <span class="st">"."</span>, <span class="st">"9999"</span>, <span class="st">"Not applicable"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 9 × 3
+      x y     z     
+  &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt; 
+1     1 a     hi    
+2    NA b     hello 
+3     3 &lt;NA&gt;  &lt;NA&gt;  
+4     4 d     ola   
+5     5 e     hola  
+6    NA f     whatup
+7     7 g     wassup
+8     8 h     sup   
+9     9 i     &lt;NA&gt;  </code></pre>
+</div>
+</div>
+</section>
+<section id="option-2.-specify-column-types" class="slide level2">
+<h2>Option 2. Specify column types</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href=""></a><span class="fu">read_csv</span>(<span class="st">"data/df-na.csv"</span>, <span class="at">col_types =</span> <span class="fu">list</span>(<span class="fu">col_double</span>(), </span>
+<span id="cb29-2"><a href=""></a>                                            <span class="fu">col_character</span>(), </span>
+<span id="cb29-3"><a href=""></a>                                            <span class="fu">col_character</span>()))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 9 × 3
+      x y              z     
+  &lt;dbl&gt; &lt;chr&gt;          &lt;chr&gt; 
+1     1 a              hi    
+2    NA b              hello 
+3     3 Not applicable 9999  
+4     4 d              ola   
+5     5 e              hola  
+6    NA f              whatup
+7     7 g              wassup
+8     8 h              sup   
+9     9 i              &lt;NA&gt;  </code></pre>
+</div>
+</div>
+</section>
+<section id="column-types" class="slide level2">
+<h2>Column types</h2>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th><strong>type function</strong></th>
+<th><strong>data type</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>col_character()</code></td>
+<td>character</td>
+</tr>
+<tr class="even">
+<td><code>col_date()</code></td>
+<td>date</td>
+</tr>
+<tr class="odd">
+<td><code>col_datetime()</code></td>
+<td>POSIXct (date-time)</td>
+</tr>
+<tr class="even">
+<td><code>col_double()</code></td>
+<td>double (numeric)</td>
+</tr>
+<tr class="odd">
+<td><code>col_factor()</code></td>
+<td>factor</td>
+</tr>
+<tr class="even">
+<td><code>col_guess()</code></td>
+<td>let readr guess (default)</td>
+</tr>
+<tr class="odd">
+<td><code>col_integer()</code></td>
+<td>integer</td>
+</tr>
+<tr class="even">
+<td><code>col_logical()</code></td>
+<td>logical</td>
+</tr>
+<tr class="odd">
+<td><code>col_number()</code></td>
+<td>numbers mixed with non-number characters</td>
+</tr>
+<tr class="even">
+<td><code>col_numeric()</code></td>
+<td>double or integer</td>
+</tr>
+<tr class="odd">
+<td><code>col_skip()</code></td>
+<td>do not read</td>
+</tr>
+<tr class="even">
+<td><code>col_time()</code></td>
+<td>time</td>
+</tr>
+</tbody>
+</table>
+</section></section>
+<section>
+<section id="case-study-favorite-foods" class="title-slide slide level1 center">
+<h1>Case study: favorite foods</h1>
+
+</section>
+<section id="favorite-foods" class="slide level2">
+<h2>Favorite foods</h2>
+
+<img data-src="img/fav-food/fav-food.png" class="r-stretch"></section>
+<section id="favorite-foods-1" class="slide level2" data-visibility="uncounted">
+<h2>Favorite foods</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href=""></a>fav_food <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">"data/favourite-food.xlsx"</span>)</span>
+<span id="cb31-2"><a href=""></a></span>
+<span id="cb31-3"><a href=""></a>fav_food</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 5 × 6
+  `Student ID` `Full Name`      favourite.food     mealPlan          AGE   SES  
+         &lt;dbl&gt; &lt;chr&gt;            &lt;chr&gt;              &lt;chr&gt;             &lt;chr&gt; &lt;chr&gt;
+1            1 Sunil Huffmann   Strawberry yoghurt Lunch only        4     High 
+2            2 Barclay Lynn     French fries       Lunch only        5     Midd…
+3            3 Jayendra Lyne    N/A                Breakfast and lu… 7     Low  
+4            4 Leon Rossini     Anchovies          Lunch only        99999 Midd…
+5            5 Chidiegwu Dunkel Pizza              Breakfast and lu… five  High </code></pre>
+</div>
+</div>
+</section>
+<section id="variable-names-1" class="slide level2">
+<h2>Variable names</h2>
+
+<img data-src="img/fav-food/fav-food-names.png" class="r-stretch"></section>
+<section id="clean-variable-names" class="slide level2">
+<h2>Clean variable names</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href=""></a>fav_food <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">"data/favourite-food.xlsx"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb33-2"><a href=""></a>  <span class="fu">clean_names</span>() </span>
+<span id="cb33-3"><a href=""></a></span>
+<span id="cb33-4"><a href=""></a>fav_food </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 5 × 6
+  student_id full_name        favourite_food     meal_plan           age   ses  
+       &lt;dbl&gt; &lt;chr&gt;            &lt;chr&gt;              &lt;chr&gt;               &lt;chr&gt; &lt;chr&gt;
+1          1 Sunil Huffmann   Strawberry yoghurt Lunch only          4     High 
+2          2 Barclay Lynn     French fries       Lunch only          5     Midd…
+3          3 Jayendra Lyne    N/A                Breakfast and lunch 7     Low  
+4          4 Leon Rossini     Anchovies          Lunch only          99999 Midd…
+5          5 Chidiegwu Dunkel Pizza              Breakfast and lunch five  High </code></pre>
+</div>
+</div>
+</section>
+<section id="handling-nas" class="slide level2">
+<h2>Handling NAs</h2>
+
+<img data-src="img/fav-food/fav-food-nas.png" class="r-stretch"></section>
+<section id="handling-nas-1" class="slide level2" data-visibility="uncounted">
+<h2>Handling NAs</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href=""></a>fav_food <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">"data/favourite-food.xlsx"</span>,</span>
+<span id="cb35-2"><a href=""></a>                       <span class="at">na =</span> <span class="fu">c</span>(<span class="st">"N/A"</span>, <span class="st">"99999"</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb35-3"><a href=""></a>  <span class="fu">clean_names</span>()</span>
+<span id="cb35-4"><a href=""></a></span>
+<span id="cb35-5"><a href=""></a>fav_food </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 5 × 6
+  student_id full_name        favourite_food     meal_plan           age   ses  
+       &lt;dbl&gt; &lt;chr&gt;            &lt;chr&gt;              &lt;chr&gt;               &lt;chr&gt; &lt;chr&gt;
+1          1 Sunil Huffmann   Strawberry yoghurt Lunch only          4     High 
+2          2 Barclay Lynn     French fries       Lunch only          5     Midd…
+3          3 Jayendra Lyne    &lt;NA&gt;               Breakfast and lunch 7     Low  
+4          4 Leon Rossini     Anchovies          Lunch only          &lt;NA&gt;  Midd…
+5          5 Chidiegwu Dunkel Pizza              Breakfast and lunch five  High </code></pre>
+</div>
+</div>
+</section>
+<section id="make-age-numeric" class="slide level2">
+<h2>Make <code>age</code> numeric</h2>
+<div class="columns">
+<div class="column" style="width:70%;">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href=""></a>fav_food <span class="ot">&lt;-</span> fav_food <span class="sc">|&gt;</span></span>
+<span id="cb37-2"><a href=""></a>  <span class="fu">mutate</span>( </span>
+<span id="cb37-3"><a href=""></a>    <span class="at">age =</span> <span class="fu">if_else</span>(age <span class="sc">==</span> <span class="st">"five"</span>, <span class="st">"5"</span>, age), </span>
+<span id="cb37-4"><a href=""></a>    <span class="at">age =</span> <span class="fu">as.numeric</span>(age) </span>
+<span id="cb37-5"><a href=""></a>    ) </span>
+<span id="cb37-6"><a href=""></a></span>
+<span id="cb37-7"><a href=""></a>fav_food</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 5 × 6
+  student_id full_name        favourite_food     meal_plan             age ses  
+       &lt;dbl&gt; &lt;chr&gt;            &lt;chr&gt;              &lt;chr&gt;               &lt;dbl&gt; &lt;chr&gt;
+1          1 Sunil Huffmann   Strawberry yoghurt Lunch only              4 High 
+2          2 Barclay Lynn     French fries       Lunch only              5 Midd…
+3          3 Jayendra Lyne    &lt;NA&gt;               Breakfast and lunch     7 Low  
+4          4 Leon Rossini     Anchovies          Lunch only             NA Midd…
+5          5 Chidiegwu Dunkel Pizza              Breakfast and lunch     5 High </code></pre>
+</div>
+</div>
+</div><div class="column" style="width:30%;">
+<p><img data-src="img/fav-food/fav-food-age.png"></p>
+</div></div>
+</section>
+<section id="make-ses-factor" class="slide level2">
+<h2>Make <code>ses</code> factor</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href=""></a>fav_food <span class="sc">|&gt;</span></span>
+<span id="cb39-2"><a href=""></a>  <span class="fu">count</span>(ses)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 2
+  ses        n
+  &lt;chr&gt;  &lt;int&gt;
+1 High       2
+2 Low        1
+3 Middle     2</code></pre>
+</div>
+</div>
+</div><div class="column" style="width:50%;">
+<p><img data-src="img/fav-food/fav-food-ses.png"></p>
+</div></div>
+</section>
+<section id="make-ses-factor-1" class="slide level2" data-visibility="uncounted">
+<h2>Make <code>ses</code> factor</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href=""></a>fav_food <span class="ot">&lt;-</span> fav_food <span class="sc">|&gt;</span></span>
+<span id="cb41-2"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">ses =</span> <span class="fu">fct_relevel</span>(ses, <span class="st">"Low"</span>, <span class="st">"Middle"</span>, <span class="st">"High"</span>)) <span class="co">#&lt;&lt;</span></span>
+<span id="cb41-3"><a href=""></a></span>
+<span id="cb41-4"><a href=""></a>fav_food <span class="sc">|&gt;</span></span>
+<span id="cb41-5"><a href=""></a>  <span class="fu">count</span>(ses)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 2
+  ses        n
+  &lt;fct&gt;  &lt;int&gt;
+1 Low        1
+2 Middle     2
+3 High       2</code></pre>
+</div>
+</div>
+</section>
+<section id="putting-it-altogether" class="slide level2">
+<h2>Putting it altogether</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href=""></a>fav_food <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">"data/favourite-food.xlsx"</span>, <span class="at">na =</span> <span class="fu">c</span>(<span class="st">"N/A"</span>, <span class="st">"99999"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb43-2"><a href=""></a>  <span class="fu">clean_names</span>() <span class="sc">|&gt;</span></span>
+<span id="cb43-3"><a href=""></a>  <span class="fu">mutate</span>(</span>
+<span id="cb43-4"><a href=""></a>    <span class="at">age =</span> <span class="fu">if_else</span>(age <span class="sc">==</span> <span class="st">"five"</span>, <span class="st">"5"</span>, age), </span>
+<span id="cb43-5"><a href=""></a>    <span class="at">age =</span> <span class="fu">as.numeric</span>(age),</span>
+<span id="cb43-6"><a href=""></a>    <span class="at">ses =</span> <span class="fu">fct_relevel</span>(ses, <span class="st">"Low"</span>, <span class="st">"Middle"</span>, <span class="st">"High"</span>)</span>
+<span id="cb43-7"><a href=""></a>  )</span>
+<span id="cb43-8"><a href=""></a></span>
+<span id="cb43-9"><a href=""></a>fav_food</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 5 × 6
+  student_id full_name        favourite_food     meal_plan             age ses  
+       &lt;dbl&gt; &lt;chr&gt;            &lt;chr&gt;              &lt;chr&gt;               &lt;dbl&gt; &lt;fct&gt;
+1          1 Sunil Huffmann   Strawberry yoghurt Lunch only              4 High 
+2          2 Barclay Lynn     French fries       Lunch only              5 Midd…
+3          3 Jayendra Lyne    &lt;NA&gt;               Breakfast and lunch     7 Low  
+4          4 Leon Rossini     Anchovies          Lunch only             NA Midd…
+5          5 Chidiegwu Dunkel Pizza              Breakfast and lunch     5 High </code></pre>
+</div>
+</div>
+</section>
+<section id="out-and-back-in" class="slide level2">
+<h2>Out and back in</h2>
+<p>Write data to .csv and read back in.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href=""></a><span class="fu">write_csv</span>(fav_food, <span class="at">file =</span> <span class="st">"data/fav-food-clean.csv"</span>)</span>
+<span id="cb45-2"><a href=""></a></span>
+<span id="cb45-3"><a href=""></a>fav_food_clean <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/fav-food-clean.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Often, we do data processing in one or more “processing” .qmd files, we write the output to file, and read the clean data into a different “analysis” .qmd file.</p>
+</section>
+<section id="but-what-happened-to-ses-when-we-read-it-back-in" class="slide level2">
+<h2>But what happened to <code>ses</code> when we read it back in?</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href=""></a>fav_food_clean <span class="sc">|&gt;</span></span>
+<span id="cb46-2"><a href=""></a>  <span class="fu">count</span>(ses)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 2
+  ses        n
+  &lt;chr&gt;  &lt;int&gt;
+1 High       2
+2 Low        1
+3 Middle     2</code></pre>
+</div>
+</div>
+</section>
+<section id="read_rds-and-write_rds" class="slide level2">
+<h2><code>read_rds()</code> and <code>write_rds()</code></h2>
+<ul>
+<li><p>CSVs can be unreliable for saving interim results if there is specific variable type information you want to hold on to (factors, dates, etc.).</p></li>
+<li><p>An alternative is RDS files. You can read and write them with <code>read_rds()</code> and <code>write_rds()</code>, respectively.</p></li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href=""></a><span class="fu">read_rds</span>(path)</span>
+<span id="cb48-2"><a href=""></a><span class="fu">write_rds</span>(x, path)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="out-and-back-in-take-2" class="slide level2">
+<h2>Out and back in, take 2</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href=""></a><span class="fu">write_rds</span>(fav_food, <span class="at">file =</span> <span class="st">"data/fav-food-clean.rds"</span>)</span>
+<span id="cb49-2"><a href=""></a></span>
+<span id="cb49-3"><a href=""></a>fav_food_clean <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(<span class="st">"data/fav-food-clean.rds"</span>)</span>
+<span id="cb49-4"><a href=""></a></span>
+<span id="cb49-5"><a href=""></a>fav_food_clean <span class="sc">|&gt;</span></span>
+<span id="cb49-6"><a href=""></a>  <span class="fu">count</span>(ses)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 2
+  ses        n
+  &lt;fct&gt;  &lt;int&gt;
+1 Low        1
+2 Middle     2
+3 High       2</code></pre>
+</div>
+</div>
+</section></section>
+<section>
+<section id="other-types-of-data-sources" class="title-slide slide level1 center">
+<h1>Other types of data sources</h1>
+
+</section>
+<section id="other-data-sources" class="slide level2">
+<h2>Other data sources</h2>
+<ul>
+<li><strong>googlesheets4:</strong> Google Sheets</li>
+<li><strong>haven</strong>: SPSS, Stata, and SAS files</li>
+<li><strong>DBI</strong>, along with a database specific backend (e.g.&nbsp;RMySQL, RSQLite, RPostgreSQL etc): allows you to run SQL queries against a database and return a data frame</li>
+<li><strong>jsonline</strong>: JSON</li>
+<li><strong>xml2</strong>: xml</li>
+<li><strong>rvest</strong>: web scraping</li>
+<li><strong>httr</strong>: web APIs</li>
+<li><strong>sparklyr</strong>: data loaded into spark</li>
+</ul>
+</section></section>
+<section>
+<section id="try-it-1" class="title-slide slide level1 center">
+<h1>Try it</h1>
+
+</section>
+<section id="ae-09-nobels-csv.qmd-1" class="slide level2">
+<h2>ae-09 nobels-csv.qmd</h2>
+<ul>
+<li>Posit Cloud &gt; <code>sales-excel.qmd</code>.</li>
+<li>Load the <code>sales.xlsx</code> file from the <code>data-raw/</code> folder, using appropriate arguments for the <code>read_excel()</code> function such that it looks like the output on the left.</li>
+<li><strong>Stretch goal:</strong> Manipulate the sales data such that it looks like the output on the right.</li>
+</ul>
+<div class="columns">
+<div class="column" style="width:50%;">
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 9 × 2
+  id      n    
+  &lt;chr&gt;   &lt;chr&gt;
+1 Brand 1 n    
+2 1234    8    
+3 8721    2    
+4 1822    3    
+5 Brand 2 n    
+6 3333    1    
+7 2156    3    
+8 3987    6    
+9 3216    5    </code></pre>
+</div>
+</div>
+</div><div class="column" style="width:50%;">
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 7 × 3
+  brand      id     n
+  &lt;chr&gt;   &lt;dbl&gt; &lt;dbl&gt;
+1 Brand 1  1234     8
+2 Brand 1  8721     2
+3 Brand 1  1822     3
+4 Brand 2  3333     1
+5 Brand 2  2156     3
+6 Brand 2  3987     6
+7 Brand 2  3216     5</code></pre>
+</div>
+</div>
+</div></div>
+
+</section></section>
+    </div>
+  <div class="quarto-auto-generated-content" style="display: none;">
+<div class="footer footer-default">
+
+</div>
+</div></div>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script>
+  <script src="10-data-import_files/libs/revealjs/dist/reveal.js"></script>
+  <!-- reveal.js plugins -->
+  <script src="10-data-import_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="10-data-import_files/libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="10-data-import_files/libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="10-data-import_files/libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="10-data-import_files/libs/revealjs/plugin/quarto-support/support.js"></script>
+  
+
+  <script src="10-data-import_files/libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="10-data-import_files/libs/revealjs/plugin/search/search.js"></script>
+  <script src="10-data-import_files/libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="10-data-import_files/libs/revealjs/plugin/math/math.js"></script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+'controlsAuto': true,
+'previewLinksAuto': false,
+'pdfSeparateFragments': false,
+'autoAnimateEasing': "ease",
+'autoAnimateDuration': 1,
+'autoAnimateUnmatched': true,
+'jumpToSlide': true,
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'smaller': false,
+ 
+        // Display controls in the bottom right corner
+        controls: false,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: false,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'edges',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: true,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: false,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'linear',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: false,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'none',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'none',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1500,
+
+        height: 700,
+
+        // Factor of the display size that should remain empty around the content
+        margin: 5.0e-2,
+
+        math: {
+          mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, QuartoSupport,
+
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    
+    <script>
+      // htmlwidgets need to know to resize themselves when slides are shown/hidden.
+      // Fire the "slideenter" event (handled by htmlwidgets.js) when the current
+      // slide changes (different for each slide format).
+      (function () {
+        // dispatch for htmlwidgets
+        function fireSlideEnter() {
+          const event = window.document.createEvent("Event");
+          event.initEvent("slideenter", true, true);
+          window.document.dispatchEvent(event);
+        }
+
+        function fireSlideChanged(previousSlide, currentSlide) {
+          fireSlideEnter();
+
+          // dispatch for shiny
+          if (window.jQuery) {
+            if (previousSlide) {
+              window.jQuery(previousSlide).trigger("hidden");
+            }
+            if (currentSlide) {
+              window.jQuery(currentSlide).trigger("shown");
+            }
+          }
+        }
+
+        // hookup for slidy
+        if (window.w3c_slidy) {
+          window.w3c_slidy.add_observer(function (slide_num) {
+            // slide_num starts at position 1
+            fireSlideChanged(null, w3c_slidy.slides[slide_num - 1]);
+          });
+        }
+
+      })();
+    </script>
+
+    <script id="quarto-html-after-body" type="application/javascript">
+    window.document.addEventListener("DOMContentLoaded", function (event) {
+      const toggleBodyColorMode = (bsSheetEl) => {
+        const mode = bsSheetEl.getAttribute("data-mode");
+        const bodyEl = window.document.querySelector("body");
+        if (mode === "dark") {
+          bodyEl.classList.add("quarto-dark");
+          bodyEl.classList.remove("quarto-light");
+        } else {
+          bodyEl.classList.add("quarto-light");
+          bodyEl.classList.remove("quarto-dark");
+        }
+      }
+      const toggleBodyColorPrimary = () => {
+        const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+        if (bsSheetEl) {
+          toggleBodyColorMode(bsSheetEl);
+        }
+      }
+      toggleBodyColorPrimary();  
+      const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+      tabsets.forEach(function(tabset) {
+        const tabby = new Tabby('#' + tabset.id);
+      });
+      const isCodeAnnotation = (el) => {
+        for (const clz of el.classList) {
+          if (clz.startsWith('code-annotation-')) {                     
+            return true;
+          }
+        }
+        return false;
+      }
+      const onCopySuccess = function(e) {
+        // button target
+        const button = e.trigger;
+        // don't keep focus
+        button.blur();
+        // flash "checked"
+        button.classList.add('code-copy-button-checked');
+        var currentTitle = button.getAttribute("title");
+        button.setAttribute("title", "Copied!");
+        let tooltip;
+        if (window.bootstrap) {
+          button.setAttribute("data-bs-toggle", "tooltip");
+          button.setAttribute("data-bs-placement", "left");
+          button.setAttribute("data-bs-title", "Copied!");
+          tooltip = new bootstrap.Tooltip(button, 
+            { trigger: "manual", 
+              customClass: "code-copy-button-tooltip",
+              offset: [0, -8]});
+          tooltip.show();    
+        }
+        setTimeout(function() {
+          if (tooltip) {
+            tooltip.hide();
+            button.removeAttribute("data-bs-title");
+            button.removeAttribute("data-bs-toggle");
+            button.removeAttribute("data-bs-placement");
+          }
+          button.setAttribute("title", currentTitle);
+          button.classList.remove('code-copy-button-checked');
+        }, 1000);
+        // clear code selection
+        e.clearSelection();
+      }
+      const getTextToCopy = function(trigger) {
+          const codeEl = trigger.previousElementSibling.cloneNode(true);
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
+            }
+          }
+          return codeEl.innerText;
+      }
+      const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+        text: getTextToCopy
+      });
+      clipboard.on('success', onCopySuccess);
+      if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+        const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+          text: getTextToCopy,
+          container: window.document.getElementById('quarto-embedded-source-code-modal')
+        });
+        clipboardModal.on('success', onCopySuccess);
+      }
+        var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+        var mailtoRegex = new RegExp(/^mailto:/);
+          var filterRegex = new RegExp('/' + window.location.host + '/');
+        var isInternal = (href) => {
+            return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+        }
+        // Inspect non-navigation links and adorn them if external
+     	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+        for (var i=0; i<links.length; i++) {
+          const link = links[i];
+          if (!isInternal(link.href)) {
+            // undo the damage that might have been done by quarto-nav.js in the case of
+            // links that we want to consider external
+            if (link.dataset.originalHref !== undefined) {
+              link.href = link.dataset.originalHref;
+            }
+          }
+        }
+      function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+        const config = {
+          allowHTML: true,
+          maxWidth: 500,
+          delay: 100,
+          arrow: false,
+          appendTo: function(el) {
+              return el.closest('section.slide') || el.parentElement;
+          },
+          interactive: true,
+          interactiveBorder: 10,
+          theme: 'light-border',
+          placement: 'bottom-start',
+        };
+        if (contentFn) {
+          config.content = contentFn;
+        }
+        if (onTriggerFn) {
+          config.onTrigger = onTriggerFn;
+        }
+        if (onUntriggerFn) {
+          config.onUntrigger = onUntriggerFn;
+        }
+          config['offset'] = [0,0];
+          config['maxWidth'] = 700;
+        window.tippy(el, config); 
+      }
+      const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+      for (var i=0; i<noterefs.length; i++) {
+        const ref = noterefs[i];
+        tippyHover(ref, function() {
+          // use id or data attribute instead here
+          let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+          try { href = new URL(href).hash; } catch {}
+          const id = href.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note) {
+            return note.innerHTML;
+          } else {
+            return "";
+          }
+        });
+      }
+      const findCites = (el) => {
+        const parentEl = el.parentElement;
+        if (parentEl) {
+          const cites = parentEl.dataset.cites;
+          if (cites) {
+            return {
+              el,
+              cites: cites.split(' ')
+            };
+          } else {
+            return findCites(el.parentElement)
+          }
+        } else {
+          return undefined;
+        }
+      };
+      var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+      for (var i=0; i<bibliorefs.length; i++) {
+        const ref = bibliorefs[i];
+        const citeInfo = findCites(ref);
+        if (citeInfo) {
+          tippyHover(citeInfo.el, function() {
+            var popup = window.document.createElement('div');
+            citeInfo.cites.forEach(function(cite) {
+              var citeDiv = window.document.createElement('div');
+              citeDiv.classList.add('hanging-indent');
+              citeDiv.classList.add('csl-entry');
+              var biblioDiv = window.document.getElementById('ref-' + cite);
+              if (biblioDiv) {
+                citeDiv.innerHTML = biblioDiv.innerHTML;
+              }
+              popup.appendChild(citeDiv);
+            });
+            return popup.innerHTML;
+          });
+        }
+      }
+    });
+    </script>
+    
+
+</body></html>

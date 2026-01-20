@@ -1,0 +1,557 @@
+---
+title: "Iteration"
+subtitle: "<br><br> Environmental Data Analysis and Visualization"
+format: 
+  revealjs:
+    theme: simple
+    width: 1500
+    margin: 0.05
+    scrollable: true
+slide-number: c/t
+from: markdown+emoji
+editor: 
+  markdown: 
+    wrap: 72
+execute:
+  echo: true
+---
+
+```{r packages, echo=FALSE, message=FALSE, warning=FALSE}
+library(tidyverse)
+```
+
+## Performing the same action for multiple "things"
+
+- `facet_wrap()` and `facet_grid()` draw plots for each subset of data
+- `group_by()` plus `summarize()` computes summary stats for each subset of data
+
+R also has functions that enable us to apply any function across subsets of data or across multiple datasets.
+
+# Modifying multiple columns using `dplyr::across()`
+
+
+## We want to perform the same computation across multiple columns
+
+::: columns
+::: {.column width = "50%"}
+Have: a tibble called `df`
+```{r echo=FALSE}
+tibble(
+  a = rnorm(10),
+  b = rnorm(10),
+  c = rnorm(10),
+  d = rnorm(10)
+)
+```
+
+:::
+::: {.column width = "50%"}
+Want: the median of each column
+```{r echo=FALSE}
+df <- tibble(
+  a = rnorm(10),
+  b = rnorm(10),
+  c = rnorm(10),
+  d = rnorm(10)
+)
+
+df |> 
+  summarize(
+    across(a:d, median))
+```
+::: 
+:::
+
+
+## We could calculate the median of each column individually
+
+```{r}
+df |> summarize(
+  a = median(a),
+  b = median(b),
+  c = median(c),
+  d = median(d))
+```
+
+
+## But we could also use the `across()` function to do it
+
+```{r}
+df |> 
+  summarize(
+    across(a:d, median))
+```
+
+<br>
+As with functions, iterating across columns in this way makes our code more efficient and less prone to errors.
+
+
+## The `across()` function usage
+
+`across(.cols, .fns, .names)`
+
+- `.cols`: columns to which you want to apply the calculation
+- `.fns`: function(s) you want to apply to each column
+- `.names`: how you want to name the output columns
+
+## Selecting columns (`.cols`)
+
+Only columns a and b: use `:` to select columns located sequentially in the dataframe
+```{r}
+df |> 
+  summarize(
+    across(a:b, median)
+  )
+```
+
+
+## Selecting columns (`.cols`)
+
+Only columns a and c: use `c()` to concatenate the column names if they are not sequentially located in the dataframe.
+```{r}
+df |> 
+  summarize(
+    across(c(a, c), median)
+  )
+```
+
+
+## Selecting columns (`.cols`)
+
+All columns: use `everything()`
+```{r}
+df |> 
+  summarize(
+    across(everything(), median)
+  )
+```
+
+## Use `where()` to select colunns by data type
+
+For more dataframes with multiple data types, use `where()` to apply `across()` functions to certain types of data.
+<br>
+
+::: columns
+::: {.column width = "50%" .fragment}
+```{r echo=FALSE}
+tibble(diamonds[,1:7])
+```
+
+:::
+::: {.column width = "50%" .fragment}
+```{r}
+#| code-line-numbers: "3"
+
+diamonds |> 
+  summarize(
+    across(where(is.numeric), mean)
+  )
+```
+::: 
+:::
+
+
+## `where()` functions
+
+- where(is.numeric) selects all numeric columns.
+- where(is.character) selects all string columns.
+- where(is.Date) selects all date columns.
+- where(is.POSIXct) selects all date-time columns.
+- where(is.logical) selects all logical columns.
+
+
+## What about when the function requires additional arguments?
+
+::: columns
+::: {.column width = "50%"}
+```{r echo=FALSE}
+rnorm_na <- function(n, n_na, mean = 0, sd = 1) {
+  sample(c(rnorm(n - n_na, mean = mean, sd = sd), rep(NA, n_na)))
+}
+
+df_miss <- tibble(
+  a = rnorm_na(5, 1),
+  b = rnorm_na(5, 1),
+  c = rnorm_na(5, 2),
+  d = rnorm(5)
+)
+
+df_miss
+```
+:::
+
+::: {.column width = "50%"}
+```{r}
+df_miss |> 
+  summarize(
+    across(a:d, median))
+```
+::: 
+:::
+
+<br>
+The output contains missing values. We need to pass the argument `na.rm=TRUE`.
+
+
+## What about when the function requires additional arguments?
+
+```{r warning=TRUE}
+#| code-line-numbers: "3"
+
+df_miss |> 
+  summarize(
+    across(a:d, median, na.rm = TRUE))
+```
+
+
+## What about when the function requires additional arguments?
+
+You can call a new function "on the fly" - the function is not saved as an object to the global environment. 
+<br>
+<br>
+```{r warning=TRUE}
+#| code-line-numbers: "3"
+
+df_miss |> 
+  summarize(
+    across(a:d, function(x) median(x, na.rm = TRUE)))
+```
+
+
+## What about when the function requires additional arguments?
+
+You can shorten your code by using an "anonymous function" - replace `function` with `\`
+<br>
+<br>
+```{r warning=TRUE}
+#| code-line-numbers: "3"
+
+df_miss |> 
+  summarize(
+    across(a:d, \(x) median(x, na.rm = TRUE)))
+```
+
+## `across()` with multiple functions
+
+Use `list()` to calculate the median and number of missing values in `df_miss`
+
+```{r}
+#| code-line-numbers: "3,4,5"
+
+df_miss |> 
+  summarize(
+    across(a:d, list(
+      median = \(x) median(x, na.rm = TRUE),
+      n_missing = \(x) sum(is.na(x))
+    )))
+```
+
+
+## `across()` with multiple functions
+
+Use `list()` to calculate the median and number of missing values in `df_miss`
+
+```{r}
+#| code-line-numbers: "3,4,5"
+
+df_miss |> 
+  summarize(
+    across(a:d, list(
+      median = \(x) median(x, na.rm = TRUE),
+      n_missing = \(x) sum(is.na(x))
+    )))
+```
+
+<br>
+
+Note: By default, R "glues" the column name and function name together because we applied multiple functions to each column.
+
+
+## Take control of the resulting column names with `.names` argument
+
+Maybe we want the function name to come first followed by the column name, and we want to separate by `_`:
+```{r}
+#| code-line-numbers: "6"
+
+df_miss |> 
+  summarize(
+    across(a:d, list(
+      median = \(x) median(x, na.rm = TRUE),
+      n_missing = \(x) sum(is.na(x))),
+      .names = "{.fn}-{.col}"
+    ))
+```
+
+<br>
+- Put it all in `""`
+- `{.fn}` takes the function name
+- `{.col}` takes the column name
+- `_` indicates we want to separate the function and column name by `_`
+- customize however you want
+
+
+## `across()` works with `mutate()` too
+
+::: columns
+::: {.column width = "50%"}
+```{r}
+df
+```
+:::
+::: {.column width = "50%"}
+```{r}
+df |> 
+  mutate(
+    across(a:d, \(x) x + 2))
+```
+::: 
+:::
+Wait, I wanted to keep the original columns!
+
+
+## `across()` works with `mutate()` too
+
+Specify the `.names` argument to keep original columns and add new columns.
+
+::: columns
+::: {.column width = "30%"}
+```{r}
+df
+```
+:::
+::: {.column width = "70%"}
+```{r}
+df |> 
+  mutate(
+    across(a:d, \(x) x + 2, .names = "{.col}_add_two"))
+```
+::: 
+:::
+
+# Intro to `purrr:map()`: reading and writing multiple files
+
+## Reading in multiple files the slow, error-prone way
+
+First read in each file and assign the output to a different object:
+
+```{r}
+ph_a <- read_csv("data/sitenames/2024-05-21_YOR_BR_PH_A.csv")
+ph_b <- read_csv("data/sitenames/2024-05-21_YOR_BR_PH_B.csv")
+ph_c <- read_csv("data/sitenames/2024-05-21_YOR_BR_PH_C.csv")
+ph_d <- read_csv("data/sitenames/2024-05-21_YOR_BR_PH_D.csv")
+ph_e <- read_csv("data/sitenames/2024-05-21_YOR_BR_PH_E.csv")
+
+ph_a
+```
+
+## Reading in multiple files the slow, error-prone way
+
+Then combine the dataframe objects into a tibble using `bind_rows()`
+
+::: columns
+::: {.column width = "50%" .fragment}
+```{r}
+data <- bind_rows(ph_a, ph_b, ph_c, ph_d, ph_e)
+
+data
+```
+:::
+::: {.column width = "50%" .fragment}
+Problems with this approach:
+
+- verbose: so much code
+- error-prone: easy to mistype the parts we are changing
+- clutters the environment: we have to save each file as an object, but we only need the final combined object.
+::: 
+:::
+
+
+## Automate it
+
+The basic steps:
+
+1. Use `list.files()` to generate a list of filenames in your data folder
+2. Use `purrr::map()` to read in each file in the file name list
+3. Use `list_rbind()` to combine the data frames into a single data frame
+
+
+## List files in a directory
+
+<br>
+```{r}
+paths <- list.files("data/sitenames", full.names = TRUE)
+
+paths
+```
+
+- Because we use projects, R knows the base folder is the folder containing our project files
+- If your data files are in a subfolder, specify the folder structure 
+- `full.names=TRUE` indicates you want to include the full directory structure
+
+
+## List files in a directory
+
+<br>
+```{r}
+class(paths)
+```
+
+The output is a character vector of file names (with full directory structure included).
+
+
+## Use `map()` to read in each element of the `paths` vector
+
+```{r}
+files <- map(paths, read_csv)
+
+files[[1]]
+```
+
+
+## Use `map()` to read in each element of the `paths` vector
+
+The ouput is a **list**
+
+```{r}
+class(files)
+```
+
+- Recall, a list is a vector of data elements. Each element of the list can be *anything* -  a single observation, a vector, a data frame, a plot, etc. 
+- `files` is a list of data frames.
+- We can extract an element of a list using `[[]]`. We place the element number inside the brackets `files[[3]]`.
+
+## Use `list_rbind()` to collapse list elements into a single data frame
+
+```{r}
+files |> 
+  list_rbind()
+```
+
+
+## Put it all together
+
+```{r}
+ph <- list.files("data/sitenames", full.names = TRUE) |> 
+  map(read_csv) |> 
+  list_rbind()
+
+ph
+```
+
+
+## What if you need to extract data from the file name
+
+e.g., we have another dataset where there is no site name column, but the site name is contained in the file names.
+
+```{r}
+list.files("data/no_sitenames", full.names = TRUE) |> 
+  map(read_csv) |> 
+  list_rbind()
+```
+
+<br>
+
+No site name - there's no way to identify which site the data came from.
+
+
+## Use `set_names()` to extract info from the file names
+```{r}
+list.files("data/no_sitenames", full.names = TRUE) |> 
+  set_names(basename) 
+```
+
+The full file paths are vector elements. The "basenames" above are the *names* of each element.
+
+
+## Use `set_names()` to extract info from the file names
+
+Now use map to read in the data files
+
+::: columns
+::: {.column width = "50%"}
+```{r}
+list.files("data/no_sitenames", full.names = TRUE) |> 
+  set_names(basename) |> 
+  map(read_csv)
+```
+:::
+::: {.column width = "50%"}
+- The output shows the first element of the files list. 
+- The "name" of the first element is the name of the first .csv file that was read in.
+::: 
+:::
+
+## Use `set_names()` and `mutate()` to extract info from the file names
+
+Use the `names_to` argument in `list_rbind()` to create a `site` column that is populated with the corresponding list element names
+
+```{r}
+list.files("data/no_sitenames", full.names = TRUE) |> 
+  set_names(basename) |> 
+  map(read_csv) |> 
+  list_rbind(names_to = "site")
+```
+
+`site` is too long but we can fix that
+
+
+## Use `set_names()` and `mutate()` to extract info from the file names
+
+Use the `substr()` to extract the 22nd character from the `site` names
+
+```{r}
+list.files("data/no_sitenames", full.names = TRUE) |> 
+  set_names(basename) |> 
+  map(read_csv) |> 
+  list_rbind(names_to = "site") |> 
+  mutate(site = substr(site, 22, 22))
+```
+
+
+## Use `separate_wider_delim()` to keep and separate all elements of the file names
+
+```{r}
+list.files("data/no_sitenames", full.names = TRUE) |> 
+  set_names(basename) |> 
+  map(read_csv) |> 
+  list_rbind(names_to = "file") |> 
+  separate_wider_delim(file, delim = "_", 
+                       names = c("date", "river", "salinity", "param", "chamber"))
+```
+
+Close - we need to get rid of the ".csv"
+
+## Use `separate_wider_delim()` to keep and separate all elements of the file names
+
+```{r}
+list.files("data/no_sitenames", full.names = TRUE) |> 
+  set_names(basename) |> 
+  map(read_csv) |> 
+  list_rbind(names_to = "file") |> 
+  separate_wider_delim(file, delim = "_", 
+                       names = c("date", "river", "salinity", "param", "site")) |> 
+  mutate(site = substr(site, 1,1))
+```
+
+## Assign the output to an object
+
+```{r}
+ph <- list.files("data/no_sitenames", full.names = TRUE) |> 
+  set_names(basename) |> 
+  map(read_csv) |> 
+  list_rbind(names_to = "file") |> 
+  separate_wider_delim(file, delim = "_", 
+                       names = c("date", "river", "salinity", "param", "site")) |> 
+  mutate(site = substr(site, 1,1))
+```
+
+## Save so we can start our analysis in a fresh .qmd
+
+<br>
+<br>
+```{r eval=FALSE}
+write_csv(ph, file = "data/ph_combined.csv")
+```
+
+
+# You can use `map()` (and the family of other `map()` functions) to perform almost any operation across multiple elements of a vector or list. More to come.

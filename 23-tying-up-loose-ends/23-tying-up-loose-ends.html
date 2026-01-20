@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Tying up loose ends</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="https://enst222.github.io/website" />
+    <link href="libs/font-awesome/css/all.css" rel="stylesheet" />
+    <link href="libs/font-awesome/css/v4-shims.css" rel="stylesheet" />
+    <link href="libs/panelset/panelset.css" rel="stylesheet" />
+    <script src="libs/panelset/panelset.js"></script>
+    <link rel="stylesheet" href="../xaringan-themer.css" type="text/css" />
+    <link rel="stylesheet" href="../slides.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Tying up loose ends
+## <br><br> Environmental Data Science
+### <a href="https://enst222.github.io/website">https://enst222.github.io/website</a>
+
+---
+
+
+
+
+
+layout: true
+  
+&lt;div class="my-footer"&gt;
+&lt;span&gt;
+&lt;a href="https://enst222.github.io/website" target="_blank"&gt;ENST 222: Environmental Data Science&lt;/a&gt;
+&lt;/span&gt;
+&lt;/div&gt; 
+
+---
+
+
+
+class: middle
+
+### 1. What is *p*-hacking and why should you avoid it?
+
+### 2. Random tips and tricks
+
+---
+
+background-image: url(https://media.giphy.com/media/MCZ39lz83o5lC/giphy.gif)
+
+---
+
+class: middle, inverse
+
+# ***p* value:** The probability of obtaining test results at least as extreme as the observed result due to random chance alone
+
+---
+class: center
+
+### We often use *p* &lt; 0.05 as the cutoff for an acceptable *p*-value, but this is somewhat arbitrary
+
+&lt;br/&gt;
+![xkd cartoon](img/xkd-p-values.png)
+---
+
+### Over-reliance on *p*-values can lead to questionable choices 
+
+**Why might each of these be problematic?**
+
+- Stop collecting data once *p* &lt; 0.05
+
+- Analyze many measures and/or conditions, but only report those with *p* &lt; 0.05
+
+- Exclude observations to get *p* &lt; 0.05
+
+- Transform the data to get *p* &lt; 0.05
+
+---
+
+class: middle, inverse
+
+## ***p*-hacking:** A misuse of data analysis to find patterns in data that can be presented as "statistically significant" when in fact there is no underlying effect.
+
+---
+
+### How to not *p*-hack: Instead of reporting only the good stuff, just report all the stuff
+
+- Report your sample size
+
+- List all variables and levels of categorical variables
+
+- If excluding outliers, report results with outliers included as well
+
+- Report results for all variables tested
+
+---
+
+***An apt metaphor for the phrase “statistically significant” and its relatives is that of a toro bravo, a champion bull raised for bullfighting who is now on his last legs and awaiting only the coup de grâce.***  [Hurlbert et al. 2019](https://www.tandfonline.com/doi/full/10.1080/00031305.2018.1543616)
+
+&lt;img src="img/bull-matador.jpeg" width="60%" style="display: block; margin: auto;" /&gt;
+
+---
+
+class: middle, inverse
+
+.question[There is now wide agreement among many statisticians who have studied the issue that for reporting of statistical tests yielding p-values it is illogical and inappropriate to dichotomize the p-scale and describe results as “significant” and “nonsignificant.” Authors are strongly discouraged from continuing this never justified practice that originated from confusions in the early history of modern statistics.]
+
+[Hurlbert et al. 2019](https://www.tandfonline.com/doi/full/10.1080/00031305.2018.1543616)
+
+---
+
+### How to not *p*-hack: Emphasize what your model results actually *mean* instead of *p-*values
+
+- Report *p*-values but don't use the term, "statistically significant"
+
+- Discuss apparent relationships or patterns
+
+- **Interpret your results**, and explain their meaning in the context of your study system
+
+--
+
+**Assume both of these scenarios has *p* &lt; 0.05. Which is more *ecologically* significant?**
+
+"Growth rates were, on average, 5 times greater in the nutrient-treatment plots."
+
+"Growth rates were, on average, 0.01 times greater in the  nutrient-treatment plots."
+
+
+---
+
+class: middle, inverse
+
+# More R tips
+
+---
+
+class: middle
+
+# Make sure you are comparing apples to apples! Normalize your data when appropriate.
+
+---
+
+### Where do the most motor vehicle deaths occur?
+
+&lt;img src="23-tying-up-loose-ends_files/figure-html/unnamed-chunk-3-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+---
+
+### Where do the most motor vehicle deaths occur?
+
+&lt;img src="23-tying-up-loose-ends_files/figure-html/unnamed-chunk-4-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+More people = more motor vehicle deaths. It's hard to tell whether it's because there are just more people living within each state or driving on the road, or because because there is a difference in traffic safety across states.
+
+---
+
+### Normalize your data if needed for your question
+
+&lt;img src="23-tying-up-loose-ends_files/figure-html/unnamed-chunk-5-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+Normalized to population, Mississippi has the most motor vehicle deaths.
+
+---
+
+### Normalize your data if needed for your question
+
+&lt;img src="23-tying-up-loose-ends_files/figure-html/unnamed-chunk-6-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+Normalized to vehicle miles traveled, South Carolina has the most motor vehicle deaths.
+
+---
+
+class: inverse, middle
+
+### Use clean formatting in your R Markdown documents! 
+
+---
+
+## Use markdown syntax
+
+&lt;img src="img/rmd-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Use markdown syntax
+
+&lt;img src="img/rmd-2.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Use markdown syntax
+
+&lt;img src="img/rmd-3.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+---
+
+### Use `knitr::kable` to print tables
+
+But only print tables if it's important for the reader to have that information. For example, printing a raw, unformatted data table is helpful to you as the data analyst, but not the reader. Remove this from your code before finalizing your report.
+
+
+```r
+penguins %&gt;%
+  filter(species == "Adelie")
+```
+
+```
+## # A tibble: 152 × 8
+##   species island    bill_le…¹ bill_…² flipp…³ body_…⁴ sex    year
+##   &lt;fct&gt;   &lt;fct&gt;         &lt;dbl&gt;   &lt;dbl&gt;   &lt;int&gt;   &lt;int&gt; &lt;fct&gt; &lt;int&gt;
+## 1 Adelie  Torgersen      39.1    18.7     181    3750 male   2007
+## 2 Adelie  Torgersen      39.5    17.4     186    3800 fema…  2007
+## 3 Adelie  Torgersen      40.3    18       195    3250 fema…  2007
+## 4 Adelie  Torgersen      NA      NA        NA      NA &lt;NA&gt;   2007
+## 5 Adelie  Torgersen      36.7    19.3     193    3450 fema…  2007
+## 6 Adelie  Torgersen      39.3    20.6     190    3650 male   2007
+## # … with 146 more rows, and abbreviated variable names
+## #   ¹​bill_length_mm, ²​bill_depth_mm, ³​flipper_length_mm,
+## #   ⁴​body_mass_g
+```
+
+---
+
+class: inverse
+
+### Cleanly formatting in your R Markdown documents: Use `knitr::kable` to print tables
+
+However, printing a nice summary table can be quite useful.  
+
+
+```r
+knitr::kable(penguins %&gt;%
+  group_by(species, sex) %&gt;%
+  summarize(body_mass_g = round(mean(body_mass_g, na.rm = TRUE), 0)) %&gt;%
+    drop_na() %&gt;%
+    pivot_wider(names_from = sex, values_from = body_mass_g))
+```
+
+
+
+|species   | female| male|
+|:---------|------:|----:|
+|Adelie    |   3369| 4043|
+|Chinstrap |   3527| 3939|
+|Gentoo    |   4680| 5485|
+
+---
+
+class: middle
+
+# Use chunk options to control what appears in your knitted document
+
+---
+
+.pull-left-narrow[If you want to set the same chunk options for the entire document, use `knitr::opts_chunk$set()` in the first code chunk of your document]
+
+.pull-right-wide[
+&lt;img src="img/code-1-options.png" width="60%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+.pull-left-narrow[Customize the output of individual chunks by defining chunk options in the {} of a chunk header]
+
+.pull-right-wide[
+&lt;img src="img/code-1-options.png" width="60%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+# Commonly used chunk options
+
+- `include = FALSE` prevents code and results from appearing in the finished file. R Markdown still runs the code in the chunk, and the results can be used by other chunks.
+- `echo = FALSE` prevents code, but not the results from appearing in the finished file. This is a useful way to embed figures.
+- `message = FALSE` prevents messages that are generated by code from appearing in the finished file.
+- `warning = FALSE` prevents warnings that are generated by code from appearing in the finished.
+- `fig.cap = "..."` adds a caption to graphical results.
+
+See the [R Markdown Reference Guide](https://www.rstudio.com/wp-content/uploads/2015/03/rmarkdown-reference.pdf) for a complete list of knitr chunk options and a lot of additional information.
+
+---
+
+### Use the `patchwork` package to create plots with multiple panels when the y-axis variables are different
+
+.panelset[
+.panel[.panel-name[Plot]
+&lt;img src="23-tying-up-loose-ends_files/figure-html/unnamed-chunk-14-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+]
+
+.panel[.panel-name[Code]
+
+```r
+p1 &lt;- ggplot(penguins, aes(x = bill_depth_mm, y = bill_length_mm, color = species)) +
+  geom_point() +
+  labs(x = "Bill depth (mm)", y = "Bill length (mm)", color = "Species")
+
+p2 &lt;- ggplot(penguins, aes(x = flipper_length_mm, y = body_mass_g, color = species)) +
+  geom_point() +
+  labs(x = "Flipper length (mm)", y = "Body mass (g)", color = "Species")
+
+*p1 + p2
+```
+]
+]
+---
+
+### Collect legend and move to the bottom; change the theme; add a figure title and panel labels
+
+.panelset[
+.panel[.panel-name[Plot]
+&lt;img src="23-tying-up-loose-ends_files/figure-html/unnamed-chunk-16-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+]
+
+.panel[.panel-name[Code]
+
+```r
+p1 &lt;- ggplot(penguins, aes(x = bill_depth_mm, y = bill_length_mm, color = species)) +
+  geom_point() +
+  labs(x = "Bill depth (mm)", y = "Bill length (mm)", color = "Species")
+
+p2 &lt;- ggplot(penguins, aes(x = flipper_length_mm, y = body_mass_g, color = species)) +
+  geom_point() +
+  labs(x = "Flipper length (mm)", y = "Body mass (g)", color = "Species")
+
+*p1 + p2 + plot_layout(guides = "collect") + plot_annotation(title = "Palmer penguin body metrics", tag_levels = "a") &amp; theme_light() &amp; theme(legend.position = "bottom")
+```
+]
+]
+
+---
+
+### Use `facet_wrap()` to create plots with multiple panels when the y-axis variables are the same
+
+.panelset[
+.panel[.panel-name[Plot]
+&lt;img src="23-tying-up-loose-ends_files/figure-html/unnamed-chunk-18-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+]
+
+.panel[.panel-name[Code]
+
+```r
+ggplot(penguins, aes(x = bill_depth_mm, y = bill_length_mm, color = species)) +
+  geom_point() +
+* facet_wrap(~species) +
+  labs(x = "Bill depth (mm)", y = "Bill length (mm)",
+       title = "Palmer penguin bill metrics") +
+  theme_light() +
+  theme(legend.position = "none") 
+```
+]
+]
+---
+
+class: middle
+
+See the `patchwork` reference guide for many more plot layout and annotation options: https://patchwork.data-imaginist.com/index.html
+
+---
+
+# R Studio keyboard shortcuts
+
+- **ALT + CTRL + I (PC) or OPTION + CMD + I (mac)** to insert a code chunk
+
+- **ALT + left mouse click (PC) or OPTION + left click (mac)** to select and write on multiple lines - simultaneously. 
+
+- **CTRL + SHIFT + M (PC) or CMD + SHIFT + M (mac)** to insert a %&gt;% operator
+- Place the cursor in the console and press **CTRL + UP (PC) or CMD + UP (mac)** to access navigate your console history 
+
+- Place the cursor in the line of code you'd like to run (or highlight the code you want to run) and type **CTRL + Enter (PC) or CMD + Enter (mac)**
+---
+
+# Use these cheatsheets for quick reference!
+
+.pull-left[
+- [R basics](https://res.cloudinary.com/dyd911kmh/image/upload/v1654763044/Marketing/Blog/R_Cheat_Sheet.pdf)
+
+- [R Markdown](https://github.com/rstudio/cheatsheets/blob/main/rmarkdown-2.0.pdf)
+
+- [Data visualization with `ggplot2`](https://github.com/rstudio/cheatsheets/blob/main/data-visualization-2.1.pdf)
+
+- [Data transformation with `dplyr`](https://github.com/rstudio/cheatsheets/blob/main/data-transformation.pdf)
+
+- [Data tidying with `tidyr`](https://github.com/rstudio/cheatsheets/blob/main/tidyr.pdf)
+
+- [Data import with `readr`, `readxl`, and `googlesheets4`](https://github.com/rstudio/cheatsheets/blob/main/data-import.pdf)
+
+- [Dates and times with `lubridate`](https://github.com/rstudio/cheatsheets/blob/main/lubridate.pdf)
+]
+
+.pull-right[
+- [Factors with `forcats`](https://github.com/rstudio/cheatsheets/blob/main/factors.pdf)
+
+- [Apply functions with `purrr`](https://github.com/rstudio/cheatsheets/blob/main/purrr.pdf)
+- [Create maps with `sf`](https://github.com/rstudio/cheatsheets/blob/main/mapsf.pdf)
+
+- [...and many more](https://github.com/rstudio/cheatsheets)
+]
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"ratio": "16:9",
+"highlightLines": true,
+"highlightStyle": "solarized-light",
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

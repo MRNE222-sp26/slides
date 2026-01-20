@@ -1,0 +1,305 @@
+---
+title: "Recoding data"
+subtitle: "<br><br> Environmental Data Analysis and Visualization"
+author: "[https://mrne222-sp25.github.io/website/](https://mrne222-sp25.github.io/website/)"
+format: 
+  revealjs:
+    theme: simple
+    width: 1500
+    margin: 0.05
+    scrollable: true
+slide-number: c/t
+from: markdown+emoji
+editor: 
+  markdown: 
+    wrap: 72
+execute:
+  echo: true
+---
+
+## There are a LOT of different ways to recode and transform your data in R. 
+
+We will cover a few of them, but Google is your friend to figure out how to recode in your own unique use cases.
+
+# Code-along: recoding functions
+
+## Code-along using the `iris` dataset
+::: columns
+::: {.column width = "50%" .fragment}
+First load packages:
+```{r packages, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(janitor)
+```
+:::
+::: {.column width = "50%" .fragment}
+Clean the data names (`iris` is a built-in dataset that comes with R)
+```{r}
+iris <- as_tibble(iris) |>
+  clean_names()
+
+iris
+```
+::: 
+:::
+
+## Recode species so that setosa = "a", versicolor = "b", and virginica = "c"
+
+::: columns
+::: {.column width = "40%" .fragment}
+```{r}
+distinct(iris, species)
+```
+:::
+::: {.column width = "60%" .fragment}
+```{r}
+#| code-line-numbers: "2,3,4"
+iris |>
+  mutate(species = case_match(species, "setosa" ~ "a", 
+                              "versicolor" ~ "b", 
+                              "virginica" ~ "c")) |> 
+  distinct(species)
+```
+::: 
+:::
+
+## Use .default argument if you want to keep some values the same
+
+```{r}
+#| code-line-numbers: "3"
+
+iris |>
+  mutate(species = case_match(species, "setosa" ~ "a",
+                              .default = species)) |> 
+  distinct(species)
+```
+
+## Use `mutate()` and `if_else()` to replace values based on certain conditions 
+
+**If** `petal_length` is less than three, recode `petal_length` to "short". **Otherwise** ("*else*") recode `petal_length` to "long".
+```{r}
+iris
+```
+
+## Use `mutate()` and `if_else()` to replace values based on certain conditions
+
+**If** `petal_length` is less than three, recode `petal_length` to "short". **Otherwise** ("*else*") recode `petal_length` to "long".
+```{r}
+#| code-line-numbers: "2"
+
+iris |>
+  mutate(petal_length = if_else(petal_length < 3, "short", "long")) 
+```
+
+## Create a new variable if you want to preserve the original values
+
+```{r}
+#| code-line-numbers: "2"
+
+iris |>
+  mutate(petal_category = if_else(petal_length < 3, "short", "long"))
+```
+
+## Use `case_when()` for more complicated conditional statements
+
+If `petal_length` is less than or equal to 2, recode `petal_length` to "small". If `petal_length` is greater than 2 and less than or equal to 5, recode to "medium". If `petal_length` is greater than 5, recode to "large".
+```{r}
+#| code-line-numbers: "2,3,4"
+
+iris |>
+  mutate(petal_category = case_when(petal_length <= 2 ~ "small", 
+                                    petal_length > 2 & sepal_length <= 5 ~ "medium", 
+                                    petal_length > 5 ~ "large")) |> 
+  distinct(petal_category)
+```
+
+## Use `TRUE` to index values that were not already defined
+
+For all other values of `petal_length`, recode to "other".
+```{r}
+#| code-line-numbers: "5"
+
+iris |>
+  mutate(petal_category = case_when(petal_length <= 2 ~ "small", 
+                                    petal_length > 2 & sepal_length <= 5 ~ "medium", 
+                                    petal_length > 5 ~ "large",
+                                    TRUE ~ "other")) |> 
+  distinct(petal_category)
+```
+
+# An example, with some data wrangling too
+
+## Calculate number of category 3, 4, and 5 storms each decade and plot the results. 
+::: columns
+::: {.column width = "50%"}
+The data:
+```{r}
+storms |>
+  select(name, year, month, day, hour, category)
+```
+:::
+::: {.column width = "50%"}
+The process:
+
+::: {.incremental}
+- filter to remove years from decades that have incomplete data
+- filter so storm category is greater than or equal to 3
+- create new variable (decade)
+- group by decade and use `summarize` to calculate total number of 
+:::
+::: 
+:::
+
+We'll need to create new categorical variable (decade), then group and summarize by that variable.
+
+```{r}
+storms |>
+  select(name, year, month, day, hour, category)
+```
+
+## First filter so year is between 1980 and 2020 and category >= 3 
+
+We need to remove years from decades where data is incomplete.
+```{r}
+#| code-line-numbers: "3,4,5"
+
+storms |>
+  select(name, year, month, day, hour, category) |> 
+  filter(year >= 1980, 
+         year < 2020, 
+         category >= 3) 
+```
+
+## Next group by year and storm name and calculate the max category reached for each storm and year
+::: {.panel-tabset}
+
+## Code
+```{r, eval = FALSE}
+#| code-line-numbers: "6,7"
+#| 
+storms |>
+  select(name, year, month, day, hour, category) |> 
+  filter(year >= 1980, 
+         year < 2020, 
+         category > 3) |>
+  group_by(name, year) |> 
+  summarize(maxcat = max(category))
+```
+
+## Output
+```{r, echo = FALSE}
+storms |>
+  select(name, year, month, day, hour, category) |> 
+  filter(year >= 1980, 
+         year < 2020, 
+         category > 3) |>
+  group_by(name, year) |> 
+  summarize(maxcat = max(category)) 
+```
+:::
+
+## Next, create a `decade` variable using `mutate()` and `case_when()` based on the `year` variable
+
+::: {.panel-tabset}
+
+## Code
+```{r, eval = FALSE}
+#| code-line-numbers: "8,9,10,11"
+storms |>
+  select(name, year, month, day, hour, category) |>
+  filter(year >= 1980, 
+         year < 2020, 
+         category > 3) |>
+  group_by(name, year) |>
+  summarize(maxcat = max(category)) |>
+  mutate(decade = case_when(year %in% 1980:1989 ~ "1980s", 
+                            year %in% 1990:1999 ~ "1990s",
+                            year %in% 2000:2009 ~ "2000s", 
+                            year %in% 2010:2019 ~ "2010s")) 
+```
+
+## Output
+```{r, echo = FALSE}
+storms |>
+  select(name, year, month, day, hour, category) |>
+  filter(year >= 1980, 
+         year < 2020, 
+         category > 3) |>
+  group_by(name, year) |>
+  summarize(maxcat = max(category)) |>
+  mutate(decade = case_when(year %in% 1980:1989 ~ "1980s", 
+                            year %in% 1990:1999 ~ "1990s", 
+                            year %in% 2000:2009 ~ "2000s", 
+                            year %in% 2010:2019 ~ "2010s")) 
+```
+:::
+
+## Finally, group by the new decade variable and count the number of storms in each decade
+
+::: {.panel-tabset}
+
+## Code
+```{r, eval = FALSE}
+#| code-line-numbers: "12,13"
+storms |>
+  select(name, year, month, day, hour, category) |> 
+  filter(year >= 1980, 
+         year < 2020, 
+         category > 3) |>
+  group_by(name, year) |>
+  summarize(maxcat = max(category)) |>
+  mutate(decade = case_when(year %in% 1980:1989 ~ "1980s",
+                            year %in% 1990:1999 ~ "1990s",
+                            year %in% 2000:2009 ~ "2000s",
+                            year %in% 2010:2019 ~ "2010s")) |>
+  group_by(decade) |> 
+  summarize(n = n()) 
+```
+
+## Output
+```{r, echo = FALSE}
+storms |>
+  select(name, year, month, day, hour, category) |> 
+  filter(year >= 1980, 
+         year < 2020, 
+         category > 3) |>
+  group_by(name, year) |>
+  summarize(maxcat = max(category)) |>
+  mutate(decade = case_when(year %in% 1980:1989 ~ "1980s",
+                            year %in% 1990:1999 ~ "1990s",
+                            year %in% 2000:2009 ~ "2000s",
+                            year %in% 2010:2019 ~ "2010s")) |>
+  group_by(decade) |> 
+  summarize(n = n()) 
+```
+:::
+
+## and then plot!
+
+::: {.panel-tabset}
+
+## Code
+```{r "storm-plot", fig.show="hide"}
+#| code-line-numbers: "13,14,15,16,17"
+storms |>
+  filter(year >= 1980,
+         year < 2020,
+         category > 3) |>
+  group_by(name, year) |>
+  summarize(maxcat = max(category)) |>
+  mutate(decade = case_when(year %in% 1980:1989 ~ "1980s",
+                            year %in% 1990:1999 ~ "1990s",
+                            year %in% 2000:2009 ~ "2000s",
+                            year %in% 2010:2019 ~ "2010s")) |>
+  group_by(decade) |>
+  summarize(n = n()) |>
+  ggplot(aes(x = decade, y = n)) + 
+  geom_bar(stat = "identity") + 
+  labs(x = "", y = "Number of category 3+ hurricanes") + 
+  theme_light() 
+```
+
+## Plot
+```{r ref.label="storm-plot", echo = FALSE, out.width="60%"}
+```
+:::

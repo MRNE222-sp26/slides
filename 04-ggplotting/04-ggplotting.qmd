@@ -1,0 +1,715 @@
+---
+title: "ggplotting"
+subtitle: "<br><br> Environmental Data Analysis and Visualization"
+author: "[https://mrne222-sp25.github.io/website/](https://mrne222-sp25.github.io/website/)"
+format: 
+  revealjs:
+    theme: simple
+    width: 1500
+    margin: 0.05
+slide-number: c/t
+from: markdown+emoji
+editor: 
+  markdown: 
+    wrap: 72
+---
+
+```{r packages, echo=FALSE, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(gt)
+library(openintro)
+
+starwars <- starwars[1:20,]
+
+theme_set(theme_grey() + theme(text = element_text(size=20)))
+and <- read_csv("data/and_data.csv") |> 
+  mutate(section = case_when(section == "CC" ~ "clear cut",
+                             section == "OG" ~ "old growth"),
+         reach = case_when(reach == "L" ~ "lower",
+                           reach == "M" ~ "middle",
+                           reach == "U" ~ "upper"))
+```
+
+
+# Terminology
+
+## Terminology based on number of variables involved
+
+- **Univariate analysis:** analyze distribution of single variable
+
+- **Bivariate analysis:** analyze relationship between two variables
+
+- **Multivariate analysis:** analyze relationship between more than two variables at once, usually focusing on the relationship between two while conditioning for other variables
+
+
+## Numerical variables: quantitative data; values are numbers
+
+::: {.columns}
+
+::: {.column width = "40%"}
+
+**Numerical variables** can be classified as **continuous** or **discrete** based on whether or not the variable can take on an infinite number of values or only non-negative whole numbers, respectively.
+
+[image: Allison Horst](https://allisonhorst.com/data-science-art)
+
+:::
+
+::: {.column width = "60%"}
+
+![](img/horst_continuous-discrete.png)
+:::
+
+:::
+
+
+## Categorical variables: values can take on a limited number of possible categories or groups 
+
+::: {.columns}
+
+::: {.column width = "40%"}
+
+- **nominal:** levels have no obvious order
+
+- **ordinal:** levels are ordered
+
+- **binary:** variable has only 2 possible values
+
+:::
+
+::: {.column width = "60%"}
+
+![[image: Allison Horst](https://allisonhorst.com/data-science-art)](img/horst_nominal-ordinal-binary.png)
+:::
+
+:::
+
+# Example dataset
+
+## LTER Data Sampler: `and_vertebrates`
+
+::: {.columns}
+
+::: {.column width = "70%"}
+
+- *LTER:* Long-Term Ecological Research program funded by NSF
+- `lterdatasampler` is a cool package containing example datasets from a subset of the US LTER sites
+- `and_vertebrates`: dataset containing records for aquatic vertebrates (cutthroat trout and salamanders) in Mack Creek, Andrews Experimental Forest, Oregon (1987 - present)
+
+:::
+
+::: {.column width = "30%"}
+![[https://lter.github.io/lterdatasampler/](https://lter.github.io/lterdatasampler/)](img/horst-lter-hex.png)
+:::
+
+:::
+
+
+## Take a peek at the data
+
+We're using a subset of the `and_vertebrates` dataset today. We'll call our data object `and`.
+```{r output.lines=18, echo=TRUE}
+glimpse(and)
+```
+
+
+## Selected variables
+
+```{r out.width = "75%"}
+tibble(variable = c("section", "reach", "pass", "length_mm", "weight_g", "sampledate"),
+       description = c("section in Mack Creek (CC = clear cut forest, OG = upstream old growth coniferous forest)",
+                       "reach sampled from each section; L = lower reach (0 - 50 meters), M = middle reach (50 - 100 meters), U = upper reach (100 - 150 meters))",
+                       "electroshocking pass number, either 1 or 2",
+                       "trout length (snout-fork) in millimeters",
+                       "trout mass in grams",
+                       "the date of observation")) |> 
+  gt() |> 
+  tab_options(table.font.size=24)
+```
+
+
+## Variable types
+
+```{r}
+tibble(variable = c("section", "reach", "pass", "length_mm", "weight_g", "sampledate"),
+       type = c("categorical, nominal",
+                "categorical, ordinal",
+                "categorical, binary",
+                "numeric, continuous",
+                "numeric, continuous",
+                "date")) |> 
+  gt() |> 
+  tab_options(table.font.size=24)
+```
+
+
+# Visualizing categorical variables
+
+## Bar plot: one categorical variable
+
+::: {.columns}
+
+::: {.column width = "50%"}
+```{r cat-one-var, echo=TRUE, fig.show = "hide"}
+ggplot(and, aes(x = section)) +
+  geom_bar()
+```
+:::
+
+::: {.column width = "50%"}
+```{r ref.label = "cat-one-var", echo = FALSE, warning = FALSE}
+```
+:::
+:::
+
+## Segmented bar plot: two categorical variables
+
+::: {.columns}
+
+::: {.column width = "50%"}
+```{r cat-two-var, echo=TRUE, fig.show = "hide"}
+#| code-line-numbers: "2"
+
+ggplot(and, aes(x = section, 
+                fill = reach)) +
+  geom_bar()
+```
+:::
+
+::: {.column width = "50%"}
+```{r ref.label = "cat-two-var", echo = FALSE, warning = FALSE}
+```
+
+:::
+:::
+
+## Segmented bar plot: two categorical variables
+
+::: {.columns}
+
+::: {.column width = "50%"}
+```{r cat-two-var-full, echo=TRUE, fig.show = "hide"}
+#| code-line-numbers: "3"
+
+ggplot(and, aes(x = section, 
+                fill = reach)) +
+  geom_bar(position = "fill")
+```
+:::
+
+::: {.column width = "50%"}
+```{r ref.label = "cat-two-var-full", echo = FALSE, warning = FALSE}
+```
+
+:::
+:::
+
+
+# Visualizing numerical data
+
+## Plots of one numerical variable often illustrate data distributions
+
+- shape:
+    - skewness: right-skewed, left-skewed, symmetric (skew is to the side of the *longer tail*)
+    - modality: unimodal, bimodal, multimodal, uniform
+    
+- center: mean (`mean`), median (`median`)
+
+- spread: range (`range`), standard deviation (`sd`), inter-quartile range (`IQR`)
+
+- unusual observations
+
+
+# Histograms
+
+
+## Histogram
+
+::: {.columns}
+
+::: {.column width = "50%"}
+- x-axis (horizontal axis): "binned" data ranges of the numeric variable (e.g., length = 1-10, 11-20, 21-30, etc.)
+- y-axis (vertical axis): number of observations in each bin (e.g., number of trout counted for each length bin)
+
+:::
+
+::: {.column width = "50%"}
+
+```{r message = FALSE, echo=TRUE}
+ggplot(and, aes(x = length_mm)) +
+  geom_histogram(binwidth = 10)
+```
+:::
+:::
+
+## Histogram {visibility="uncounted"}
+
+How would you describe the distribution of trout lengths? What might be causing this?
+```{r message = FALSE}
+ggplot(and, aes(x = length_mm)) +
+  geom_histogram(binwidth = 10)
+```
+
+## Change the width of data bins using the `bin_width` argument in the `geom_histogram()` layer
+
+::: panel-tabset
+
+## binwidth = 1
+```{r out.width = "50%", echo=TRUE}
+#| code-line-numbers: "2"
+
+ggplot(and, aes(x = length_mm)) +
+  geom_histogram(binwidth = 1)
+```
+
+## binwidth = 10
+```{r out.width = "50%", echo=TRUE}
+#| code-line-numbers: "2"
+
+ggplot(and, aes(x = length_mm)) +
+  geom_histogram(binwidth = 10)
+```
+
+## binwidth = 30
+```{r out.width = "50%", echo=TRUE}
+#| code-line-numbers: "2"
+
+ggplot(and, aes(x = length_mm)) +
+  geom_histogram(binwidth = 30)
+```
+
+:::
+
+## Change bin width and clean up labels
+
+::: panel-tabset
+
+## Plot
+```{r ref.label = "hist-custom", echo = FALSE, warning = FALSE}
+```
+
+## Code
+
+Modify bin width using the `binwidth` argument in the `geom_histogram()` layer.
+Specify labels in the `labs()` layer.
+
+```{r hist-custom, fig.show = "hide", warning = FALSE, echo=TRUE}
+#| code-line-numbers: "2,3,4,5,6,7"
+
+ggplot(and, aes(x = length_mm)) +
+  geom_histogram(binwidth = 10) +
+  labs( 
+    x = "Trout length (mm)", 
+    y = "Frequency", 
+    title = "Distribution of cutthroat trout lengths in AND LTER" 
+  ) 
+```
+:::
+
+
+## Fill with a categorical variable
+
+::: {.columns}
+::: {.column width = "50%"}
+```{r hist-fill, fig.show = "hide", warning = FALSE, echo=TRUE}
+#| code-line-numbers: "2"
+
+ggplot(and, aes(x = length_mm, 
+                  fill = section)) + 
+  geom_histogram(alpha = 0.5) + 
+  labs(
+    x = "Trout length (mm)", 
+    y = "Frequency", 
+    title = "Distribution of trout lengths by section",
+    fill = "Section"
+  )
+```
+:::
+
+::: {.column width = "50%"}
+```{r ref.label = "hist-fill", echo = FALSE, warning = FALSE}
+```
+:::
+:::
+
+
+## Fill with a categorical variable {visibility="uncounted"}
+
+What does coloring the bars by section show?
+```{r ref.label = "hist-fill", echo = FALSE, warning = FALSE}
+```
+
+## Facet with a categorical variable
+
+::: {.columns}
+
+::: {.column width = "50%"}
+
+```{r hist-facet, fig.show = "hide", warning = FALSE, echo=TRUE}
+#| code-line-numbers: "8"
+
+ggplot(and, aes(x = length_mm, fill = section)) + 
+  geom_histogram() + 
+  labs(
+    x = "Trout length (mm)", 
+    y = "Frequency", 
+    title = "Distribution of trout lengths by section",
+    fill = "Section") +
+  facet_wrap(~section, nrow = 2)
+```
+
+:::
+
+::: {.column width = "50%"}
+```{r ref.label = "hist-facet", echo = FALSE, warning = FALSE}
+```
+
+:::
+:::
+
+
+# Density plots
+
+
+## Like a histogram but shows a smoothed density estimate instead of observation counts
+
+Use `geom_density()` instead of `geom_histogram()`
+```{r echo=TRUE}
+#| code-line-numbers: "2"
+
+ggplot(and, aes(x = length_mm)) +
+  geom_density()
+```
+
+
+## Adjust "bandwidth" (amount of smoothing)
+
+::: panel-tabset
+
+## `adjust = 0.5`
+```{r echo=TRUE}
+#| code-line-numbers: "2"
+
+ggplot(and, aes(x = length_mm)) +
+  geom_density(adjust = 0.5)
+```
+
+## `adjust = 1` (default)
+```{r echo=TRUE}
+#| code-line-numbers: "2"
+
+ggplot(and, aes(x = length_mm)) +
+  geom_density(adjust = 1) 
+```
+
+## `adjust = 2`
+```{r echo=TRUE}
+#| code-line-numbers: "2"
+
+ggplot(and, aes(x = length_mm)) +
+  geom_density(adjust = 2)
+```
+:::
+
+
+## Adjust bandwidth and clean up labels
+
+::: panel-tabset
+
+## Plot
+```{r ref.label = "density-custom", echo = FALSE, warning = FALSE}
+```
+
+## Code
+```{r density-custom, fig.show = "hide", warning = FALSE, echo=TRUE}
+#| code-line-numbers: "2,3,4,5,6"
+
+ggplot(and, aes(x = length_mm)) +
+  geom_density(adjust = 1)  +
+  labs(x = "Trout length (mm)", 
+    y = "Density", 
+    title = "Density distribution of trout lengths")
+```
+:::
+
+
+## Create density curves for each level of a categorical variable
+
+::: panel-tabset
+
+## Plot
+```{r ref.label = "density-cat", echo = FALSE, warning = FALSE}
+```
+
+## Code
+
+Map the `section` variable to `fill`, `adjust` smoothing to 0.5, make the density curve transparency (`alpha`) 50%, and clean up labels.
+```{r density-cat, fig.show = "hide", warning = FALSE, echo=TRUE}
+#| code-line-numbers: "2"
+
+ggplot(and, aes(x = length_mm, 
+                  fill = section)) +
+  geom_density(adjust = 0.5, alpha = 0.5) +
+  labs(
+    x = "Trout length (mm)", 
+    y = "Frequency", 
+    title = "Density of trout lengths by section",
+    fill = "Section"
+  )
+```
+:::
+
+## Create density curves for each level of a categorical variable {visibility="uncounted"}
+
+How does the density distribution plot differ from the histogram? What does the histogram tell us that the density plot does not?
+
+::: {.columns}
+
+::: {.column width = "50%"}
+
+```{r ref.label = "density-cat", echo = FALSE, warning = FALSE}
+```
+
+:::
+
+::: {.column width = "50%"}
+
+```{r ref.label = "hist-fill", echo = FALSE, warning = FALSE}
+```
+:::
+:::
+
+
+# Box plots (aka box and whisker plots)
+
+## Anatomy of a boxplot
+
+::: {.columns}
+
+::: {.column width = "60%"}
+
+![[Source: R4DS2e](https://r4ds.hadley.nz/data-visualize)](img/r4ds2e-boxplot.png)
+:::
+
+::: {.column width = "40%"}
+
+- 25% of observations < 25th percentile
+- 50% of observations < 50th percentile
+- 75% of observations < 75th percentile
+- IQR: 75th - 25th percentile
+- whiskers go to 25th percentile - 1.5 * IQR and 75th percentile + 1.5 * IQR
+- dots represent outliers
+
+:::
+:::
+
+## Box plot with one numeric variable
+
+For a vertical boxplot, map the numeric variable to the *y-axis*
+```{r echo=TRUE}
+ggplot(and, aes(y = length_mm)) +
+  geom_boxplot()
+```
+
+## Box plot with one numeric variable {visibility="uncounted"}
+
+For a horizontal boxplot, map the numeric variable to the *x-axis*
+```{r echo=TRUE}
+ggplot(and, aes(x = length_mm)) +
+  geom_boxplot()
+```
+
+## Box plot and outliers
+
+::: {.columns}
+
+::: {.column width = "60%"}
+```{r echo=TRUE}
+ggplot(and, aes(y = weight_g)) +
+  geom_boxplot()
+```
+:::
+
+::: {.column width = "40%"}
+Outliers are values > 75th percentile + 1.5 * IQR or < 25th percentile - 1.5 * IQR
+:::
+:::
+
+
+## Adding a categorical variable to a boxplot
+
+::: {.columns}
+
+:::{.column width = "50%"}
+```{r box-cat, fig.show = "hide", warning = FALSE, echo=TRUE}
+#| code-line-numbers: 1
+
+ggplot(and, aes(x = section, y = length_mm)) +
+  geom_boxplot() +
+  labs(
+    x = NULL,
+    y = "Length (mm)",
+    title = "Cutthroat trout lengths in AND LTER by section"
+  )
+```
+:::
+::: {.column width = "50%"}
+```{r ref.label = "box-cat", echo = FALSE, warning = FALSE}
+```
+:::
+:::
+
+## Adding a categorical variable to a boxplot {visibility="uncounted"}
+
+What can we learn from a boxplot that is not apparent in a histogram (or density plot)?
+
+::: {.columns}
+
+::: {.column width = "50%"}
+
+```{r ref.label = "box-cat", echo = FALSE, warning = FALSE}
+```
+
+:::
+
+::: {.column}
+```{r ref.label = "hist-fill", echo = FALSE, warning = FALSE}
+```
+:::
+:::
+
+
+# Visualizing relationships between numerical variables
+
+## Scatterplot
+
+Map one numeric variable to the x-axis, map the other numeric variable to the y-axis. Use the `geom_point()` layer to plot points.
+```{r warning = FALSE, echo=TRUE}
+ggplot(and, aes(x = length_mm, y = weight_g)) +
+  geom_point()
+```
+
+## Scatterplot
+
+Adjust transparency (alpha) to see overlapping points
+```{r warning = FALSE, echo=TRUE}
+ggplot(and, aes(x = length_mm, y = weight_g)) +
+  geom_point(alpha = 0.2)
+```
+
+
+# More plots!
+
+## Violin plots: probability density turned sideways
+
+::: {.columns}
+
+::: {.column width = "50%"}
+```{r violin, echo=TRUE, fig.show = "hide"}
+ggplot(and, aes(x = reach, 
+                y = length_mm)) +
+  geom_violin()
+```
+:::
+
+::: {.column width = "50%"}
+```{r ref.label = "violin", echo = FALSE, warning = FALSE}
+```
+:::
+:::
+
+## Ridge plot: multiple probability density distributions
+
+::: {.columns}
+
+::: {.column width = "50%"}
+```{r ridge, echo=TRUE, fig.show = "hide"}
+library(ggridges)
+ggplot(and, aes(x = length_mm, 
+                y = reach)) +
+  geom_density_ridges(alpha = 0.7) +
+  scale_fill_viridis_d()
+```
+:::
+
+::: {.column width = "50%"}
+```{r ref.label = "ridge", echo = FALSE, warning = FALSE}
+```
+:::
+:::
+
+## Bar plots: use `stat = identity` to plot numeric values instead of counts
+
+::: {.columns}
+
+::: {.column width = "50%"}
+```{r bar-num, echo=TRUE, fig.show = "hide"}
+#| code-line-numbers: "2"
+
+ggplot(starwars, aes(x = name, y = height)) +
+  geom_bar(stat = "identity")
+```
+<br>
+Plot is unintelligible due to overlapping x-axis labels!
+:::
+
+::: {.column width = "50%"}
+```{r ref.label = "bar-num", echo = FALSE, warning = FALSE}
+```
+:::
+:::
+
+## Bar plots: map the categorical variable to the y-axis to make the names legible
+
+::: {.columns}
+
+::: {.column width = "50%"}
+```{r bar-num-flip, echo=TRUE, fig.show = "hide"}
+ggplot(starwars, aes(x = height, y = name)) +
+  geom_bar(stat = "identity")
+```
+<br>
+Now can you tell what we're looking at?
+:::
+
+::: {.column width = "50%"}
+```{r ref.label = "bar-num-flip", echo = FALSE, warning = FALSE}
+```
+:::
+:::
+
+## Bar plots: getting better but easier to read if we order from highest to lowest, and make it pretty
+
+::: {.columns}
+
+::: {.column width = "50%"}
+```{r bar-num-reorder, echo=TRUE, fig.show = "hide"}
+#| code-line-numbers: "2"
+
+ggplot(starwars, aes(x = height, 
+                     y = reorder(name, height))) +
+  geom_bar(stat = "identity") +
+  labs(x = "Height (cm)", 
+       y = "",
+       title = "Starwars character heights")
+```
+:::
+
+::: {.column width = "50%"}
+```{r ref.label = "bar-num-reorder", echo = FALSE, warning = FALSE}
+```
+:::
+:::
+
+# Your turn
+
+## lab-02
+
+- Go to our class GitHub organization page: https://github.com/MRNE222-sp25-activities
+- Find a repo titled lab-02-your-github-username
+- Click on the green <> Code button and copy the repo URL
+- Go to the class Posit Cloud workspace
+- Open any project and set your PAT by typing `gitcreds::gitcreds_set()` into the console. Enter your PAT (no quotes) when prompted
+- Go to File -> New project -> New project from Git repository
+- Paste the repo URL into the "URL of your Git Repository" box
+- Open the lab-02 qmd file and edit it directly to complete the exercise
+- Don't forget to **render, stage, commit, and push** your changes to GitHub when you're done with the exercise.

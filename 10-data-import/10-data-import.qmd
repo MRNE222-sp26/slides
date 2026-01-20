@@ -1,0 +1,513 @@
+---
+title: "Importing data"
+subtitle: "<br><br> Environmental Data Analysis and Visualization"
+author: "[https://mrne222-sp25.github.io/website/](https://mrne222-sp25.github.io/website/)"
+format: 
+  revealjs:
+    theme: simple
+    width: 1500
+    margin: 0.05
+    scrollable: true
+slide-number: c/t
+from: markdown+emoji
+editor: 
+  markdown: 
+    wrap: 72
+execute:
+  echo: true
+---
+
+```{r packages, echo=FALSE, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(readxl)
+library(skimr)
+library(DT)
+library(here)
+library(palmerpenguins)
+library(janitor)
+```
+
+# Reading rectangular data into R
+
+## Reading rectangular data into R
+::: {.columns}
+::: {.column}
+![](img/readr.png){width=60%}
+:::
+::: {.column}
+![](img/readxl.png){width=60%}
+:::
+:::
+
+## Functions for reading rectangular data into R
+
+::: {.columns}
+::: {.column width = "50%"}
+### readr
+
+- `read_csv()` - comma delimited files
+- `read_csv2()` - semicolon separated files (common in countries where , is used as the decimal place)
+- `read_tsv()` - tab delimited files
+- `read_delim()` - reads in files with any delimiter
+- `read_fwf()` - fixed width files
+- ...
+:::
+::: {.column width = "50%"}
+### readxl
+
+- `read_excel()` - read xls or xlsx files
+- ...
+:::
+:::
+
+## Reading data
+
+```{r}
+nobel <- read_csv(file = "data/nobel.csv")
+nobel
+```
+
+## Writing data
+
+::: {.columns}
+::: {.column width = "50%"}
+- Write a file
+
+```{r cache=TRUE}
+df <- tribble(
+  ~x, ~y,
+  1,  "a",
+  2,  "b",
+  3,  "c"
+)
+
+write_csv(df, file = "data/df.csv")
+```
+:::
+::: {.column width = "50%"}
+- Read it back in to inspect
+
+```{r}
+read_csv("data/df.csv")
+```
+:::
+:::
+
+## Take charge of your files
+
+Be aware that these things exist:
+
+- Working directory
+- File folders
+- RStudio projects
+
+## Working directory
+
+- Where R will look, by default, for files you ask it to load
+- Where files you write to disk will go, by default
+- You can type `getwd()` into the console to check the working directory
+
+<br>
+
+```{r}
+getwd()
+```
+
+
+## File folders
+
+::: {.columns}
+::: {.column width = "50%"}
+![](img/verge-files.jpg)
+:::
+::: {.column width = "50%"}
+- "file folders" are like a physical folder in a filing cabinet - they are containers to store multiple files together
+- organized by topic or project
+- USE THEM and know where to find them on your computer
+:::
+:::
+
+## RStudio projects
+
+::: {.columns}
+::: {.column width = "60%"}
+- Feature for keeping all files associated with project together
+- Our labs and exercises are each associated with a project
+- Always start a new analysis by creating a new project. Keep all data and .qmd files associated with that project in your project folder. 
+- Open the project by double-clicking on your project file - R now knows that the folder containing your project file is the working directory.
+:::
+::: {.column width = "40%"}
+![](img/projects.png)
+:::
+:::
+
+## Project organization
+
+::: {.columns}
+::: {.column width = "50%"}
+- Save .Rproj file in main project folder
+- Make folders for data, scripts (.qmd files), figures, and docs (reports, etc.)
+:::
+::: {.column width = "50%"}
+![](img/rproj-organization.png)
+:::
+:::
+
+## Projects are key to reproducibility
+
+Without .Rproj, you'd need to read and write files using your entire directory structure. Is this reproducible? Also, who wants to type all of that out?
+
+<br>
+
+```{r eval=FALSE}
+read_csv("/users/cbgurbisz/documents/project/data/biomass.csv")
+```
+
+## Projects are key to reproducibility {visibility="uncounted"}
+
+- .Rproj tells R that your base project folder is the working directory. 
+- You (and other users who clone your entire project and associated files and folders) now only need to tell R how to access files and folders within your project folder.
+
+<br>
+
+```{r eval=FALSE}
+read_csv("data/biomass.csv")
+```
+
+# Try it
+
+## ae-09 nobels-csv.qmd
+
+- Posit Cloud > open `nobels-csv.qmd`
+- Read in the `nobels.csv` file from the `data-raw/` folder.
+- Split into two (STEM and non-STEM): 
+  - Create a new data frame, `nobel_stem`, that filters for the STEM fields 
+(Physics, Medicine, Chemistry, and Economics).
+  - Create another data frame, `nobel_nonstem`, that filters for the remaining 
+fields.  
+- Write the two data frames to `nobel-stem.csv` and `nobel-nonstem.csv`, 
+respectively, to `data/`.
+
+**Hint:** Use the `%in%` operator when `filter()`ing.
+
+## Filtering with `%in%`
+
+The `%in%` operator is used to filter rows that contain a value in a vector
+
+<br>
+
+```{r}
+penguins |> 
+  distinct(island)
+```
+
+## Filtering with `%in%` {visibility="uncounted"}
+
+Keep rows containing values of `island` are in the vector of islands supplied - here just "Torgersen" 
+<br>
+
+```{r}
+penguins |> 
+  filter(island %in% "Torgersen") |> 
+  distinct(island)
+```
+
+## Filtering with `%in%` {visibility="uncounted"}
+
+Keep rows where values of `island` are in the vector of islands supplied - "Torgersen" and "Dream".
+
+<br>
+```{r}
+penguins |> 
+  filter(island %in% c("Torgersen", "Dream")) |> 
+  distinct(island)
+```
+
+## Filtering with `%in%` {visibility="uncounted"}
+
+This can also be done with the `==` and `|` operators but `%in%` becomes useful when you have a longer list of values that you want to include.
+
+<br>
+```{r}
+penguins |> 
+  filter(island == "Torgersen" |
+         island == "Dream") |> 
+  distinct(island)
+```
+
+# Variable names
+
+## Data with bad names
+
+```{r message=FALSE}
+edibnb_badnames <- read_csv("data/edibnb-badnames.csv")
+names(edibnb_badnames)
+```
+
+## R doesn't allow spaces in variable names
+
+```{r error=TRUE}
+ggplot(edibnb_badnames, aes(x = Number of bathrooms, y = Price)) +
+  geom_point()
+```
+
+## Option 1 - You define the column names when you read in the data
+
+```{r}
+edibnb_col_names <- read_csv("data/edibnb-badnames.csv",
+                             col_names = c("id", "price", 
+                                           "neighborhood", "accommodates",
+                                           "bathroom", "bedroom", 
+                                           "bed", "review_scores_rating", 
+                                           "n_reviews", "url"))
+
+names(edibnb_col_names)
+```
+
+## Option 2 - Format text to snake_case using the `clean_names` function (from the `janitor` package)
+
+```{r warning=FALSE}
+library(janitor)
+
+edibnb_clean_names <- read_csv("data/edibnb-badnames.csv") |>
+  clean_names()
+
+names(edibnb_clean_names)
+```
+
+# Variable types
+
+## Which type is `x`? Why?
+::: {.columns}
+::: {.column width = "50%"}
+![](img/df-na.png)
+:::
+::: {.column width = "50%"}
+```{r echo=FALSE}
+read_csv("data/df-na.csv") |> print(n = 10)
+```
+:::
+:::
+
+## Option 1. Be explicit about observations that are actually NAs
+
+```{r}
+read_csv("data/df-na.csv", 
+         na = c("", "NA", ".", "9999", "Not applicable"))
+```
+
+## Option 2. Specify column types
+
+```{r eval=FALSE}
+read_csv("data/df-na.csv", col_types = list(col_double(), 
+                                            col_character(), 
+                                            col_character()))
+```
+
+```{r echo=FALSE}
+read_csv("data/df-na.csv", col_types = list(col_double(), 
+                                            col_character(), 
+                                            col_character())) |>
+  print(n = 10)
+```
+
+## Column types
+
+**type function**  | **data type**
+------------------ | -------------
+`col_character()`  | character
+`col_date()`       | date
+`col_datetime()`   | POSIXct (date-time)
+`col_double()`     | double (numeric)
+`col_factor()`     | factor
+`col_guess()`      | let readr guess (default)
+`col_integer()`    | integer
+`col_logical()`    | logical
+`col_number()`     | numbers mixed with non-number characters
+`col_numeric()`    | double or integer
+`col_skip()`       | do not read
+`col_time()`       | time
+
+# Case study: favorite foods
+
+## Favorite foods
+
+![](img/fav-food/fav-food.png)
+
+
+## Favorite foods {visibility="uncounted"}
+```{r}
+fav_food <- read_excel("data/favourite-food.xlsx")
+
+fav_food
+```
+
+## Variable names
+
+![](img/fav-food/fav-food-names.png)
+
+## Clean variable names
+
+```{r warning=FALSE}
+fav_food <- read_excel("data/favourite-food.xlsx") |>
+  clean_names() 
+
+fav_food 
+```
+
+## Handling NAs
+
+![](img/fav-food/fav-food-nas.png)
+
+## Handling NAs {visibility="uncounted"}
+
+```{r warning=FALSE}
+fav_food <- read_excel("data/favourite-food.xlsx",
+                       na = c("N/A", "99999")) |> 
+  clean_names()
+
+fav_food 
+```
+
+## Make `age` numeric
+
+::: {.columns}
+::: {.column width = "70%"}
+```{r warning=FALSE}
+fav_food <- fav_food |>
+  mutate( 
+    age = if_else(age == "five", "5", age), 
+    age = as.numeric(age) 
+    ) 
+
+fav_food
+```
+:::
+::: {.column width = "30%"}
+![](img/fav-food/fav-food-age.png)
+:::
+:::
+
+## Make `ses` factor
+
+::: {.columns}
+::: {.column width = "50%"}
+```{r}
+fav_food |>
+  count(ses)
+```
+:::
+::: {.column width = "50%"}
+![](img/fav-food/fav-food-ses.png)
+:::
+:::
+
+## Make `ses` factor {visibility="uncounted"}
+
+```{r warning=FALSE}
+fav_food <- fav_food |>
+  mutate(ses = fct_relevel(ses, "Low", "Middle", "High")) #<<
+
+fav_food |>
+  count(ses)
+```
+
+## Putting it altogether
+```{r warning=FALSE}
+fav_food <- read_excel("data/favourite-food.xlsx", na = c("N/A", "99999")) |>
+  clean_names() |>
+  mutate(
+    age = if_else(age == "five", "5", age), 
+    age = as.numeric(age),
+    ses = fct_relevel(ses, "Low", "Middle", "High")
+  )
+
+fav_food
+```
+
+## Out and back in
+
+Write data to .csv and read back in. 
+
+```{r}
+write_csv(fav_food, file = "data/fav-food-clean.csv")
+
+fav_food_clean <- read_csv("data/fav-food-clean.csv")
+```
+
+Often, we do data processing in one or more "processing" .qmd files, we write the output to file, and read the clean data into a different "analysis" .qmd file.
+
+## But what happened to `ses` when we read it back in?
+
+```{r}
+fav_food_clean |>
+  count(ses)
+```
+
+## `read_rds()` and `write_rds()`
+
+- CSVs can be unreliable for saving interim results if there is specific variable type information you want to hold on to (factors, dates, etc.).
+
+- An alternative is RDS files. You can read and write them with `read_rds()` and `write_rds()`, respectively.
+
+```{r eval=FALSE}
+read_rds(path)
+write_rds(x, path)
+```
+
+## Out and back in, take 2
+
+```{r}
+write_rds(fav_food, file = "data/fav-food-clean.rds")
+
+fav_food_clean <- read_rds("data/fav-food-clean.rds")
+
+fav_food_clean |>
+  count(ses)
+```
+
+# Other types of data sources
+
+## Other data sources
+
+- **googlesheets4:** Google Sheets
+- **haven**: SPSS, Stata, and SAS files
+- **DBI**, along with a database specific backend (e.g. RMySQL, RSQLite, RPostgreSQL etc): allows you to run SQL queries against a database and return a data frame
+- **jsonline**: JSON
+- **xml2**: xml
+- **rvest**: web scraping
+- **httr**: web APIs
+- **sparklyr**: data loaded into spark
+
+# Try it
+
+## ae-09 nobels-csv.qmd
+
+- Posit Cloud > `sales-excel.qmd`. 
+- Load the `sales.xlsx` file from the `data-raw/` folder, using appropriate arguments for the `read_excel()` function such that it looks like the output on the left.
+- **Stretch goal:** Manipulate the sales data such that it looks like the output on the right.
+
+::: {.columns}
+::: {.column width = "50%"}
+```{r echo=FALSE}
+sales <- read_excel("data/sales.xlsx", skip = 3, col_names = c("id", "n"))
+sales
+```
+:::
+::: {.column width = "50%"}
+```{r echo=FALSE}
+sales |>
+  mutate(
+    is_brand_name = str_detect(id, "Brand"),
+    brand = if_else(is_brand_name, id, NA_character_)
+  ) |>
+  fill(brand) |>
+  filter(!is_brand_name) |>
+  select(brand, id, n) |>
+  mutate(
+    id = as.numeric(id),
+    n = as.numeric(n)
+  )
+```
+:::
+:::

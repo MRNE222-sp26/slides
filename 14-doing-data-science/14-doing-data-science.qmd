@@ -1,0 +1,249 @@
+---
+title: "Doing data science"
+subtitle: "<br><br> Environmental Data Analysis and Visualization"
+format: 
+  revealjs:
+    theme: simple
+    width: 1500
+    margin: 0.05
+    scrollable: true
+slide-number: c/t
+from: markdown+emoji
+editor: 
+  markdown: 
+    wrap: 72
+execute:
+  echo: true
+---
+
+```{r packages, echo=FALSE, message=FALSE, warning=FALSE}
+library(tidyverse)
+```
+
+# What's in a data analysis?
+
+## Five core activities of data analysis
+
+1. Stating and refining the question
+1. Exploring the data
+1. Building formal statistical models
+1. Interpreting the results
+1. Communicating the results
+
+*Roger D. Peng and Elizabeth Matsui. "The Art of Data Science." A Guide for Anyone Who Works with Data. Skybrude Consulting, LLC (2015).*
+
+# Stating and refining the question
+
+## Six types of questions
+
+1. **Descriptive:** summarize a characteristic of a set of data
+1. **Exploratory:** analyze to see if there are patterns, trends, or relationships between variables (hypothesis generating)
+1. **Inferential:** analyze patterns, trends, or relationships in representative data from a population
+1. **Predictive:** make predictions for individuals or groups of individuals
+1. **Causal:** whether changing one factor will change another factor, on average, in a population
+1. **Mechanistic:** explore "how" as opposed to whether
+
+*Jeffery T. Leek and Roger D. Peng. "What is the question?." Science 347.6228 (2015): 1314-1315.*
+
+## Ex: COVID-19 and Vitamin D
+
+::: {.incremental}
+
+1. **Descriptive:** frequency of hospitalizations due to COVID-19 in a data set collected from a group of individuals
+1. **Exploratory:** examine relationships between a range of dietary factors and COVID-19 hospitalizations
+1. **Inferential:** examine whether any relationships between taking Vitamin D supplements and COVID-19 hospitalizations found in the sample hold for the population at large
+1. **Predictive:** predict what types of people will take Vitamin D supplements during the next year
+1. **Causal:** test whether the hospitalization rate differs for people with COVID-19 who were randomly assigned to take Vitamin D supplements vs. those who were not assigned to take Vitamin D 
+1. **Mechanistic:** investigate the physiological mechanism by which increased vitamin D intake leads to a reduction in the number of viral illnesses
+:::
+
+## Questions to ask when begining an analysis
+
+- Do you have appropriate data to answer your question?
+
+- Do you have information on confounding variables (other variables that can affect the variable(s) of interest)?
+
+- Was the data you're working with collected in a way that introduces bias?
+
+## Beware of confounding variables
+
+Suppose I collect data on sunburns and ice cream consumption and find that higher ice cream consumption is associated with a higher probability of sunburn. 
+
+::: {.incremental}
+- Does that mean that ice cream consumption causes sunburn? 
+- What might be a *confounding variable*? 
+- Can you think of an example from ecology/the environment? 
+- How can we control for confounding variables in our analyses? 
+:::
+
+## Beware of biased data
+
+Suppose I want to estimate the average number of children in households in St. Mary's County. I conduct a survey at an elementary school in the county and ask students at this elementary school how many children, including themselves, live in their house. Then, I take the average of the responses. 
+
+::: {.incremental}
+- Is this a biased or an unbiased estimate of the number of children in households in the county? 
+- If biased, will the value be an overestimate or underestimate? 
+- How can we minimze bias in our analyses?
+:::
+
+# Exploratory data analysis
+
+## Exploratory data analysis checklist
+
+- Formulate your question
+- Read in your data
+- Check the dimensions
+- Look at the top and the bottom of your data
+- Validate with at least one external data source
+- Make a plot
+- Try the easy solution first
+
+## Formulate your question
+
+Consider scope:
+
+- Are air pollution levels higher on the east coast than on the west coast?
+- Are hourly ozone levels on average higher in New York City than they are in Los Angeles?
+- Do counties in the eastern United States have higher ozone levels than counties in the western United States?
+- Most importantly: "Do I have the right data to answer this question?"
+
+## Read in your data
+
+- Place your data in a folder called `data`
+- Read it into R with `read_csv()` or friends (`read_delim()`, `read_excel()`, etc.)
+
+```{r}
+library(readxl)
+fav_food <- read_excel("data/favourite-food.xlsx")
+fav_food
+```
+
+## `clean_names()`
+
+If the variable names are not formatted in snake_case, use `janitor::clean_names()`
+
+```{r message=FALSE, warning=FALSE}
+library(janitor)
+fav_food %>% clean_names()  
+```
+
+## Case study: NYC Squirrels!
+
+- [The Squirrel Census](https://www.thesquirrelcensus.com/) is a multimedia science, design, and storytelling project focusing on the Eastern gray (*Sciurus carolinensis*). They count squirrels and present their findings to the public.
+- This table contains squirrel data for each of the 3,023 sightings, including location coordinates, age, primary and secondary fur color, elevation, activities, communications, and interactions between squirrels and with humans.
+
+```{r}
+# devtools::install_github("mine-cetinkaya-rundel/nycsquirrels18")
+library(nycsquirrels18)
+```
+
+## Look at dataset info
+
+<br>
+```{r}
+?squirrels
+```
+
+## Check the dimensions
+
+```{r}
+dim(squirrels)
+```
+
+## Look at the top...
+
+```{r}
+squirrels |>
+  head()
+```
+
+## ...and the bottom
+
+```{r}
+squirrels |> 
+  tail()
+```
+
+## Validate with at least one external data source
+
+::: columns
+::: {.column width = "50%"}
+```{r}
+squirrels %>%
+  select(long, lat) %>%
+  print(n = 15)
+```
+
+:::
+::: {.column width = "50%"}
+![](img/central-park-coords.png)
+
+::: 
+:::
+
+## Make a plot
+
+```{r}
+ggplot(squirrels, aes(x = long, y = lat)) +
+  geom_point(alpha = 0.2)
+```
+
+# **Hypothesis:** There will be a higher density of sightings on the perimeter than inside the park.
+
+## Try the easy solution first
+
+::: {.panel-tabset}
+## Plot 
+```{r ref.label="easy-solution", echo = FALSE}
+```
+
+## Code
+```{r easy-solution, fig.show = "hide"}
+squirrels <- squirrels %>%
+  separate(hectare, into = c("NS", "EW"), sep = 2, remove = FALSE) %>%
+  mutate(where = if_else(NS %in% c("01", "42") | EW %in% c("A", "I"), "perimeter", "inside")) 
+
+ggplot(squirrels, aes(x = long, y = lat, color = where)) +
+  geom_point(alpha = 0.2)
+```
+:::
+
+## Then go deeper...
+
+::: {.panel-tabset}
+
+## Plot
+```{r ref.label="hex-plot", echo = FALSE, warning = FALSE}
+```
+
+## Code
+```{r hex-plot, fig.show = "hide", warning = FALSE}
+hectare_counts <- squirrels %>%
+  group_by(hectare) %>%
+  summarise(n = n()) 
+
+hectare_centroids <- squirrels %>%
+  group_by(hectare) %>%
+  summarise(
+    centroid_x = mean(long),
+    centroid_y = mean(lat)
+  )
+
+squirrels %>%
+  left_join(hectare_counts, by = "hectare") %>%
+  left_join(hectare_centroids, by = "hectare") %>%
+  ggplot(aes(x = centroid_x, y = centroid_y, color = n)) +
+  geom_hex()
+```
+:::
+
+
+## Communicating for your audience
+
+- Avoid: Jargon, uninterpreted results, lengthy output
+
+- Pay attention to: Organization, presentation, flow
+
+- Don't forget about: Code style, coding best practices, meaningful commits
+
+- Be open to: Suggestions, feedback, taking (calculated) risks

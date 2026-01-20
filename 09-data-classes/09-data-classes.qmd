@@ -1,0 +1,357 @@
+---
+title: "Data classes"
+subtitle: "<br><br> Environmental Data Analysis and Visualization"
+author: "[https://mrne222-sp25.github.io/website/](https://mrne222-sp25.github.io/website/)"
+format: 
+  revealjs:
+    theme: simple
+    width: 1500
+    margin: 0.05
+slide-number: c/t
+from: markdown+emoji
+editor: 
+  markdown: 
+    wrap: 72
+execute:
+  echo: true
+---
+
+```{r packages, echo=FALSE, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(DT)
+library(scales)
+library(lubridate)
+```
+
+## Data classes
+
+We've talked about *types* so far, next we'll introduce the concept of *classes*
+
+- Vectors are like Lego building blocks
+
+- We stick them together to build more complicated constructs, e.g. *representations of data*
+
+- The **class** attribute relates to the S3 class of an object which determines its behaviour
+  - You don't need to worry about what S3 classes really mean, but you can read more about it [here](https://adv-r.hadley.nz/s3.html#s3-classes) if you're curious
+
+- Examples: factors, dates, and data frames
+
+## Factors
+
+R uses factors to handle categorical variables, variables that have a fixed and known set of possible values
+
+```{r}
+x <- factor(c("BS", "MS", "PhD", "MS"))
+x
+```
+
+
+::: {.columns}
+::: {.column width = "50%"}
+```{r}
+typeof(x)
+```
+:::
+::: {.column width = "50%"}
+```{r}
+class(x)
+```
+:::
+:::
+
+## More on factors
+
+We can think of factors like character (level labels) and an integer (level numbers) glued together
+
+```{r}
+glimpse(x)
+as.integer(x)
+```
+
+## Dates
+
+```{r}
+y <- as.Date("2020-01-01")
+y
+typeof(y)
+class(y)
+```
+
+## More on dates
+
+We can think of dates like an integer (the number of days since the origin, 1 Jan 1970) and an integer (the origin) glued together
+
+```{r}
+as.integer(y)
+as.integer(y) / 365 # roughly 50 yrs
+```
+
+## Data frames
+
+We can think of data frames like like vectors of equal length glued together
+
+```{r}
+df <- data.frame(x = 1:2, y = 3:4)
+df
+```
+
+::: {.columns}
+::: {.column width = "50%"}
+```{r}
+typeof(df)
+```
+:::
+::: {.column width = "50%"}
+```{r}
+class(df)
+```
+:::
+:::
+
+## Lists
+
+Lists are a generic vector container. Vectors of any type can go in them.
+
+```{r}
+l <- list(
+  x = 1:4,
+  y = c("hi", "hello", "jello"),
+  z = c(TRUE, FALSE)
+)
+l
+```
+
+## Lists and data frames
+
+- A data frame is a special list containing vectors of equal length
+- When we use the `pull()` function, we extract a vector from the data frame
+
+```{r}
+df
+
+df |>
+  pull(y)
+```
+
+# Working with factors
+
+```{r include=FALSE}
+cat_lovers <- read_csv("data/cat-lovers.csv")
+```
+
+## The data are read data in as character strings
+
+```{r}
+glimpse(cat_lovers)
+```
+
+## Defaut plot of "handedness" counts
+
+```{r}
+ggplot(cat_lovers, mapping = aes(x = handedness)) +
+  geom_bar()
+```
+
+## Use the forcats package to manipulate factors
+
+```{r}
+cat_lovers |>
+  mutate(handedness = fct_infreq(handedness)) |> 
+  ggplot(aes(x = handedness)) +
+  geom_bar()
+```
+
+## Come for the functionality
+
+... stay for the logo
+
+![](img/forcats-part-of-tidyverse.png)
+
+## Why use factors?
+
+- Factors are useful when you have true categorical data and you want to override the ordering of character vectors to improve display
+- They are also useful in modeling scenarios
+- The **forcats** package provides a suite of useful tools that solve common problems with factors
+
+## AE-08
+
+AE 08 - data types and classes > `forcats.Rmd`
+
+
+# Working with dates
+
+## Make a date
+::: {.columns}
+::: {.column width = "25%"}
+![](img/lubridate-not-part-of-tidyverse.png)
+:::
+::: {.column width = "70%"}
+- **lubridate** is the tidyverse-friendly package that makes dealing with dates easier
+
+- It's not one of the *core* tidyverse packages: it's installed with `install.packages("tidyverse)` but it's not loaded with it and needs to be explicitly loaded with `library(lubridate)`
+:::
+:::
+
+# We're just going to scratch the surface of working with dates in R here...
+
+## Dates and times in R
+
+- A **date**. Tibbles print this as <`date>`.
+
+- A **time** within a day. Tibbles print this as `<time>`.
+
+- A **date-time** is a date plus a time: it uniquely identifies an instant in time (typically to the nearest second). Tibbles print this as `<dttm>`. Elsewhere in R these are called POSIXct, but I don’t think that’s a very useful name.
+
+## When you read in data, check data types
+
+```{r}
+flats <- read_csv("data/flats_sub_2015.csv")
+flats
+```
+
+## When you read in data, check data types
+
+```{r}
+flats <- read_csv("data/flats_sub_2015.csv") |> 
+  print(n = 1)
+```
+
+- `date` was read in as a character
+- `time` was read in as a time
+- `datetime` was read in as a character
+
+## Why is this a problem?
+
+```{r}
+ggplot(flats, aes(x = datetime, y = depth_m)) +
+  geom_point()
+```
+
+## Using the `lubridate` functions
+
+- `Lubridate` works out the date/time format once you specify the order of components
+
+  - Identify the order in which year, month, and day appear in your dates
+  
+  - Then arrange “y”, “m”, and “d” (year, month, day) and "h", "m", and "s" (hour, minute, second) in the same order.
+  
+  - That gives you the name of the `lubridate` function that will parse your date.
+  
+  - The resulting output is always in **yyyy-mm-dd** format
+  
+## Using the `lubridate` functions
+
+::: {.columns}
+::: {.column width = "50%"}
+```{r}
+ymd("2017-01-31")
+
+mdy("January 31st, 2017")
+
+dmy("31-Jan-2017")
+```
+:::
+::: {.column width = "50%"}
+```{r}
+ymd_hms("2017-01-31 3:15:00")
+
+ymd_hm("2017-01-31 3:15")
+
+ymd(20170131)
+```
+:::
+:::
+
+## Coerce `flats` data into dates and datetimes
+
+```{r}
+#| code-line-numbers: "2,3"
+
+flats |> 
+  mutate(datetime = mdy_hm(datetime),
+         date = mdy(date)) 
+```
+
+## Now it knows the dates are actually datetimes
+
+::: {.columns}
+::: {.column width = "45%"}
+```{r date-fix, fig.show = "hide", warning = FALSE}
+flats |> 
+  mutate(datetime = mdy_hm(datetime),
+         date = mdy(date)) |> 
+  ggplot(aes(x = datetime, y = depth_m)) +
+    geom_line() +
+    labs(x = "", y = "Depth (m)") +
+    theme_minimal()
+```
+
+:::
+::: {.column width = "55%"}
+```{r ref.label = "date-fix", echo = FALSE, warning = FALSE}
+```
+:::
+:::
+
+## What if your data contain year, month, day, etc. in separate columns?
+::: {.columns}
+::: {.column width = "50%"}
+```{r separate-date, eval=FALSE, warning = FALSE}
+flats2 <- flats |>
+  select(date, depth_m) |>
+  separate(date, c("year", "month", "day"))
+flats2
+```
+:::
+::: {.column width = "50%"}
+```{r ref.label = "separate-date", echo = FALSE, warning = FALSE}
+```
+:::
+:::
+
+## What if your data contain year, month, day, etc. in separate columns?
+
+Use the `make_date()` or `make_datetime` functions!
+
+::: {.columns}
+::: {.column width = "50%"}
+```{r make-date, eval=FALSE, warning = FALSE}
+#| code-line-numbers: "2"
+
+flats2 |>
+  mutate(date = make_date(year, month, day)) |> 
+  select(date, depth_m)
+```
+:::
+::: {.column width = "50%"}
+```{r ref.label = "make-date", echo = FALSE, warning = FALSE}
+```
+:::
+:::
+
+
+## What if you want to get individual components of date/time data?
+
+Use the `year()`, `month()`, `mday()` (day of the month), `yday()` (day of the year, also known as julian day), `wday()` (day of the week), `hour()`, `minute()` or `second()` functions
+
+::: {.columns}
+::: {.column width = "45%"}
+```{r}
+datetime <- ymd_hms("2022-02-14 12:34:56")
+
+year(datetime)
+
+month(datetime)
+```
+
+:::
+::: {.column width = "55%"}
+```{r}
+mday(datetime)
+
+yday(datetime)
+
+wday(datetime)
+```
+:::
+:::

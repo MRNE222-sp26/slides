@@ -1,0 +1,222 @@
+---
+title: "Functions: An introduction"
+subtitle: "<br><br> Environmental Data Analysis and Visualization"
+format: 
+  revealjs:
+    theme: simple
+    width: 1500
+    margin: 0.05
+    scrollable: true
+slide-number: c/t
+from: markdown+emoji
+editor: 
+  markdown: 
+    wrap: 72
+execute:
+  echo: true
+---
+
+```{r packages, echo=FALSE, message=FALSE, warning=FALSE}
+library(tidyverse)
+```
+
+# Intro to functions
+
+## Recall that you use functions all the time
+
+<br>
+
+The code that comes before parentheses is the name of a **function**.
+```{r eval = FALSE}
+ggplot(penguins...) +
+  ...
+```
+`ggplot()` is a function.
+
+## Recall that you use functions all the time
+
+<br>
+
+The code that comes before parentheses is the name of a **function**.
+```{r eval = FALSE}
+mean(x)
+```
+`mean()` is a function.
+
+## Recall that you use functions all the time
+
+::: {.incremental}
+- When you load a package, it loads all of the **functions** associated with that package.
+
+- However, sometimes there isn't already an existing function to do what we want. 
+
+- When that's the case, we can write our own **custom function**.
+:::
+
+
+## Why are custom functions useful?
+
+We want to rescale the values in each column to have a range from 0 to 1 
+```{r}
+df <- tibble(
+  a = rnorm(5),
+  b = rnorm(5),
+  c = rnorm(5),
+  d = rnorm(5),
+)
+
+df
+```
+
+## Why are functions useful?
+
+We want to rescale the values in each column to have a range from 0 to 1. Can you spot the mistake?
+```{r}
+df |> mutate(
+  a = (a - min(a, na.rm = TRUE)) / 
+    (max(a, na.rm = TRUE) - min(a, na.rm = TRUE)),
+  b = (b - min(a, na.rm = TRUE)) / 
+    (max(b, na.rm = TRUE) - min(b, na.rm = TRUE)),
+  c = (c - min(c, na.rm = TRUE)) / 
+    (max(c, na.rm = TRUE) - min(c, na.rm = TRUE)),
+  d = (d - min(d, na.rm = TRUE)) / 
+    (max(d, na.rm = TRUE) - min(d, na.rm = TRUE)),
+)
+```
+
+## Why are functions useful?
+
+::: columns
+::: {.column width = "70%" .fragment}
+- In this example, we are copying and pasting basically the same code over and over. 
+
+- The only thing we are changing is the column name.
+
+### Why is this a bad idea?
+:::
+::: {.column width = "30%" .fragment}
+![](img/funct-all-things.png)
+::: 
+:::
+
+
+## Writing a function: First determine which parts of your code are constant and which parts change.
+
+<br>
+
+What are we changing each time we run our code to rescale each of the columns?
+
+```{r eval = FALSE}
+(a - min(a, na.rm = TRUE)) / (max(a, na.rm = TRUE) - min(a, na.rm = TRUE))
+(b - min(b, na.rm = TRUE)) / (max(b, na.rm = TRUE) - min(b, na.rm = TRUE))
+(c - min(c, na.rm = TRUE)) / (max(c, na.rm = TRUE) - min(c, na.rm = TRUE))
+(d - min(d, na.rm = TRUE)) / (max(d, na.rm = TRUE) - min(d, na.rm = TRUE))
+```
+
+## Writing a function: First determine which parts of your code are constant and which parts change.
+
+<br>
+
+What are we changing each time we run our code to rescale the data?
+
+![](img/r4ds-function-input.png)
+
+## To turn your code into a function you need three things:
+
+1. A **name**
+2. The **arguments**
+3. The **body**
+
+```{r eval = FALSE}
+name <- function(arguments) {
+  body
+}
+```
+
+
+## To turn your code into a function you need three things:
+
+1. A **name**. Here we’ll use rescale01 because this function rescales the values in a vector to lie between 0 and 1.
+
+```{r eval = FALSE}
+rescale01 <- function() {
+  
+}
+```
+
+## To turn your code into a function you need three things:
+
+1. A **name**. Here we’ll use rescale01 because this function rescales the values in a vector to lie between 0 and 1.
+2. The **arguments**. The arguments are things that change each time you use the function. Our analysis above tells us that we have just one argument. We’ll call it `x` because this is the conventional name for a numeric vector.
+
+```{r eval = FALSE}
+rescale01 <- function(x) {
+  
+}
+```
+
+## To turn your code into a function you need three things:
+
+1. A **name**. Here we’ll use rescale01 because this function rescales the values in a vector to lie between 0 and 1.
+2. The **arguments**. The arguments are things that change each time you use the function. Our analysis above tells us that we have just one argument. We’ll call it `x` because this is the conventional name for a numeric vector.
+3. The **body**. The body is the code that’s repeated across all the calls.
+
+```{r}
+rescale01 <- function(x) {
+  (x - min(x, na.rm = TRUE)) / (max(x, na.rm = TRUE) - min(x, na.rm = TRUE))
+}
+```
+
+## Test it out
+
+<br>
+```{r}
+rescale01(c(-10, 0, 10))
+```
+
+<br>
+
+```{r}
+rescale01(c(1, 2, 3, NA, 5))
+```
+
+## Test it out
+
+<br>
+```{r}
+rescale01(c(-10, 0, 10))
+```
+
+<br>
+
+```{r}
+rescale01(c(1, 2, 3, NA, 5))
+```
+
+<br>
+
+### Looks good
+
+## Apply to original `df`
+
+```{r}
+df |> mutate(
+  a = rescale01(a),
+  b = rescale01(b),
+  c = rescale01(c),
+  d = rescale01(d),
+)
+```
+
+## Apply to original `df`
+
+```{r}
+df |> mutate(
+  a = rescale01(a),
+  b = rescale01(b),
+  c = rescale01(c),
+  d = rescale01(d),
+)
+```
+
+### Now we only need to change the input column in one place, so the code is more streamlined, we are less likely to make a mistake, and we are more likely to spot a mistake.

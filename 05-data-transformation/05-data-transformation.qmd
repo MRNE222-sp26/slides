@@ -1,0 +1,640 @@
+---
+title: "Data transformation"
+subtitle: "<br><br> Environmental Data Analysis and Visualization"
+author: "[https://mrne222-sp25.github.io/website/](https://mrne222-sp25.github.io/website/)"
+format: 
+  revealjs:
+    theme: simple
+    width: 1500
+    margin: 0.05
+slide-number: c/t
+from: markdown+emoji
+editor: 
+  markdown: 
+    wrap: 72
+execute:
+  echo: true
+---
+
+## We drew the owl, now let's dive into the things you need to know get this result *on your own* with *any dataset*
+
+![](img/draw-the-owl.jpg){fig-align="center"}
+
+
+## You are already asking the right questions
+
+- How can I change the values of a categorical variable if they are not informative (e.g., change "OG" to "old growth")
+- How can I calculate summary statistics (e.g., mean, max, min, etc.)
+- What if I only want to analyze a subset of the columns or rows?
+- How can I remove missing values (NAs)?
+
+
+## We almost always need to transform our data to do the things we want to do
+
+![](img/dplyr-horst.png){fig-align="center"}
+
+## `dplyr` functions for data transformation
+
+::: {.columns}
+::: {.column width = "30%"}
+
+![](img/dplyr-part-of-tidyverse.png)
+
+:::
+
+::: {.column width = "70%"}
+::: {style="font-size: 90%;"}
+- `select`: pick columns by name
+- `arrange`: reorder rows
+- `slice`: pick rows using index(es)
+- `filter`: pick rows matching criteria
+- `distinct`: filter for unique rows
+- `mutate`: add new variables
+- `summarise`: reduce variables to values
+- `group_by`: for grouped operations
+- ... (many more)
+:::
+
+:::
+:::
+
+## Rules of `dplyr` functions
+
+How functions work in R: `function_name(arguments...)` = output...
+
+- With `dplyr` functions, the first argument is *always* a data frame
+
+- Subsequent arguments say what to do with that data frame
+
+- A data frame is always returned as the output
+
+
+## Example data: Hotel bookings
+
+- Data[^1] from two hotels: one resort and one city hotel
+- Observations: Each row represents a hotel booking
+- Goal for original data collection: Development of prediction models to classify a hotel booking's likelihood to be cancelled ([Antonia et al., 2019](https://www.sciencedirect.com/science/article/pii/S2352340918315191#bib5))
+
+```{r message=FALSE}
+library(tidyverse)
+hotels <- read_csv("data/hotels.csv")
+```
+
+[^1]: Source: [TidyTuesday](https://github.com/rfordatascience/tidytuesday/blob/master/data/2020/2020-02-11/readme.md)
+
+
+## Look at the variable names in the `hotels` data frame
+
+```{r output.lines=18}
+names(hotels)
+```
+
+
+## Look at data types and first few observations in the `hotels` data frame
+
+```{r output.lines=18}
+glimpse(hotels)
+```
+
+
+## How to use `dplyr` functions: example with `select`
+
+We want to only include the `lead_time` column (`lead_time`= number of days between booking and arrival date):
+
+::: {.columns}
+
+::: {.column width = "50%" .fragment}
+```{r}
+hotels # original hotels data frame
+```
+:::
+
+::: {.column width = "50%" .fragment}
+
+```{r}
+select(hotels, lead_time) # select only lead_time
+```
+:::
+:::
+
+## FYI - commenting
+
+::: {style="font-size: 80%;"}
+In R, you can use the `#` for adding comments to your code. 
+Any text following `#` will be printed as is, and won't be run as R code.
+This is useful for leaving comments in your code and for temporarily disabling 
+certain lines of code while debugging.
+<br>
+<br>
+:::
+
+::: {.columns}
+::: {.column width = "70%"}
+```{r comment, eval=FALSE}
+#| code-line-numbers: "|2|3|4"
+hotels |> 
+  # slice the first five rows   # this line is a comment
+  # select(hotel) |>            # this one has code but doesn't run
+  select(is_canceled)           # this line runs (no #)
+```
+:::
+::: {.column width = "30%"}
+```{r ref.label = "comment", echo=FALSE}
+```
+:::
+:::
+## How to use `dplyr` functions: example with `select` {visibility="uncounted"}
+
+::: {.columns}
+
+::: {.column width = "50%"}
+```{r eval=FALSE}
+#| code-line-numbers: 1
+select( 
+  hotels, 
+  lead_time
+  )
+```
+
+:::
+
+:::{.columnn width = "50%"}
+- Start with the function (a verb): `select()`
+:::
+:::
+
+## How to use `dplyr` functions: example with `select` {visibility="uncounted"}
+
+::: {.columns}
+
+::: {.column width = "50%"}
+```{r eval=FALSE}
+#| code-line-numbers: "2"
+select( 
+  hotels, 
+  lead_time
+  )
+```
+
+:::
+
+:::{.columnn width = "50%"}
+- Start with the function (a verb): `select()`
+- First argument: name of the data object we're working with (`hotels`)
+:::
+:::
+
+## How to use `dplyr` functions: example with `select` {visibility="uncounted"}
+
+::: {.columns}
+
+::: {.column width = "50%"}
+```{r eval=FALSE}
+#| code-line-numbers: "3"
+select( 
+  hotels, 
+  lead_time
+  )
+```
+
+:::
+
+:::{.columnn width = "50%"}
+- Start with the function (a verb): `select()`
+- First argument: name of the data object we're working with (`hotels`)
+- Second argument: variable we want to select, `lead_time`
+:::
+:::
+
+## How to use `dplyr` functions: example with `select` {visibility="uncounted"}
+
+::: {.columns}
+
+::: {.column width = "50%"}
+```{r}
+#| code-line-numbers: "3"
+select( 
+  hotels, 
+  lead_time
+  )
+```
+
+:::
+
+:::{.columnn width = "50%"}
+- Result: data frame with `r nrow(hotels)` rows and 1 column
+:::
+:::
+
+# `dplyr` functions always expect a data frame and always result in a data frame
+
+
+## Select multiple columns
+
+View only the `hotel` type and `lead_time`:
+
+```{r}
+select(hotels, hotel, lead_time)
+```
+
+# What if we wanted to select these columns, and *then* arrange the data in descending order of lead time?
+
+# Use the pipe operator `|>` 
+
+
+## What is a pipe?
+
+In programming, a pipe is a technique for passing information from one process to another.
+
+::: {.columns}
+::: {.column width = "50%"}
+
+- Start with the `hotels` data frame and pass it to the `select()` function
+- Select the variables `hotel` and `lead_time`
+:::
+::: {.column width = "50%"}
+```{r}
+#| code-line-numbers: "1,2"
+
+hotels |> 
+  select(hotel, lead_time) |> 
+  arrange(desc(lead_time))
+```
+:::
+:::
+
+
+## What is a pipe? {visibility="uncounted"}
+
+In programming, a pipe is a technique for passing information from one process to another.
+
+- You can think about the following sequence of actions - find keys, 
+unlock car, start car, drive to work, park.
+- You need the first action in order to complete the second action
+- Expressed as a set of nested functions in R pseudocode this would look like:
+<br>
+```{r eval=FALSE}
+park(drive(start_car(find("keys"))))
+```
+
+## How does a pipe work? {visibility="uncounted"}
+
+Writing it out using pipes give it a more natural (and easier to read) 
+structure:
+<br>
+```{r eval=FALSE}
+find("keys") |> 
+  start_car() |> 
+  drive(to = "work") |> 
+  park()
+```
+
+## How does a pipe work? {visibility="uncounted"}
+
+Start with a data frame
+```{r}
+hotels
+```
+
+## How does a pipe work? {visibility="uncounted"}
+
+Pipe the data down to the next line. With `dplyr` functions, data is *always* the first argument. When we pipe, we are telling R to use the output of the previous line as the data argument. The data argument is now implicit. 
+```{r}
+hotels |>                     
+  select(lead_time, is_canceled)
+```
+
+## How does a pipe work? {visibility="uncounted"}
+
+Now, pipe the output of line 2 to line 3. The output of line 2 implicitly becomes the data argument for line 3. 
+```{r}
+hotels |>                     
+  select(lead_time, is_canceled) |>           
+  slice_head(n=5) 
+```
+
+## How does a pipe work? {visibility="uncounted"}
+
+Pipe one more time from line 3 to line 4. The output of line 3 implicitly becomes the data argument for line 4. You can pipe as many more times as you want/need. 
+```{r}
+hotels |>                     
+  select(lead_time, is_canceled) |>           
+  slice_head(n = 5) |> 
+  arrange(lead_time)
+```
+
+## How does a pipe work? {visibility="uncounted"}
+
+Pipes allow us to use a sequence of functions on a dataset without having to save the output as a new object at each step. The output is piped from one step to the next and implicitly used as the data argument.
+
+![](img/pipes.png){fig-align="center"}
+
+## A note on piping (dplyr) and layering (ggplot)
+
+- `|>` is used in **dplyr** pipelines: *we pipe the output of the previous line of code as the first input of the next line of code*
+ <br>
+- `+` is used in **ggplot2** plots is used for "layering:" *we create the plot in layers, separated by `+`*
+
+## piping vs. layering
+
+<br>
+Nope!
+```{r error=TRUE}
+hotels +
+  select(hotel, lead_time)
+```
+
+<br>
+
+Yep!
+```{r eval=FALSE}
+hotels |> 
+  select(hotel, lead_time)
+```
+
+::: {style="font-size: 75%;"}
+# You might see `%>%`. This is also a pipe (from the `magrittr` package). R now has it's own build-in pipe operator `|>` so that's what most people use.
+:::
+
+# `dplyr` functions rundown
+
+# `dplyr::select`
+
+## `select` to exclude variables
+
+```{r}
+#| code-line-numbers: "2"
+
+hotels |>
+  select(-agent) 
+```
+
+
+## `select` a range of variables
+
+```{r}
+#| code-line-numbers: "2"
+
+hotels |>
+  select(hotel:arrival_date_month) 
+```
+
+## `select` variables with certain characteristics
+
+```{r}
+#| code-line-numbers: "2"
+
+hotels |>
+  select(starts_with("arrival")) 
+```
+
+## `select` variables with certain characteristics
+
+```{r}
+#| code-line-numbers: "2"
+
+hotels |>
+  select(ends_with("type")) 
+```
+
+## Some select helpers
+
+- `starts_with()`: Starts with a prefix
+- `ends_with()`: Ends with a suffix
+- `contains()`: Contains a literal string
+- `num_range()`: Matches a numerical range like x01, x02, x03
+- `one_of()`: Matches variable names in a character vector
+- `everything()`: Matches all variables
+- `last_col()`: Select last variable, possibly with an offset
+- `matches()`: Matches a regular expression (a sequence of symbols/characters expressing a string/pattern to be searched for within text)
+
+# `dplyr::arrange`
+
+## `arrange` in ascending / descending order
+
+::: {.columns}
+
+::: {.column width = "50%" .fragment}
+**Ascending**
+```{r}
+#| code-line-numbers: "3"
+
+hotels |>
+  select(adults, children, babies) |>
+  arrange(babies) 
+```
+:::
+
+::: {.column width = "50%" .fragment}
+**Descending**
+```{r}
+#| code-line-numbers: "3"
+
+hotels |>
+  select(adults, children, babies) |>
+  arrange(desc(babies)) 
+```
+:::
+:::
+
+# `dplyr::slice`
+
+## `slice` to select certain observations by row number
+
+`slice` to select first five rows
+```{r}
+#| code-line-numbers: "2"
+
+hotels |>
+  slice(1:5) 
+```
+
+
+# `dplyr::filter`
+
+## `filter` to select a subset of rows
+
+```{r}
+#| code-line-numbers: "1,3"
+
+# bookings in City Hotels
+hotels |>
+  filter(hotel == "City Hotel")
+```
+
+## `filter` for many conditions at once
+
+::: {.columns}
+::: {.column width = "50%"}
+```{r}
+#| code-line-numbers: "2,3,4,5"
+
+hotels |>
+  filter( 
+    adults == 0,     
+    children >= 1    
+    ) |> 
+  select(adults, babies, children)
+```
+:::
+
+:::{.column width = "50%"}
+::: {.incremental}
+-  `==` and `>=` are two of many "logical operators" that we use to produce TRUE/FALSE results. 
+- When used in conjunction with `filter`, only the TRUE results are retained in the resulting data frame 
+- e.g., only results where `adults` is equal to 0 and `children` is greater than or equal to 1 are retained.
+:::
+:::
+:::
+
+## Logical operators in R
+
+::: {.columns}
+::: {.column width = "50%"}
+operator       |     definition                    
+---------------|   ------------------------------
+`<`            |     less than                     
+`<=`           |	    less than or equal to        
+`>`            |     greater than                 
+`>=`           |	    greater than or equal to     
+`==`           |	    exactly equal to             
+`!=`           |	    not equal to                 
+`x & y`        |     `x` AND `y`                                
+:::
+::: {.column}
+operator     | definition
+--------------|----------------
+`x`&nbsp;&#124;&nbsp;`y`     | `x` OR `y`
+`is.na(x)`    | test if `x` is `NA`
+`!is.na(x)`   | test if `x` is not `NA`
+`x %in% y`    | test if `x` is in `y`
+`!(x %in% y)` | test if `x` is not in `y`
+`!x`          | not `x`
+:::
+:::
+
+## Try it: ae-04 1-4
+
+- Before you try to push any changes, don't forget to use `gitcreds::gitcreds_set` to set your PAT.
+- Before pushing, make sure to *render, stage, commit* and then *push*
+
+# `dplyr::distinct` and `dplyr::count`
+
+## `distinct` to filter for unique rows
+
+Get unique values of the `market_segment` variable and arrange in alphabetical order.
+```{r}
+#| code-line-numbers: "2,3"
+
+hotels |> 
+  distinct(market_segment) |> 
+  arrange(market_segment)
+```
+
+## `distinct` to filter for unique rows
+
+Get unique combinations of the `hotel` and `market_segment` variables and arrange in alphabetical order by `hotel` first and `market_segment` second.
+```{r}
+#| code-line-numbers: "2,3"
+
+hotels |> 
+  distinct(hotel, market_segment) |>
+  arrange(hotel, market_segment)
+```
+
+
+## `count` to create frequency tables
+
+::: {.columns}
+:::{.column width = "50%" .fragment}
+Alphabetical order by default
+```{r}
+#| code-line-numbers: "2"
+
+hotels |>
+  count(market_segment) 
+```
+:::
+::: {.column width = "50%" .fragment}
+Descending order by frequency
+```{r}
+#| code-line-numbers: "2"
+
+hotels |>
+  count(market_segment, sort = TRUE) 
+```
+:::
+:::
+
+## `count` for multiple variables
+
+Get the number of observations for each unique combination of `hotel` and `market_segment`
+```{r}
+#| code-line-numbers: "2"
+
+hotels |>
+  count(hotel, market_segment) 
+```
+
+# Try it: ae-04 5-6
+
+# `dplyr::mutate`
+
+## `mutate` to add a new variable
+
+`mutate` creates a new column based on whatever arguments you provide, often using other existing colunns in the dataframe.
+
+```{r}
+#| code-line-numbers: "2,3,4"
+
+hotels |>
+  mutate(little_ones = children + babies) |> 
+  select(children, babies, little_ones) |>
+  arrange(desc(little_ones))
+```
+
+# `dplyr::summarise` and `dplyr::group_by`
+
+## use `summarise` to calculate summary stats
+
+Calculate mean `adr` (average daily rate) for all bookings. Assign the resulting output to a variable named `mean_adr`.
+
+```{r}
+#| code-line-numbers: "2"
+
+hotels |>
+  summarise(mean_adr = mean(adr)) 
+```
+::: {.incremental}
+- `summarise()` changes the data frame entirely: it collapses rows down to a single 
+summary statistic, and removes all columns that are not included in the calculation.
+:::
+
+## `group_by` for grouped summary calculations
+
+Calculate mean average daily rate for all booking at city and resort hotels
+```{r}
+#| code-line-numbers: "2"
+
+hotels |>
+  group_by(hotel) |> 
+  summarise(mean_adr = mean(adr))
+```
+
+## Multiple summary statistics
+
+`summarise` can be used for multiple summary statistics
+
+```{r}
+#| code-line-numbers: "2,3,4,5,6,7"
+
+hotels |>
+  summarise(
+    min_adr = min(adr),
+    mean_adr = mean(adr),
+    median_adr = median(adr),
+    max_adr = max(adr)
+    )
+```
+
+# Try it: ae-04 7-8

@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>More models with multiple predictors</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="https://enst222.github.io/website" />
+    <link href="libs/font-awesome/css/all.css" rel="stylesheet" />
+    <link href="libs/font-awesome/css/v4-shims.css" rel="stylesheet" />
+    <link href="libs/panelset/panelset.css" rel="stylesheet" />
+    <script src="libs/panelset/panelset.js"></script>
+    <script src="libs/htmlwidgets/htmlwidgets.js"></script>
+    <script src="libs/pymjs/pym.v1.js"></script>
+    <script src="libs/widgetframe-binding/widgetframe.js"></script>
+    <link rel="stylesheet" href="../xaringan-themer.css" type="text/css" />
+    <link rel="stylesheet" href="../slides.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# More models with multiple predictors
+## <br><br> Environmental Data Science
+### <a href="https://enst222.github.io/website">https://enst222.github.io/website</a>
+
+---
+
+
+
+
+
+layout: true
+  
+&lt;div class="my-footer"&gt;
+&lt;span&gt;
+&lt;a href="https://enst222.github.io/website" target="_blank"&gt;ENST 222: Environmental Data Science&lt;/a&gt;
+&lt;/span&gt;
+&lt;/div&gt; 
+
+---
+
+
+
+## The data
+
+
+```r
+pp &lt;- read_csv(
+  "data/paris-paintings.csv",
+  na = c("n/a", "", "NA")
+) %&gt;%
+  mutate(log_price = log(price),
+         artistliving = case_when(artistliving == 0 ~ "no",
+                                  TRUE ~ "yes"))
+
+print(pp, n = 5)
+```
+
+```
+## # A tibble: 3,393 × 62
+##   name   sale  lot   posit…¹ dealer  year origi…² origi…³ schoo…⁴
+##   &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt;   &lt;dbl&gt; &lt;chr&gt;  &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;  
+## 1 L1764… L1764 2      0.0328 L       1764 F       O       F      
+## 2 L1764… L1764 3      0.0492 L       1764 I       O       I      
+## 3 L1764… L1764 4      0.0656 L       1764 X       O       D/FL   
+## 4 L1764… L1764 5      0.0820 L       1764 F       O       F      
+## 5 L1764… L1764 5      0.0820 L       1764 F       O       F      
+## # … with 3,388 more rows, 53 more variables: diff_origin &lt;dbl&gt;,
+## #   logprice &lt;dbl&gt;, price &lt;dbl&gt;, count &lt;dbl&gt;, subject &lt;chr&gt;,
+## #   authorstandard &lt;chr&gt;, artistliving &lt;chr&gt;, authorstyle &lt;chr&gt;,
+## #   author &lt;chr&gt;, winningbidder &lt;chr&gt;, winningbiddertype &lt;chr&gt;,
+## #   endbuyer &lt;chr&gt;, Interm &lt;dbl&gt;, type_intermed &lt;chr&gt;,
+## #   Height_in &lt;dbl&gt;, Width_in &lt;dbl&gt;, Surface_Rect &lt;dbl&gt;,
+## #   Diam_in &lt;dbl&gt;, Surface_Rnd &lt;dbl&gt;, Shape &lt;chr&gt;, …
+```
+
+---
+class: middle, inverse
+
+#Recap: So far we have covered...
+
+---
+
+class: middle, inverse
+
+### Linear models with a numeric response variable and one or more categorical predictor variable test for a difference in the mean value of each level of the categorical variable
+
+---
+
+### *Is painting price different depending on whether or not the artist is living?*
+
+&lt;img src="22-more-model-multiple-predictors_files/figure-html/unnamed-chunk-2-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+---
+### *Is painting price different depending on whether or not the artist is living?*
+
+
+```r
+linear_reg() %&gt;%
+  set_engine("lm") %&gt;%
+  fit(logprice ~ artistliving, data = pp) %&gt;%
+  tidy()
+```
+
+```
+## # A tibble: 2 × 5
+##   term            estimate std.error statistic p.value
+##   &lt;chr&gt;              &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;
+## 1 (Intercept)       4.96      0.0352   141.      0    
+## 2 artistlivingyes   0.0898    0.0961     0.935   0.350
+```
+
+---
+
+class: middle, inverse
+
+### Linear models with a numeric response variable and a numeric predictor variable test for a linear relationship between the two variables.
+
+---
+
+### *Is painting price a function of painting size?*
+
+&lt;img src="22-more-model-multiple-predictors_files/figure-html/unnamed-chunk-4-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+---
+
+### *Is painting price a function of painting size?*
+
+
+```r
+linear_reg() %&gt;%
+  set_engine("lm") %&gt;%
+  fit(logprice ~ log(Surface+0.001), data = pp) %&gt;%
+  tidy()
+```
+
+```
+## # A tibble: 2 × 5
+##   term                 estimate std.error statistic   p.value
+##   &lt;chr&gt;                   &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+## 1 (Intercept)             3.95     0.129      30.7  4.49e-182
+## 2 log(Surface + 0.001)    0.197    0.0222      8.89 1.02e- 18
+```
+
+---
+class: middle, inverse
+
+### And we can log-transform the response variable or the response and explanatory variable to "spread out" the values if they are right-skewed
+
+---
+
+### Log-transforming skewed data
+
+&lt;img src="22-more-model-multiple-predictors_files/figure-html/unnamed-chunk-6-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+---
+
+### Log-transforming skewed data
+
+&lt;img src="22-more-model-multiple-predictors_files/figure-html/unnamed-chunk-7-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+---
+
+class: middle, inverse
+
+### Linear models with a numeric response variable, and numeric predictor variable, and a categorical predictor variable fit a different line for each level of the categorical predictor variable
+
+---
+
+### If we *add* the categorical variable in our fit formula, the modeled lines have the same slope but different intercepts
+
+```
+## Warning: Removed 258 rows containing missing values
+## (`geom_point()`).
+```
+
+&lt;img src="22-more-model-multiple-predictors_files/figure-html/unnamed-chunk-8-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+---
+
+### If we *add* the categorical variable in our fit formula, the modeled lines have the same slope but different intercepts
+
+
+```r
+linear_reg() %&gt;%
+  set_engine("lm") %&gt;%
+* fit(Height_in ~ Width_in + landsALL, data = pp) %&gt;%
+  tidy()
+```
+
+```
+## # A tibble: 3 × 5
+##   term        estimate std.error statistic  p.value
+##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+## 1 (Intercept)    5.62    0.269        20.9 1.24e-90
+## 2 Width_in       0.777   0.00909      85.4 0       
+## 3 landsALL      -5.02    0.292       -17.2 3.70e-63
+```
+
+---
+
+### If we *multiply by* the categorical variable in our fit formula, the modeled lines have different slopes *and* different intercepts
+
+
+```
+## Warning: Removed 258 rows containing missing values
+## (`geom_point()`).
+```
+
+&lt;img src="22-more-model-multiple-predictors_files/figure-html/unnamed-chunk-10-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+---
+
+### If we *multiply by* the categorical variable in our fit formula, the modeled lines have different slopes *and* different intercepts
+
+
+```r
+linear_reg() %&gt;%
+  set_engine("lm") %&gt;%
+* fit(Height_in ~ Width_in * landsALL, data = pp) %&gt;%
+  tidy()
+```
+
+```
+## # A tibble: 4 × 5
+##   term              estimate std.error statistic  p.value
+##   &lt;chr&gt;                &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+## 1 (Intercept)         5.15      0.298      17.3  6.70e-64
+## 2 Width_in            0.798     0.0108     73.9  0       
+## 3 landsALL           -3.47      0.516      -6.71 2.28e-11
+## 4 Width_in:landsALL  -0.0725    0.0199     -3.64 2.75e- 4
+```
+
+---
+
+### We can assess which model has a better fit by comparing the parameter estimate p-values and adjusted R-squared values
+
+Main effects model (we *added* the categorical variable)
+
+```
+## # A tibble: 3 × 5
+##   term        estimate std.error statistic  p.value
+##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+## 1 (Intercept)    5.62    0.269        20.9 1.24e-90
+## 2 Width_in       0.777   0.00909      85.4 0       
+## 3 landsALL      -5.02    0.292       -17.2 3.70e-63
+```
+
+```
+## # A tibble: 1 × 12
+##   r.squared adj.r.sq…¹ sigma stati…² p.value    df  logLik    AIC
+##       &lt;dbl&gt;      &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;
+## 1     0.710      0.710  7.94   3838.       0     2 -10943. 21893.
+## # … with 4 more variables: BIC &lt;dbl&gt;, deviance &lt;dbl&gt;,
+## #   df.residual &lt;int&gt;, nobs &lt;int&gt;, and abbreviated variable
+## #   names ¹​adj.r.squared, ²​statistic
+```
+
+---
+
+### We can assess which model has a better fit by comparing the parameter estimate p-values and adjusted R-squared values
+
+Interaction effects model (we *multiplied by* the categorical variable)
+
+```
+## # A tibble: 4 × 5
+##   term              estimate std.error statistic  p.value
+##   &lt;chr&gt;                &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+## 1 (Intercept)         5.15      0.298      17.3  6.70e-64
+## 2 Width_in            0.798     0.0108     73.9  0       
+## 3 landsALL           -3.47      0.516      -6.71 2.28e-11
+## 4 Width_in:landsALL  -0.0725    0.0199     -3.64 2.75e- 4
+```
+
+```
+## # A tibble: 1 × 12
+##   r.squared adj.r.sq…¹ sigma stati…² p.value    df  logLik    AIC
+##       &lt;dbl&gt;      &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;
+## 1     0.711      0.711  7.93   2573.       0     3 -10936. 21882.
+## # … with 4 more variables: BIC &lt;dbl&gt;, deviance &lt;dbl&gt;,
+## #   df.residual &lt;int&gt;, nobs &lt;int&gt;, and abbreviated variable
+## #   names ¹​adj.r.squared, ²​statistic
+```
+
+---
+
+class: middle, inverse
+
+# There's one more model formulation we haven't covered yet...
+
+---
+
+class: middle, inverse
+
+# ...two or more numeric predictors
+
+---
+
+### Models with multiple numeric predictors predict the additive effect of each predictor on the response variable
+
+
+```r
+pp_fit &lt;- linear_reg() %&gt;%
+  set_engine("lm") %&gt;%
+  fit(log_price ~ Width_in + Height_in, data = pp)
+tidy(pp_fit)
+```
+
+```
+## # A tibble: 3 × 5
+##   term        estimate std.error statistic  p.value
+##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+## 1 (Intercept)   4.77     0.0579      82.4  0       
+## 2 Width_in      0.0269   0.00373      7.22 6.58e-13
+## 3 Height_in    -0.0133   0.00395     -3.36 7.93e- 4
+```
+
+---
+
+### Our model equation no longer represents a 1-dimensional straight line. Instead the model is fit to the data in *n* dimensions, where *n* = the number of explanatory variables
+
+
+```
+## # A tibble: 3 × 5
+##   term        estimate std.error statistic  p.value
+##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+## 1 (Intercept)   4.77     0.0579      82.4  0       
+## 2 Width_in      0.0269   0.00373      7.22 6.58e-13
+## 3 Height_in    -0.0133   0.00395     -3.36 7.93e- 4
+```
+
+&lt;br&gt;
+We use one equation to represent the model fit:
+
+`$$\widehat{log\_price} = 4.77 + 0.0269 \times width - 0.0133 \times height$$`
+---
+
+## Visualizing models with multiple predictors
+
+.panelset[
+.panel[.panel-name[Plot]
+.pull-left-wide[
+<div id="htmlwidget-6166d559454ecd730d7d" style="width:100%;height:1483.2px;" class="widgetframe html-widget "></div>
+<script type="application/json" data-for="htmlwidget-6166d559454ecd730d7d">{"x":{"url":"22-more-model-multiple-predictors_files/figure-html//widgets/widget_plotly-plot.html","options":{"xdomain":"*","allowfullscreen":false,"lazyload":false}},"evals":[],"jsHooks":[]}</script>
+]
+]
+.panel[.panel-name[Code]
+
+```r
+p &lt;- plot_ly(pp,
+  x = ~Width_in, y = ~Height_in, z = ~log_price,
+  marker = list(size = 3, color = "lightgray", alpha = 0.5, 
+                line = list(color = "gray", width = 2))) %&gt;%
+  add_markers() %&gt;%
+  plotly::layout(scene = list(
+    xaxis = list(title = "Width (in)"),
+    yaxis = list(title = "Height (in)"),
+    zaxis = list(title = "log_price")
+  )) %&gt;%
+  config(displayModeBar = FALSE)
+frameWidget(p)
+```
+]
+]
+
+---
+### Interpreting multiple regression output
+
+
+```
+## # A tibble: 3 × 5
+##   term        estimate std.error statistic  p.value
+##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+## 1 (Intercept)   4.77     0.0579      82.4  0       
+## 2 Width_in      0.0269   0.00373      7.22 6.58e-13
+## 3 Height_in    -0.0133   0.00395     -3.36 7.93e- 4
+```
+
+For every 1-inch increase in width, logprice is expected to increase, on average, by 0.0269 livres *when height is held constant*.
+
+For every 1-inch increase in height, logprice is expected to decrease, on average, by 0.0133 livres *when width is held constant*.
+
+When width and height = 0, logprice is expected to be, on average, 4.77 livres (doesn't make sense in this case!)
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"ratio": "16:9",
+"highlightLines": true,
+"highlightStyle": "solarized-light",
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

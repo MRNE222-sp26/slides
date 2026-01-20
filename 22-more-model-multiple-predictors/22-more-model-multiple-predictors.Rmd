@@ -1,0 +1,333 @@
+---
+title: "More models with multiple predictors"
+subtitle: "<br><br> Environmental Data Science"
+author: "[https://enst222.github.io/website](https://enst222.github.io/website)"
+output:
+  xaringan::moon_reader:
+    css: ["../xaringan-themer.css", "../slides.css"]
+    lib_dir: libs
+    anchor_sections: FALSE
+    nature:
+      ratio: "16:9"
+      highlightLines: true
+      highlightStyle: solarized-light
+      countIncrementalSlides: false
+---
+
+```{r child = "../setup.Rmd"}
+```
+
+```{r packages, echo = FALSE, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(tidymodels)
+library(plotly)
+library(widgetframe)
+library(patchwork)
+set.seed(1234)
+options(dplyr.print_min = 10, dplyr.print_max = 6)
+```
+
+## The data
+
+```{r load-pp, message=FALSE}
+pp <- read_csv(
+  "data/paris-paintings.csv",
+  na = c("n/a", "", "NA")
+) %>%
+  mutate(log_price = log(price),
+         artistliving = case_when(artistliving == 0 ~ "no",
+                                  TRUE ~ "yes"))
+
+print(pp, n = 5)
+```
+
+---
+class: middle, inverse
+
+#Recap: So far we have covered...
+
+---
+
+class: middle, inverse
+
+### Linear models with a numeric response variable and one or more categorical predictor variable test for a difference in the mean value of each level of the categorical variable
+
+---
+
+### *Is painting price different depending on whether or not the artist is living?*
+
+```{r, echo = FALSE}
+ggplot(pp, aes(x = artistliving, y = logprice, color = artistliving)) +
+  geom_jitter(position = position_jitter(width = 0.1, height = 0.1), alpha = 0.3) +
+  theme_light() +
+  theme(legend.position = "none")
+```
+
+---
+### *Is painting price different depending on whether or not the artist is living?*
+
+```{r}
+linear_reg() %>%
+  set_engine("lm") %>%
+  fit(logprice ~ artistliving, data = pp) %>%
+  tidy()
+```
+
+---
+
+class: middle, inverse
+
+### Linear models with a numeric response variable and a numeric predictor variable test for a linear relationship between the two variables.
+
+---
+
+### *Is painting price a function of painting size?*
+
+```{r, echo = FALSE, warning = FALSE}
+ggplot(pp, aes(x = log(Surface), y = logprice)) +
+  geom_point(alpha = 0.3) +
+  geom_smooth(method = "lm", se = FALSE) +
+  theme_light()
+```
+
+---
+
+### *Is painting price a function of painting size?*
+
+```{r}
+linear_reg() %>%
+  set_engine("lm") %>%
+  fit(logprice ~ log(Surface+0.001), data = pp) %>%
+  tidy()
+```
+
+---
+class: middle, inverse
+
+### And we can log-transform the response variable or the response and explanatory variable to "spread out" the values if they are right-skewed
+
+---
+
+### Log-transforming skewed data
+
+```{r, echo = FALSE}
+p1 <- ggplot(pp, aes(x = price)) +
+  geom_histogram() +
+  labs(title = "Histogram: price") +
+  theme_light()
+
+p2 <- ggplot(pp, aes(x = logprice)) +
+  geom_histogram() +
+  labs(title = "Histogram: log-transformed price") +
+  theme_light()
+
+p1 + p2
+```
+
+---
+
+### Log-transforming skewed data
+
+```{r, echo = FALSE, warning = FALSE}
+p1 <- ggplot(pp, aes(x = Surface)) +
+  geom_histogram() +
+  labs(title = "Histogram: Surface area") +
+  theme_light()
+
+p2 <- ggplot(pp, aes(x = log(Surface))) +
+  geom_histogram() +
+  labs(title = "Histogram: log-transformed surface area") +
+  theme_light()
+
+p1 + p2
+```
+---
+
+class: middle, inverse
+
+### Linear models with a numeric response variable, and numeric predictor variable, and a categorical predictor variable fit a different line for each level of the categorical predictor variable
+
+---
+
+### If we *add* the categorical variable in our fit formula, the modeled lines have the same slope but different intercepts
+```{r, echo = FALSE}
+heightmod1 <- linear_reg() %>%
+  set_engine("lm") %>%
+  fit(Height_in ~ Width_in + landsALL, data = pp) %>%
+  tidy()
+  
+ggplot(pp, aes(x = Width_in, y = Height_in, color = as.factor(landsALL))) +
+  geom_point(alpha = 0.3) +
+  theme_light() +
+  labs(color = "landscape") +
+  geom_abline(intercept = heightmod1$estimate[1], 
+              slope = heightmod1$estimate[2], color = "#54b5bf") +
+  geom_abline(slope = heightmod1$estimate[2], 
+              intercept = heightmod1$estimate[1] + heightmod1$estimate[3], color = "#692569") +
+  scale_color_manual(values = c("#54b5bf", "#692569")) +
+  theme(legend.position = "bottom")
+```
+
+---
+
+### If we *add* the categorical variable in our fit formula, the modeled lines have the same slope but different intercepts
+
+```{r}
+linear_reg() %>%
+  set_engine("lm") %>%
+  fit(Height_in ~ Width_in + landsALL, data = pp) %>% #<<
+  tidy()
+```
+
+---
+
+### If we *multiply by* the categorical variable in our fit formula, the modeled lines have different slopes *and* different intercepts
+
+```{r, echo = FALSE}
+heightmod2 <- linear_reg() %>%
+  set_engine("lm") %>%
+  fit(Height_in ~ Width_in * landsALL, data = pp) %>%
+  tidy()
+  
+ggplot(pp, aes(x = Width_in, y = Height_in, color = as.factor(landsALL))) +
+  geom_point(alpha = 0.3) +
+  theme_light() +
+  labs(color = "landscape") +
+  geom_abline(intercept = heightmod2$estimate[1], 
+              slope = heightmod2$estimate[2], color = "#54b5bf") +
+  geom_abline(slope = heightmod2$estimate[2] + heightmod2$estimate[4], 
+              intercept = heightmod2$estimate[1] + heightmod2$estimate[3], color = "#692569") +
+  scale_color_manual(values = c("#54b5bf", "#692569")) +
+  theme(legend.position = "bottom")
+```
+
+---
+
+### If we *multiply by* the categorical variable in our fit formula, the modeled lines have different slopes *and* different intercepts
+
+```{r}
+linear_reg() %>%
+  set_engine("lm") %>%
+  fit(Height_in ~ Width_in * landsALL, data = pp) %>% #<<
+  tidy()
+```
+
+---
+
+### We can assess which model has a better fit by comparing the parameter estimate p-values and adjusted R-squared values
+
+Main effects model (we *added* the categorical variable)
+```{r, echo = FALSE}
+heightmod1 <- linear_reg() %>%
+  set_engine("lm") %>%
+  fit(Height_in ~ Width_in + landsALL, data = pp)
+
+tidy(heightmod1)
+glance(heightmod1)
+```
+
+---
+
+### We can assess which model has a better fit by comparing the parameter estimate p-values and adjusted R-squared values
+
+Interaction effects model (we *multiplied by* the categorical variable)
+```{r, echo = FALSE}
+heightmod2 <- linear_reg() %>%
+  set_engine("lm") %>%
+  fit(Height_in ~ Width_in * landsALL, data = pp)
+
+tidy(heightmod2)
+glance(heightmod2)
+```
+
+---
+
+class: middle, inverse
+
+# There's one more model formulation we haven't covered yet...
+
+---
+
+class: middle, inverse
+
+# ...two or more numeric predictors
+
+---
+
+### Models with multiple numeric predictors predict the additive effect of each predictor on the response variable
+
+```{r model-price-width-height}
+pp_fit <- linear_reg() %>%
+  set_engine("lm") %>%
+  fit(log_price ~ Width_in + Height_in, data = pp)
+tidy(pp_fit)
+```
+
+---
+
+### Our model equation no longer represents a 1-dimensional straight line. Instead the model is fit to the data in *n* dimensions, where *n* = the number of explanatory variables
+
+```{r model-price-width-height-tidy, echo=FALSE}
+tidy(pp_fit)
+```
+
+<br>
+We use one equation to represent the model fit:
+
+$$\widehat{log\_price} = 4.77 + 0.0269 \times width - 0.0133 \times height$$
+---
+
+## Visualizing models with multiple predictors
+
+.panelset[
+.panel[.panel-name[Plot]
+.pull-left-wide[
+```{r plotly-plot, echo = FALSE, fig.align="center", warning=FALSE}
+p <- plot_ly(pp,
+  x = ~Width_in, y = ~Height_in, z = ~log_price,
+  marker = list(size = 3, color = "lightgray", alpha = 0.5, 
+                line = list(color = "gray", width = 2))) %>%
+  add_markers() %>%
+  plotly::layout(scene = list(
+    xaxis = list(title = "Width (in)"),
+    yaxis = list(title = "Height (in)"),
+    zaxis = list(title = "log_price")
+  )) %>%
+  config(displayModeBar = FALSE)
+frameWidget(p)
+```
+]
+]
+.panel[.panel-name[Code]
+```{r plotly-code, eval=FALSE}
+p <- plot_ly(pp,
+  x = ~Width_in, y = ~Height_in, z = ~log_price,
+  marker = list(size = 3, color = "lightgray", alpha = 0.5, 
+                line = list(color = "gray", width = 2))) %>%
+  add_markers() %>%
+  plotly::layout(scene = list(
+    xaxis = list(title = "Width (in)"),
+    yaxis = list(title = "Height (in)"),
+    zaxis = list(title = "log_price")
+  )) %>%
+  config(displayModeBar = FALSE)
+frameWidget(p)
+```
+]
+]
+
+---
+### Interpreting multiple regression output
+
+```{r, echo = FALSE}
+pp_fit <- linear_reg() %>%
+  set_engine("lm") %>%
+  fit(log_price ~ Width_in + Height_in, data = pp)
+tidy(pp_fit)
+```
+
+For every 1-inch increase in width, logprice is expected to increase, on average, by 0.0269 livres *when height is held constant*.
+
+For every 1-inch increase in height, logprice is expected to decrease, on average, by 0.0133 livres *when width is held constant*.
+
+When width and height = 0, logprice is expected to be, on average, 4.77 livres (doesn't make sense in this case!)

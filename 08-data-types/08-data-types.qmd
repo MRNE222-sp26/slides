@@ -1,0 +1,328 @@
+---
+title: "Data types"
+subtitle: "<br><br> Environmental Data Analysis and Visualization"
+author: "[https://mrne222-sp25.github.io/website/](https://mrne222-sp25.github.io/website/)"
+format: 
+  revealjs:
+    theme: simple
+    width: 1500
+    margin: 0.05
+    scrollable: true
+slide-number: c/t
+from: markdown+emoji
+editor: 
+  markdown: 
+    wrap: 72
+execute:
+  echo: true
+---
+
+```{r packages, echo=FALSE, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(DT)
+library(scales)
+```
+
+# Why should you care about data types?
+
+## Example: Cat lovers
+
+A survey asked respondents their name and number of cats. The instructions said to enter the number of cats as a numerical value.
+
+```{r message=FALSE}
+cat_lovers <- read_csv("data/cat-lovers.csv")
+```
+
+```{r echo=FALSE}
+cat_lovers
+```
+
+## Oh why won't you work?!
+
+```{r warning=TRUE}
+cat_lovers |> 
+  summarise(mean_cats = mean(number_of_cats))
+```
+
+## Oh why won't you work?!
+
+```{r eval=FALSE}
+?mean
+```
+
+![](img/mean-help.png)
+
+
+## Take a breath and look at your data
+
+What is the "type" of the `number_of_cats` variable?
+
+```{r}
+glimpse(cat_lovers)
+```
+
+
+## Let's take another look
+
+```{r echo=FALSE}
+cat_lovers |> 
+  datatable()
+```
+
+## Sometimes you might need to babysit your respondents
+
+```{r}
+#| code-line-numbers: "5,6"
+ 
+cat_lovers |> 
+  mutate(number_of_cats = case_when(
+    name == "Ginger Clark" ~ 2,
+    name == "Doug Bass"    ~ 3,
+    TRUE                   ~ as.numeric(number_of_cats))) |> 
+  summarise(mean_cats = mean(number_of_cats))
+```
+
+## You always need to respect data types
+
+```{r}
+cat_lovers |> 
+  mutate(
+    number_of_cats = case_when(
+      name == "Ginger Clark" ~ "2",
+      name == "Doug Bass"    ~ "3",
+      TRUE                   ~ number_of_cats),
+    number_of_cats = as.numeric(number_of_cats)) |> 
+  summarise(mean_cats = mean(number_of_cats))
+```
+
+## Now that we know what we're doing, assign output to object
+
+```{r}
+cat_lovers <- cat_lovers |> 
+  mutate(
+    number_of_cats = case_when(
+      name == "Ginger Clark" ~ "2",
+      name == "Doug Bass"    ~ "3",
+      TRUE                   ~ number_of_cats),
+    number_of_cats = as.numeric(number_of_cats))
+```
+
+## Moral of the story
+
+- If your data does not behave how you expect it to, type coercion when reading in the data might be the reason.
+
+- Go in and investigate your data, apply the fix, *save your data*, live happily ever after.
+
+# Data types
+
+## Data types in R
+
+- **logical**
+- **double**
+- **integer**
+- **character**
+- there are more, but we won't be focusing on those
+
+## Logical & character
+
+**logical** - boolean values `TRUE` and `FALSE`
+
+```{r}
+typeof(TRUE)
+```
+
+**character** - character strings
+
+```{r}
+typeof("hello")
+```
+
+## Double & integer
+
+**double** - floating point numerical values (default numerical type)
+
+```{r}
+typeof(1.335)
+
+typeof(7)
+```
+
+**integer** - integer numerical values (indicated with an `L`)
+
+```{r}
+typeof(7L)
+typeof(1:3)
+```
+
+## Concatenation
+
+Vectors can be constructed using the `c()` function.
+
+```{r}
+c(1, 2, 3)
+  
+c("Hello", "World!")
+
+c(c("hi", "hello"), c("bye", "jello"))
+```
+
+## Converting between types - numeric to character
+
+::: {.columns}
+::: {.column width = "50%"}
+```{r}
+x <- 1:3
+x
+typeof(x)
+```
+:::
+::: {.column width = "50%"}
+```{r}
+y <- as.character(x)
+y
+typeof(y)
+```
+:::
+:::
+
+## Converting between types - logical to double
+
+::: {.columns}
+::: {.column width = "50%"}
+```{r}
+x <- c(TRUE, FALSE)
+x
+typeof(x)
+```
+:::
+::: {.column width = "50%"}
+```{r}
+y <- as.numeric(x)
+y
+typeof(y)
+```
+:::
+:::
+
+## Be aware of what happens when you combine different data types in the same vector
+
+R will happily convert between various types without complaint when different types of data are concatenated in a vector, and that's not always a great thing!
+
+::: {.columns}
+::: {.column width = "50%"}
+```{r}
+c(1, "Hello")
+c(FALSE, 3L)
+```
+:::
+::: {.column width = "50%"}
+```{r}
+c(1.2, 3L)
+c(2L, "two")
+```
+:::
+:::
+
+## Explicit vs. implicit coercion
+
+Let's give formal names to what we've seen so far:
+
+- **Explicit coercion** is when you call a function like `as.logical()`, `as.numeric()`, `as.integer()`, `as.double()`, or `as.character()`
+
+- **Implicit coercion** happens when you use a vector in a specific context that expects a certain type of vector (like combining multiple data types in one)
+
+
+
+## Example
+
+Suppose we want to know the type of `c(1, "a")`. 
+
+First, I'd look at: 
+
+```{r}
+typeof(1)
+```
+
+```{r}
+typeof("a")
+```
+
+and make a guess about what type R thinks the vector is based on the type of each element of the vector.
+
+## Example
+
+Suppose we want to know the type of `c(1, "a")`. 
+
+First, I'd look at: 
+
+```{r}
+typeof(1)
+```
+
+```{r}
+typeof("a")
+```
+
+and make a guess based on these. Then finally I'd check:
+
+```{r}
+typeof(c(1, "a"))
+```
+
+# Special values
+
+## Special values
+
+- `NA`: Not available
+- `NaN`: Not a number
+- `Inf`: Positive infinity
+- `-Inf`: Negative infinity
+
+## Why might we end up with NaN or Inf?
+
+::: {.columns}
+::: {.column width = "50%"}
+```{r}
+pi / 0
+0 / 0
+```
+:::
+::: {.column width = "50%"}
+```{r}
+1/0 - 1/0
+1/0 + 1/0
+```
+:::
+:::
+
+## `NA`s are special `r emo::ji('snowflake')`s
+
+```{r}
+x <- c(1, 2, 3, 4, NA)
+```
+
+```{r}
+mean(x)
+mean(x, na.rm = TRUE)
+summary(x)
+```
+
+## `NA`s are special `r emo::ji('snowflake')`s
+
+Some functions will not execute if the data contains NAs. Usually, they include an optional argument to specify whether to remove NAs. Otherwise you can use the `drop_na()` function to remove them yourself.
+```{r}
+x <- c(1, 2, 3, 4, NA)
+```
+
+```{r}
+mean(x)
+mean(x, na.rm = TRUE)
+summary(x)
+```
+
+## AE-07
+
+- `AE 07 - Data types and classes` > open `type-coercion.qmd`.
+
+- What is the type of the given vectors? First, guess. Then, try it out in R. 
+If your guess was correct, great! If not, discuss why they have that type.
