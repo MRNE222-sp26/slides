@@ -1,7 +1,7 @@
 ---
 title: "Welcome to ENST/MRNE 222!"
 subtitle: "<br><br> Environmental Data Analysis and Visualization"
-author: "[https://mrne222-sp25.github.io/website/](https://mrne222-sp25.github.io/website/)"
+author: "[https://mrne222-sp26.github.io/website/](https://mrne222-sp26.github.io/website/)"
 format: 
   revealjs:
     theme: simple
@@ -32,7 +32,7 @@ library(tidyverse)
     -   first and last name
     -   pronouns
     -   your proudest data moment or your biggest data fail
--   In groups discuss: What are your thoughts on/experiences with "fear of math"?
+-   In groups discuss: What do you want to get out of this class? Are you afraid of math? Why or why not?
 :::
 
 ## What is data science?
@@ -160,7 +160,7 @@ travel
 
 -   We will use Posit Cloud, a cloud computing platform for all work in this course.
 
--   Join the space using [this link](https://posit.cloud/spaces/598435/join?access_code=dt0_o-ZKghnJDu2gvF5S3GTKc5GLRSf8QWGAfELr)
+-   Join the space using [this link](https://posit.cloud/spaces/742577/join?access_code=aniqlj6EfZVcx9myIb3blIdMJmYA8bS7KL5i4kq0)
 
 -   Select "Log in with Google" and use your SMCM credentials.
 
@@ -180,7 +180,7 @@ travel
 
 ## Class website
 
-<https://mrne222-sp25.github.io/website/>
+<https://mrne222-sp26.github.io/website/>
 
 -   Contains course materials (slides, schedule, etc.)
 
@@ -188,7 +188,7 @@ travel
 
 ## What will we do?
 
-- Prep for class with **data science readings**
+- Links to **resources** related to each week's content are provided
 
 -   **Short lectures** introduce you to concepts
 
@@ -250,29 +250,6 @@ travel
 
 ---
 
-## This course is "ungraded"
-
-- I want you to focus on learning R and developing your quantitative reasoning skills without the stress of losing points over minor mistakes. 
-
-- Mistakes are inevitable in this type of course. In fact, making mistakes and fixing them is the best way to learn! 
-
-- Furthermore, [research has shown](https://www.alfiekohn.org/article/case-grades/) that grading doesn’t improve learning and can sometimes even harm learning.
-
----
-
-### How does ungrading work?
-
-- You evaluate your own learning through frequent written reflections and a mid-term and final portfolio
-
-- You will give yourself a grade at the end of the semester 
-
-- I have the right to disagree with your final grade. This usually isn't a problem, though, since we will meet at the middle and end of the semester to discuss your progress.
-
-:::{.callout-important}
-
-You must meet *all* specifications on the final project to earn at least a C in the course.
-
-:::
 
 # Course policies
 
@@ -289,9 +266,9 @@ You must meet *all* specifications on the final project to earn at least a C in 
 
 - Application exercises and labs are due on Fridays. You have an automatic 2-day extension (Sunday) if needed - you don't even have to ask. 
 
-- Solutions will be posted on Mondays and we will go over them in class on Tuesday, so you really need to have them submitted by then.
+- I am also usually flexible if you really need an additional day or two to complete an assignmen, just ask.
 
-- You won't "lose points" for late work, but you're not going to learn as much if you already know the answers to the problems in the assignments. Therefore, late submissions should be factored in when determining your final grade.
+- If I don’t hear from you and I grade the assignment before you submit it, you’ll earn a 0.
 
 ## Late work - labs
 
@@ -308,8 +285,6 @@ It wouldn’t be fair to your group members if you are not prepared to contribut
 - The project will have several milestone components and due dates. 
 
 - You really need to stick to these in order to stay on track with the project and participate meaningfully in peer review
-
-- However if you'd like to request an extension due to extenuating circumstances, just let me know
 
 
 ## Communication
