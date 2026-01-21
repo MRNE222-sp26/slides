@@ -1,7 +1,7 @@
 ---
 title: "Meet the toolkit"
 subtitle: "<br><br> Environmental Data Analysis and Visualization"
-author: "[https://mrne222-sp25.github.io/website/](https://mrne222-sp25.github.io/website/)"
+author: "[https://mrne222-sp26.github.io/website/](https://mrne222-sp26.github.io/website/)"
 format: 
   revealjs:
     theme: simple
@@ -101,7 +101,7 @@ What does it mean for a data analysis to be "reproducible"?
 
 - Scriptability  :arrow_right: R
 
-- Literate programming (code, narrative, output in one place)  :arrow_right: R Markdown
+- Literate programming (code, narrative, output in one place)  :arrow_right: Quarto Markdown
 
 - Version control  :arrow_right: Git / GitHub
 
@@ -128,8 +128,8 @@ What does it mean for a data analysis to be "reproducible"?
 
 ![](img/rstudio-logo.png)
 
-- RStudio: convenient interface for R called an **IDE** (integrated development environment)
-- Not a requirement for programming with R, very commonly used 
+- RStudio: interface for R called an **IDE** (integrated development environment)
+- Not a requirement but very commonly used 
 - The car that houses the engine
 
 :::
@@ -351,7 +351,11 @@ Rendering reruns everything from scratch, so it couldn't find an object called `
 
 Mitchell O'Hara-Wild, [useR! 2018 feature wall](https://www.mitchelloharawild.com/blog/user-2018-feature-wall/)
 
+# ae-02: play around with the R Studio IDE
 
+- Open ae-02 in Posit Cloud
+- We will work through some of this together
+- Please finish for homework
 
 
 # Course toolkit
@@ -466,27 +470,19 @@ Mitchell O'Hara-Wild, [useR! 2018 feature wall](https://www.mitchelloharawild.co
 :::
 
 
-## In lab...
-
-Work with R, RStudio, Git, and GitHub together
-
-
-## First create a Github account
+# Create a Github account
 
 - Go to [github.com](https://github.com/) and create an account
 - Verify your GitHub email
-- Adjust your GitHub settings for a more pleasant GitHub experience
+- Adjust your GitHub settings:
   - Settings > Emails > Uncheck "Keep my email address private"
   - Settings > Emails > Update name and photo
-- Add your GitHub username to [this spreadsheet](https://docs.google.com/spreadsheets/d/1dA8SPka8X2ebYBgyXwiEAcDUQt45emLLciLyrUZMIT8/edit?gid=0#gid=0)
+- Add your GitHub username to [this spreadsheet](https://docs.google.com/spreadsheets/d/1x7OZpo7XwYQN32XAUyRtY0xAbsJ-NGv4Vb9kXWKoIiQ/edit?usp=sharing)
 
 
-*In lab...*
+# In lab...
 
-*Work with R, RStudio, Git, and GitHub together!*
-
-
-
+Work with R, RStudio, Git, and GitHub together!
 
 
 
