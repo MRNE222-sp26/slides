@@ -353,7 +353,7 @@ Mitchell O'Hara-Wild, [useR! 2018 feature wall](https://www.mitchelloharawild.co
 
 # ae-02: play around with the R Studio IDE
 
-- Open ae-02 in Posit Cloud
+- Open ae-01b in Posit Cloud
 - We will work through some of this together
 - Please finish for homework
 
