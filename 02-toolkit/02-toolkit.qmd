@@ -21,15 +21,69 @@ library(lubridate)
 ```
 
 
-# Course toolkit
+# Data science toolkit overview
 
-## Doing data science
+## Recall our learning goals
+
+By the end of the course, you will be able to...
+
+::: incremental
+
+- gain insight from data
+
+- gain insight from data, **reproducibly**
+
+- gain insight from data, reproducibly, **using modern programming tools and techniques**
+
+- gain insight from data, reproducibly **and collaboratively**, using modern programming tools and techniques
+
+- gain insight from data, reproducibly **(with literate programming and version control)** and collaboratively, using modern programming tools and techniques
+
+:::
+
+
+## Reproducibility definition
+
+*The ability to obtain consistent computational results using the same input data, computational steps, methods, code, and conditions of analysis*
+
+- National Academies [Reproducibility and Replicability in Science](Reproducibility and Replicability in Science)
+
+## Benefits of reproducibility
+
+<br>
+
+- Ensures scientific work can be trusted
+- Facilitates collaboration and review
+- Helps prevent misinformation and duplicate work
+
+
+## Reproducibility vs. replicability
+
+<br>
+
+Reproducibility is different from replicability, which involves new data collection to confirm findings.
+
+
+## Reproducibility checklist
+
+A reproducible analysis includes:
+
+- Data 
+- Code for cleaning raw data
+- Code and packages for analysis
+- Careful documentation and explanation of the analysis
+- No "by hand" steps. Everything is done via code.
+
+Ideally all this is all tied up in a neat little package and made publicly available. This is a hallmark of "open science."
+
+
+## Reproducibility toolkit
 
 ::: columns
 
 ::: {.column width="50%"}
 
-**Programming:**
+**Scriptability and literate programming:**
 
   - R
   - RStudio
@@ -50,63 +104,7 @@ library(lubridate)
 :::
 
 
-## Learning goals
-
-By the end of the course, you will be able to...
-
-::: incremental
-
-- gain insight from data
-
-- gain insight from data, **reproducibly**
-
-- gain insight from data, reproducibly, **using modern programming tools and techniques**
-
-- gain insight from data, reproducibly **and collaboratively**, using modern programming tools and techniques
-
-- gain insight from data, reproducibly **(with literate programming and version control)** and collaboratively, using modern programming tools and techniques
-
-:::
-
-
-# Reproducible data analysis
-
-
-## Reproducibility checklist
-
-::: {.callout-note icon=false}
-
-## Question:
-
-What does it mean for a data analysis to be "reproducible"?
-
-:::
-
-## Reproducibility checklist
-
-
-**Near-term goals:**
-
-- Are the tables and figures reproducible from the code and data?
-- Does the code actually do what you think it does?
-- In addition to what was done, is it clear *why* it was done? 
-
-**Long-term goals:**
-
-- Can the code be used for other data?
-- Can you extend the code to do other things?
-
-
-## Toolkit for reproducibility
-
-- Scriptability  :arrow_right: R
-
-- Literate programming (code, narrative, output in one place)  :arrow_right: Quarto Markdown
-
-- Version control  :arrow_right: Git / GitHub
-
-
-# R and RStudio
+# R and RStudio: Scriptability
  
 
 ---
@@ -119,7 +117,6 @@ What does it mean for a data analysis to be "reproducible"?
 
 - R: open-source statistical **programming language**
 - Environment for statistical computing and graphics
-- Easily extensible with *packages*
 - The engine that runs code
 
 :::
@@ -140,43 +137,18 @@ What does it mean for a data analysis to be "reproducible"?
 
 ## R packages
 
-- **Packages**: fundamental units of reproducible R code. They include R functions, the documentation that describes how to use them, and sample data[^1]
+- **Packages**: fundamental units of reproducible R code. They include R functions, the documentation that describes how to use them, and sample data
 
-- As of January 2025, there are almost 22,000 R packages available on **CRAN** (the Comprehensive R Archive Network)[^2]
+- As of January 2026, there are over 23,000 R packages available on [CRAN](https://cran.r-project.org/web/packages/) (the Comprehensive R Archive Network)
 
-- We're going to work with a small (but important) subset of these
-
-[^1]: Wickham and Bryan, [R Packages](https://r-pkgs.org/)
-
-[^2]: [CRAN contributed packages](https://cran.r-project.org/web/packages/)
+- We're going to work with a small but important subset of these (the tidyverse!)
 
 
-
-## Tour: R and RStudio
-
-
-![](img/tour-r-rstudio.png)
-
-
-
-## A short list (for now) of R essentials: *functions*
+## R packages
 
 <br>
 
-Functions are (most often) verbs, followed by what they will be applied to in parentheses:
-
-```{r eval=FALSE, echo=TRUE}
-
-do_this(to_this)
-do_that(to_this, to_that, with_those)
-```
-
-
-## A short list (for now) of R essentials: *packages*
-
-<br>
-
-Packages are installed with the `install.packages` function and loaded with the `library` function, once per session:
+Packages are installed with the `install.packages()` function and loaded with the `library()` function:
 
 ```{r eval=FALSE, echo=TRUE}
 
@@ -184,31 +156,30 @@ install.packages("package_name")
 library(package_name)
 ```
 
-
-
-## R essentials (continued)
-
 <br>
 
-Columns (variables) in data frames are accessed with `$`:
+Packages only need to be *installed* once. They need to be *loaded* every time you open a new R session.
 
-```{r eval=FALSE, echo=TRUE}
-dataframe$var_name
-```
 
-## R essentials (continued)
+## Functions
 
 <br>
+**Function:** A reusable block of code that performs a specific task.
 
-Function documentation can be accessed with `?`
-
+Functions are often verbs, followed by *arguments* that specify how the function will be applied in parentheses: 
+<br>
 ```{r eval=FALSE, echo=TRUE}
-?mean
+
+do_this(to_this)
+do_that(to_this, to_that, with_those)
 ```
 
+## Example of a function
+
+Note to self: show examples of functions in live code
 
 
-## tidyverse
+## tidyverse: an ecosystem of packages
 
 ::: columns
 :::{.column width = "50%"}
@@ -222,12 +193,33 @@ Function documentation can be accessed with `?`
 
 [tidyverse.org](https://www.tidyverse.org/)
 
-- The **tidyverse** is an opinionated collection of R packages designed for data science
+- The **tidyverse** is a collection of R packages designed for data science
 - All packages share an underlying philosophy and a common grammar
 :::
 :::
 
-# Quarto
+## R is an object-oriented computing environment
+
+<br>
+When you run code in the console, the code is executed but the results aren't saved anywhere.
+<br>
+```{r echo=TRUE}
+5 * 4
+```
+
+
+## R is an object-oriented computing environment
+
+<br>
+If you assign the output of your code as an object using `<-`, the object will be added to your *global environment.* They aren't saved permanently to your computer, but they are stored in the memory of your current R session. You can then do calculations with objects and pass them to functions.
+```{r echo=TRUE}
+x <- 5 * 4
+
+x
+```
+
+
+# Quarto: Literate programming
 
 ## Quarto
 
@@ -237,8 +229,10 @@ Function documentation can be accessed with `?`
 
 [https://quarto.org/](https://quarto.org/)
 
-- **Quarto** and the various packages that support it enable R users to write their code and prose in reproducible computational documents
-- We will generally refer to quarto documents (with `.qmd` extension), e.g. *"Do this in your quarto document"* and rarely discuss loading the quarto package
+- Quarto enables R users to write both their code and prose in reproducible computational documents
+- Quarto documents have a .qmd file extension
+- They use simple markdown syntax for text
+- Code goes in "chunks," narrative goes outside of chunks
 
 :::
 
@@ -251,31 +245,25 @@ Function documentation can be accessed with `?`
 :::
 
 
-## Quarto
+## Quarto tour
 
-- Fully reproducible reports -- each time you render the analysis is ran from the beginning
-- Simple markdown syntax for text
-- Code goes in chunks, defined by three backticks, narrative goes outside of chunks
+Note to self: show elements of Quarto docs in live code
 
 
 
-## Tour: Quarto
-
-![](img/tour-rmarkdown.png)
-
-## Environments
+## Quarto, objects, and the R environment
 
 ::: {.callout-note}
-The environment of your quarto document is separate from the console!
+The environment of your Quarto document is separate from your global environment!
 :::
+
+* When you render a document, Quarto "forgets" what you already have saved in your environment and re-runs your entire document from scratch. Everything needed to run your code needs to be in your quarto doc in order for it to render.
 
 * Remember this, and expect it to bite you a few times as you're learning to work 
 with quarto! 
 
-* When you render a document, quarto "forgets" what you already have saved in your environment and re-runs your entire document from scratch. Everything you need to run your code needs to be in your quarto doc in order for it to render correctly.
 
-
-## Environments
+## Example: Quarto, objects, and the R environmentnts
 
 ::: columns
 
@@ -306,7 +294,7 @@ What happens? Why the error?
 
 :::
 
-## Environments
+## Example: Quarto, objects, and the R environmentnts
 
 You didn't assign `x <- 2` as an object in your quarto document! 
 
@@ -345,49 +333,7 @@ Rendering reruns everything from scratch, so it couldn't find an object called `
 
 
 
-## What's with all the hexes?
-
-![](img/hex-australia.png)
-
-Mitchell O'Hara-Wild, [useR! 2018 feature wall](https://www.mitchelloharawild.com/blog/user-2018-feature-wall/)
-
-# ae-02: play around with the R Studio IDE
-
-- Open ae-01b in Posit Cloud
-- We will work through some of this together
-- Please finish for homework
-
-
-# Course toolkit
-
-## Doing data science
-
-::: columns
-
-::: {.column width="50%"}
-
-**Programming:**
-
-  - R
-  - RStudio
-  - tidyverse
-  - R Markdown
-
-:::
-
-::: {.column width = "50%"}
-
-**Version control and collaboration:**
-
-  - Git
-  - GitHub
-  
-:::
-
-:::
-
-
-# Git and GitHub
+# Git and GitHub: Version control and collaboration
 
 
 ## Git and GitHub
@@ -398,7 +344,7 @@ Mitchell O'Hara-Wild, [useR! 2018 feature wall](https://www.mitchelloharawild.co
 
 ![](img/git-logo.png){height=1in}
 
-- Git is a version control system -- like “Track Changes” features from Microsoft Word, on steroids
+- **Git:** version control system like “Track Changes” on steroids
 - It's not the only version control system, but it's a very popular one
 
 :::
@@ -408,7 +354,7 @@ Mitchell O'Hara-Wild, [useR! 2018 feature wall](https://www.mitchelloharawild.co
 
 ![](img/Github-Symbol.png){height=1in}
 
-- GitHub is the home for your Git-based projects on the internet -- like DropBox but much, much better
+- **GitHub:** a place to host Git-based projects on the internet
 
 - We will use GitHub as a platform for web hosting and collaboration (and as our course management system)
 
@@ -463,16 +409,16 @@ Mitchell O'Hara-Wild, [useR! 2018 feature wall](https://www.mitchelloharawild.co
 
 - There are a lot of git commands. 99% of the time you will use git to add, commit, push, and pull.
 
-- If you google for git help you might come across methods using the command line/terminal -- skip that and move on to the next resource unless you feel comfortable trying it out.
+- If you Google for git help you might find solutions using the command line/terminal -- skip that and move on to the next resource unless you feel comfortable trying it out.
 
-- There is a great resource for working with git and R: [happygitwithr.com](http://happygitwithr.com/). Some of the content in there is beyond the scope of this course, but it's a good place to look for help.
+- A great resource for working with git and R: [happygitwithr.com](http://happygitwithr.com/). Some of the content in there is beyond the scope of this course, but it's a good place to look for help.
 
 :::
 
 
 # Create a Github account
 
-- Go to [github.com](https://github.com/) and create an account
+- Go to [github.com](https://github.com/) and create an account. Include your first or last name in your username.
 - Verify your GitHub email
 - Adjust your GitHub settings:
   - Settings > Emails > Uncheck "Keep my email address private"
@@ -480,9 +426,16 @@ Mitchell O'Hara-Wild, [useR! 2018 feature wall](https://www.mitchelloharawild.co
 - Add your GitHub username to [this spreadsheet](https://docs.google.com/spreadsheets/d/1x7OZpo7XwYQN32XAUyRtY0xAbsJ-NGv4Vb9kXWKoIiQ/edit?usp=sharing)
 
 
-# In lab...
+# In lab next week...
 
 Work with R, RStudio, Git, and GitHub together!
 
+If the college is closed, please complete lab-01 on your own before our next class meeting. Instructions are linked in the class schedule. Follow them very carefully.
 
+
+# ae-01b: getting oriented with the R and R Studio
+
+- Open ae-01b in Posit Cloud
+- We will work through some of this together
+- Please finish for homework, due Friday
 
