@@ -1,0 +1,41 @@
+---
+title: "Untitled"
+format: html
+---
+
+```{r}
+library(tidyverse)
+library(janitor)
+tuesdata <- tidytuesdayR::tt_load('2025-01-21')
+exped_tidy <- tuesdata$exped_tidy
+peaks_tidy <- tuesdata$peaks_tidy
+
+exped <- clean_names(exped_tidy)
+peaks <- clean_names(peaks_tidy)
+```
+
+```{r}
+peaks_small <- peaks |>
+  select(peakid, pkname)
+
+exped_small <- exped |>
+  select(expid, peakid, year, season_factor, success1, success2, success3, success4, bcdate, smtdate, highpoint, rope, o2used) %>%
+  mutate(success = case_when(success1 == "TRUE" | success2 == "TRUE" | 
+                               success3 == "TRUE"| success4 == "TRUE" ~ "YES",
+                             TRUE ~ "NO"),
+         days_to_high_point = as.numeric(smtdate - bcdate)) %>%
+  left_join(peaks_small) |>
+  filter(success == "YES") |>
+  select(-c(success1, success2, success3, success4, bcdate, smtdate, peakid, success)) %>%
+  drop_na(days_to_high_point) |>
+  relocate(pkname, .after = year)
+
+write_csv(exped_small, "05-data-transformation/data/mountaineering_expeditions.csv")
+```
+
+Select
+
+```{r}
+exped_small |>
+  select(highpoint, days_to_summit)
+```

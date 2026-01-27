@@ -23,6 +23,20 @@ library(palmerpenguins)
 theme_set(theme_grey() + theme(text = element_text(size=20)))
 ```
 
+
+
+# Why data viz first?
+
+## Data viz first! {.center-h2}
+<br>
+```{css}
+.center-h2 h2 {
+  text-align: center;
+}
+```
+
+![](img/eat-cake-meme.jpg){fig-align="center" fig-alt="Drawing of a meme of marie antoinette saying let them eat cake"}
+
 # What is in a dataset?
 
 ## Dataset terminology

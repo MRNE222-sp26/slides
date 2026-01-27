@@ -9,6 +9,13 @@ Alt text in plot output:
 
 Alt text for image file:
 ![Caption for the image](path/to/image.png){fig-alt="Descriptive text for screen readers"}
+## Centered title {.center-h2}
+<br>
+```{css}
+.center-h2 h2 {
+  text-align: center;
+}
+```
 
 ## Columns
 

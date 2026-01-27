@@ -1,7 +1,7 @@
 ---
 title: "Data transformation"
 subtitle: "<br><br> Environmental Data Analysis and Visualization"
-author: "[https://mrne222-sp25.github.io/website/](https://mrne222-sp25.github.io/website/)"
+author: "[https://mrne222-sp26.github.io/website/](https://mrne222-sp26.github.io/website/)"
 format: 
   revealjs:
     theme: simple
@@ -16,9 +16,23 @@ execute:
   echo: true
 ---
 
-## We drew the owl, now let's dive into the things you need to know get this result *on your own* with *any dataset*
+## We ate the cake (data viz first) {.center-h2}
+<br>
+```{css echo=FALSE}
+.center-h2 h2 {
+  text-align: center;
+}
+```
 
-![](img/draw-the-owl.jpg){fig-align="center"}
+![](img/eat-cake-meme.jpg){fig-align="center" fig-alt="Drawing of a meme of marie antoinette saying let them eat cake"}
+
+
+## Now we dive into everything you need to know get this result *on your own* with *any dataset*
+
+<br>
+
+![](img/draw-the-owl.jpg){fig-align="center" fig-alt="Drawing of an owl joke cartoon"}
+
 
 
 ## You are already asking the right questions
@@ -29,16 +43,16 @@ execute:
 - How can I remove missing values (NAs)?
 
 
-## We almost always need to transform our data to do the things we want to do
+## We almost always need to transform our data
 
-![](img/dplyr-horst.png){fig-align="center"}
+![](img/dplyr-horst.png){fig-align="center" fig-alt="cartoon of dplyr R package"}
 
 ## `dplyr` functions for data transformation
 
 ::: {.columns}
 ::: {.column width = "30%"}
 
-![](img/dplyr-part-of-tidyverse.png)
+![](img/dplyr-part-of-tidyverse.png){fig-alt="dplyr package hex logo"}
 
 :::
 
