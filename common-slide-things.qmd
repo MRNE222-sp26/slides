@@ -4,6 +4,12 @@ format: revealjs
 editor: source
 ---
 
+Alt text in plot output:
+#| fig-alt: "..."
+
+Alt text for image file:
+![Caption for the image](path/to/image.png){fig-alt="Descriptive text for screen readers"}
+
 ## Columns
 
 ::: {.columns}

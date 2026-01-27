@@ -1,7 +1,7 @@
 ---
 title: "ggplotting"
 subtitle: "<br><br> Environmental Data Analysis and Visualization"
-author: "[https://mrne222-sp25.github.io/website/](https://mrne222-sp25.github.io/website/)"
+author: "[https://mrne222-sp26.github.io/website/](https://mrne222-sp26.github.io/website/)"
 format: 
   revealjs:
     theme: simple
@@ -50,7 +50,7 @@ and <- read_csv("data/and_data.csv") |>
 
 **Numerical variables** can be classified as **continuous** or **discrete** based on whether or not the variable can take on an infinite number of values or only non-negative whole numbers, respectively.
 
-[image: Allison Horst](https://allisonhorst.com/data-science-art)
+[image: Allison Horst](https://allisonhorst.com/data-science-art){fig-alt="cartoon illustrating continuous and discrete variables"}
 
 :::
 
@@ -78,7 +78,7 @@ and <- read_csv("data/and_data.csv") |>
 
 ::: {.column width = "60%"}
 
-![[image: Allison Horst](https://allisonhorst.com/data-science-art)](img/horst_nominal-ordinal-binary.png)
+![[image: Allison Horst](https://allisonhorst.com/data-science-art)](img/horst_nominal-ordinal-binary.png){fig-alt="cartoon illustrating nominal, ordinal, and binary variables"}
 :::
 
 :::
@@ -98,7 +98,7 @@ and <- read_csv("data/and_data.csv") |>
 :::
 
 ::: {.column width = "30%"}
-![[https://lter.github.io/lterdatasampler/](https://lter.github.io/lterdatasampler/)](img/horst-lter-hex.png)
+![[https://lter.github.io/lterdatasampler/](https://lter.github.io/lterdatasampler/)](img/horst-lter-hex.png){fig-alt="lter datasampler hex logo"}
 :::
 
 :::
@@ -150,6 +150,8 @@ tibble(variable = c("section", "reach", "pass", "length_mm", "weight_g", "sample
 
 ::: {.column width = "50%"}
 ```{r cat-one-var, echo=TRUE, fig.show = "hide"}
+#| fig-alt: "example of a bar plot"
+
 ggplot(and, aes(x = section)) +
   geom_bar()
 ```
@@ -168,6 +170,7 @@ ggplot(and, aes(x = section)) +
 ::: {.column width = "50%"}
 ```{r cat-two-var, echo=TRUE, fig.show = "hide"}
 #| code-line-numbers: "2"
+#| #| fig-alt: "example of a segmented bar plot"
 
 ggplot(and, aes(x = section, 
                 fill = reach)) +
@@ -189,6 +192,7 @@ ggplot(and, aes(x = section,
 ::: {.column width = "50%"}
 ```{r cat-two-var-full, echo=TRUE, fig.show = "hide"}
 #| code-line-numbers: "3"
+#| #| fig-alt: "example of a segmented bar plot with percentages"
 
 ggplot(and, aes(x = section, 
                 fill = reach)) +
@@ -235,6 +239,7 @@ ggplot(and, aes(x = section,
 ::: {.column width = "50%"}
 
 ```{r message = FALSE, echo=TRUE}
+#| fig-alt: "example of a histogram"
 ggplot(and, aes(x = length_mm)) +
   geom_histogram(binwidth = 10)
 ```
@@ -245,6 +250,7 @@ ggplot(and, aes(x = length_mm)) +
 
 How would you describe the distribution of trout lengths? What might be causing this?
 ```{r message = FALSE}
+#| fig-alt: "histogram with bimodal distribution"
 ggplot(and, aes(x = length_mm)) +
   geom_histogram(binwidth = 10)
 ```
@@ -256,6 +262,7 @@ ggplot(and, aes(x = length_mm)) +
 ## binwidth = 1
 ```{r out.width = "50%", echo=TRUE}
 #| code-line-numbers: "2"
+#| fig-alt: "histogram with bimodal distribution and  binwidth=1"
 
 ggplot(and, aes(x = length_mm)) +
   geom_histogram(binwidth = 1)
@@ -264,6 +271,7 @@ ggplot(and, aes(x = length_mm)) +
 ## binwidth = 10
 ```{r out.width = "50%", echo=TRUE}
 #| code-line-numbers: "2"
+#| #| fig-alt: "histogram with bimodal distribution and  binwidth=10"
 
 ggplot(and, aes(x = length_mm)) +
   geom_histogram(binwidth = 10)
@@ -272,6 +280,7 @@ ggplot(and, aes(x = length_mm)) +
 ## binwidth = 30
 ```{r out.width = "50%", echo=TRUE}
 #| code-line-numbers: "2"
+#| #| fig-alt: "histogram with bimodal distribution and  binwidth=30"
 
 ggplot(and, aes(x = length_mm)) +
   geom_histogram(binwidth = 30)
@@ -285,6 +294,7 @@ ggplot(and, aes(x = length_mm)) +
 
 ## Plot
 ```{r ref.label = "hist-custom", echo = FALSE, warning = FALSE}
+#| fig-alt: "histogram with bimodal distribution with clean labels"
 ```
 
 ## Code
@@ -294,6 +304,7 @@ Specify labels in the `labs()` layer.
 
 ```{r hist-custom, fig.show = "hide", warning = FALSE, echo=TRUE}
 #| code-line-numbers: "2,3,4,5,6,7"
+#| fig-alt: "histogram with bimodal distribution with clean labels"
 
 ggplot(and, aes(x = length_mm)) +
   geom_histogram(binwidth = 10) +
@@ -312,6 +323,7 @@ ggplot(and, aes(x = length_mm)) +
 ::: {.column width = "50%"}
 ```{r hist-fill, fig.show = "hide", warning = FALSE, echo=TRUE}
 #| code-line-numbers: "2"
+#| fig-alt: "histogram with bimodal distribution and fill mapped to a different categorical variable"
 
 ggplot(and, aes(x = length_mm, 
                   fill = section)) + 
@@ -327,6 +339,7 @@ ggplot(and, aes(x = length_mm,
 
 ::: {.column width = "50%"}
 ```{r ref.label = "hist-fill", echo = FALSE, warning = FALSE}
+#| fig-alt: "histogram with bimodal distribution and fill mapped to a different categorical variable"
 ```
 :::
 :::
@@ -336,6 +349,7 @@ ggplot(and, aes(x = length_mm,
 
 What does coloring the bars by section show?
 ```{r ref.label = "hist-fill", echo = FALSE, warning = FALSE}
+#| fig-alt: "histogram with bimodal distribution and fill mapped to a different categorical variable"
 ```
 
 ## Facet with a categorical variable
@@ -346,6 +360,7 @@ What does coloring the bars by section show?
 
 ```{r hist-facet, fig.show = "hide", warning = FALSE, echo=TRUE}
 #| code-line-numbers: "8"
+#| fig-alt: "histogram with bimodal distribution and faceted by a different categorical variable"
 
 ggplot(and, aes(x = length_mm, fill = section)) + 
   geom_histogram() + 
@@ -361,6 +376,7 @@ ggplot(and, aes(x = length_mm, fill = section)) +
 
 ::: {.column width = "50%"}
 ```{r ref.label = "hist-facet", echo = FALSE, warning = FALSE}
+#| fig-alt: "histogram with bimodal distribution and faceted by a different categorical variable"
 ```
 
 :::
@@ -375,6 +391,7 @@ ggplot(and, aes(x = length_mm, fill = section)) +
 Use `geom_density()` instead of `geom_histogram()`
 ```{r echo=TRUE}
 #| code-line-numbers: "2"
+#| fig-alt: "example of a density plot"
 
 ggplot(and, aes(x = length_mm)) +
   geom_density()
@@ -388,6 +405,7 @@ ggplot(and, aes(x = length_mm)) +
 ## `adjust = 0.5`
 ```{r echo=TRUE}
 #| code-line-numbers: "2"
+#| fig-alt: "example of a density plot with adjust size=0.5"
 
 ggplot(and, aes(x = length_mm)) +
   geom_density(adjust = 0.5)
@@ -396,6 +414,7 @@ ggplot(and, aes(x = length_mm)) +
 ## `adjust = 1` (default)
 ```{r echo=TRUE}
 #| code-line-numbers: "2"
+#| fig-alt: "example of a density plot with adjust size=1"
 
 ggplot(and, aes(x = length_mm)) +
   geom_density(adjust = 1) 
@@ -404,6 +423,7 @@ ggplot(and, aes(x = length_mm)) +
 ## `adjust = 2`
 ```{r echo=TRUE}
 #| code-line-numbers: "2"
+#| fig-alt: "example of a density plot with adjust size=2"
 
 ggplot(and, aes(x = length_mm)) +
   geom_density(adjust = 2)
@@ -422,6 +442,7 @@ ggplot(and, aes(x = length_mm)) +
 ## Code
 ```{r density-custom, fig.show = "hide", warning = FALSE, echo=TRUE}
 #| code-line-numbers: "2,3,4,5,6"
+#| fig-alt: "cleaned up example of a density plot"
 
 ggplot(and, aes(x = length_mm)) +
   geom_density(adjust = 1)  +
@@ -438,6 +459,7 @@ ggplot(and, aes(x = length_mm)) +
 
 ## Plot
 ```{r ref.label = "density-cat", echo = FALSE, warning = FALSE}
+#| fig-alt: "density plot with a different curve for each of two categorical variables"
 ```
 
 ## Code
@@ -445,6 +467,7 @@ ggplot(and, aes(x = length_mm)) +
 Map the `section` variable to `fill`, `adjust` smoothing to 0.5, make the density curve transparency (`alpha`) 50%, and clean up labels.
 ```{r density-cat, fig.show = "hide", warning = FALSE, echo=TRUE}
 #| code-line-numbers: "2"
+#| fig-alt: "density plot with a different curve for each of two categorical variables"
 
 ggplot(and, aes(x = length_mm, 
                   fill = section)) +
@@ -467,6 +490,7 @@ How does the density distribution plot differ from the histogram? What does the 
 ::: {.column width = "50%"}
 
 ```{r ref.label = "density-cat", echo = FALSE, warning = FALSE}
+#| fig-alt: "density plot with a different curve for each of two categorical variables"
 ```
 
 :::
@@ -474,6 +498,7 @@ How does the density distribution plot differ from the histogram? What does the 
 ::: {.column width = "50%"}
 
 ```{r ref.label = "hist-fill", echo = FALSE, warning = FALSE}
+#| fig-alt: "histogram with fill mapped to a categorical variables"
 ```
 :::
 :::
@@ -502,10 +527,11 @@ How does the density distribution plot differ from the histogram? What does the 
 :::
 :::
 
-## Box plot with one numeric variable
+## Box plot with one numeric variable (we wouldn't normally do this)
 
 For a vertical boxplot, map the numeric variable to the *y-axis*
 ```{r echo=TRUE}
+#| fig-alt: "example of a boxplot with one numeric variable"
 ggplot(and, aes(y = length_mm)) +
   geom_boxplot()
 ```
@@ -514,6 +540,7 @@ ggplot(and, aes(y = length_mm)) +
 
 For a horizontal boxplot, map the numeric variable to the *x-axis*
 ```{r echo=TRUE}
+#| fig-alt: "example of a boxplot with one numeric variable"
 ggplot(and, aes(x = length_mm)) +
   geom_boxplot()
 ```
@@ -524,6 +551,7 @@ ggplot(and, aes(x = length_mm)) +
 
 ::: {.column width = "60%"}
 ```{r echo=TRUE}
+#| fig-alt: "example of a boxplot with outliers"
 ggplot(and, aes(y = weight_g)) +
   geom_boxplot()
 ```
@@ -542,6 +570,7 @@ Outliers are values > 75th percentile + 1.5 * IQR or < 25th percentile - 1.5 * I
 :::{.column width = "50%"}
 ```{r box-cat, fig.show = "hide", warning = FALSE, echo=TRUE}
 #| code-line-numbers: 1
+#| fig-alt: "example of a boxplot with one numeric variable and a categorical variable"
 
 ggplot(and, aes(x = section, y = length_mm)) +
   geom_boxplot() +
@@ -554,6 +583,7 @@ ggplot(and, aes(x = section, y = length_mm)) +
 :::
 ::: {.column width = "50%"}
 ```{r ref.label = "box-cat", echo = FALSE, warning = FALSE}
+#| fig-alt: "example of a boxplot with one numeric variable and a categorical variable"
 ```
 :::
 :::
@@ -584,6 +614,7 @@ What can we learn from a boxplot that is not apparent in a histogram (or density
 
 Map one numeric variable to the x-axis, map the other numeric variable to the y-axis. Use the `geom_point()` layer to plot points.
 ```{r warning = FALSE, echo=TRUE}
+#| fig-alt: "example of a scatterplot"
 ggplot(and, aes(x = length_mm, y = weight_g)) +
   geom_point()
 ```
@@ -592,6 +623,7 @@ ggplot(and, aes(x = length_mm, y = weight_g)) +
 
 Adjust transparency (alpha) to see overlapping points
 ```{r warning = FALSE, echo=TRUE}
+#| fig-alt: "example of a scatterplot with alpha adjusted"
 ggplot(and, aes(x = length_mm, y = weight_g)) +
   geom_point(alpha = 0.2)
 ```
@@ -605,6 +637,7 @@ ggplot(and, aes(x = length_mm, y = weight_g)) +
 
 ::: {.column width = "50%"}
 ```{r violin, echo=TRUE, fig.show = "hide"}
+#| fig-alt: "example of a violin plot"
 ggplot(and, aes(x = reach, 
                 y = length_mm)) +
   geom_violin()
@@ -623,6 +656,7 @@ ggplot(and, aes(x = reach,
 
 ::: {.column width = "50%"}
 ```{r ridge, echo=TRUE, fig.show = "hide"}
+#| fig-alt: "example of a ridge plot"
 library(ggridges)
 ggplot(and, aes(x = length_mm, 
                 y = reach)) +
@@ -633,6 +667,7 @@ ggplot(and, aes(x = length_mm,
 
 ::: {.column width = "50%"}
 ```{r ref.label = "ridge", echo = FALSE, warning = FALSE}
+#| fig-alt: "example of a ridge plot"
 ```
 :::
 :::
@@ -644,6 +679,7 @@ ggplot(and, aes(x = length_mm,
 ::: {.column width = "50%"}
 ```{r bar-num, echo=TRUE, fig.show = "hide"}
 #| code-line-numbers: "2"
+#| fig-alt: "example of a bar plot"
 
 ggplot(starwars, aes(x = name, y = height)) +
   geom_bar(stat = "identity")
@@ -654,6 +690,7 @@ Plot is unintelligible due to overlapping x-axis labels!
 
 ::: {.column width = "50%"}
 ```{r ref.label = "bar-num", echo = FALSE, warning = FALSE}
+#| fig-alt: "example of a bar plot"
 ```
 :::
 :::
@@ -664,6 +701,7 @@ Plot is unintelligible due to overlapping x-axis labels!
 
 ::: {.column width = "50%"}
 ```{r bar-num-flip, echo=TRUE, fig.show = "hide"}
+#| fig-alt: "example of a horizontal bar plot"
 ggplot(starwars, aes(x = height, y = name)) +
   geom_bar(stat = "identity")
 ```
@@ -673,6 +711,7 @@ Now can you tell what we're looking at?
 
 ::: {.column width = "50%"}
 ```{r ref.label = "bar-num-flip", echo = FALSE, warning = FALSE}
+#| fig-alt: "example of a horizontal bar plot"
 ```
 :::
 :::
@@ -684,6 +723,7 @@ Now can you tell what we're looking at?
 ::: {.column width = "50%"}
 ```{r bar-num-reorder, echo=TRUE, fig.show = "hide"}
 #| code-line-numbers: "2"
+#| fig-alt: "example of a horizontal bar plot with ordered variables"
 
 ggplot(starwars, aes(x = height, 
                      y = reorder(name, height))) +
@@ -702,14 +742,10 @@ ggplot(starwars, aes(x = height,
 
 # Your turn
 
-## lab-02
+## ae-03 and lab-02
 
-- Go to our class GitHub organization page: https://github.com/MRNE222-sp25-activities
-- Find a repo titled lab-02-your-github-username
-- Click on the green <> Code button and copy the repo URL
-- Go to the class Posit Cloud workspace
-- Open any project and set your PAT by typing `gitcreds::gitcreds_set()` into the console. Enter your PAT (no quotes) when prompted
-- Go to File -> New project -> New project from Git repository
-- Paste the repo URL into the "URL of your Git Repository" box
-- Open the lab-02 qmd file and edit it directly to complete the exercise
-- Don't forget to **render, stage, commit, and push** your changes to GitHub when you're done with the exercise.
+- In Posit Cloud, open any project and set your PAT by typing `gitcreds::gitcreds_set()` into the console. Enter your PAT (no quotes) when prompted
+- Clone your ae-03 from our class GitHub organization page: https://github.com/MRNE222-sp26-activities
+- Repeat for lab-02 when you're done with ae-03
+- Don't forget to **render, stage, commit, and push** your changes to GitHub when you're done with the exercise and lab
+
