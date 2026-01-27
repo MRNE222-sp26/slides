@@ -1,7 +1,7 @@
 ---
 title: "Data and visualization"
 subtitle: "<br><br> Environmental Data Analysis and Visualization"
-author: "[https://mrne222-sp25.github.io/website/](https://mrne222-sp25.github.io/website/)"
+author: "[https://mrne222-sp26.github.io/website/](https://mrne222-sp26.github.io/website/)"
 format: 
   revealjs:
     theme: simple
@@ -59,7 +59,7 @@ glimpse(penguins)
 
 ## What's in the penguin data? - `glimpse` function
 
-Use the `glimpse` function to see the column names, type of data in each column, and the first few observations or each column:
+Use the `glimpse` function to see the column names, type of data in each column, and the first few observations of each column:
 
 ```{r include=TRUE, echo=TRUE}
 glimpse(penguins)
@@ -67,7 +67,7 @@ glimpse(penguins)
 
 ## What's in the penguin data? - view in console
 
-If the dataset is formatted as a tibble, you can type the name of the data object into the console and the output will include column names, data types, and the first 10 observations of each column
+If the dataset is formatted as a *tibble*, you can type the name of the data object into the console and the output will include column names, data types, and the first 10 observations of each column
 ```{r echo=TRUE}
 penguins
 ```
@@ -92,7 +92,7 @@ dim(penguins)  # dimensions (row column)
 
 -   Often, this is visual -- this is what we'll focus on first
 
--   Might also calculate summary statistics and perform data
+-   You might also calculate summary statistics and perform data
     wrangling/manipulation/transformation -- this is what we'll focus on
     next
 
@@ -137,7 +137,7 @@ mind than any other device."*
 
 ::: {.column width = "50%"}
 
-A grammar of graphics is a tool that enables us to concisely describe
+A "grammar of graphics" enables us to concisely describe
 the components of a graphic
 
 :::
@@ -158,14 +158,14 @@ Source:
 ## Hello ggplot2!
 
 -   `ggplot()` is the main function in ggplot2
--   Plots are constructed in layers
+-   Plots are constructed in *layers*
 -   Structure of the code for plots can be summarized as
 
 ```{r echo=TRUE, eval=FALSE}
 ggplot(data = [dataset], 
-       mapping = aes(x = [x-variable], y = [y-variable])) +
+       mapping = aes(x = [x variable], y = [y variable])) +
    geom_xxx() +
-   other options
+   other options...
 ```
 
 ## Hello ggplot2!
@@ -369,7 +369,7 @@ ggplot(data = penguins,
 ggplot(data = penguins,
        mapping = aes(x = bill_depth_mm,
                      y = bill_length_mm,
-                     colour = species)) +
+                     color = species)) +
   geom_point()
 ```
 :::
@@ -395,7 +395,7 @@ ggplot(data = penguins,
 ggplot(data = penguins,
        mapping = aes(x = bill_depth_mm,
                      y = bill_length_mm,
-                     colour = species)) +
+                     color = species)) +
   geom_point() +
   labs(title = "Bill depth and length")
 ```
@@ -599,11 +599,11 @@ ggplot(data = penguins,
 ## Narrative
 
 Start with the `penguins` data frame, map bill depth to the x-axis and
-map bill length to the y-axis. Represent each observation with a point and map species to the colour of
+map bill length to the y-axis. Represent each observation with a point and map species to the color of
 each point. Title the plot "Bill depth and length", add the subtitle "Dimensions for
 Adelie, Chinstrap, and Gentoo Penguins", label the x and y axes as "Bill
 depth (mm)" and "Bill length (mm)", respectively, label the legend
-"Species", and add a caption for the data source. Finally, use a discrete colour scale that is designed to be perceived by viewers with common forms of colour blindness.
+"Species", and add a caption for the data source. Finally, use a discrete color scale that is designed to be perceived by viewers with common forms of colour blindness.
 
 :::
 
@@ -808,7 +808,7 @@ ggplot(penguins,
 
 :::
 
-------------------------------------------------------------------------
+## Mapping an aesthetic to a variable is different from setting an aesthetic
 
 ::: {.columns}
 
@@ -849,8 +849,12 @@ ggplot(penguins,
 
 ## Mapping vs. setting
 
+<br>
+
 **Mapping:** Define the size, alpha, etc. of points based on the
 values of a variable in the data - goes into `aes()` (aesthetic mapping)
+
+<br>
 
 **Setting:** Define the size, alpha, etc. of points **not** based on
 the values of a variable in the data - goes into `geom_*()` (this was
@@ -957,14 +961,14 @@ ggplot(penguins, aes(x = bill_depth_mm, y = bill_length_mm)) +
 ## Faceting summary
 
 -   `facet_grid()`:
-    -   2d grid
+    -   2-d grid
     -   `rows ~ cols`
--   `facet_wrap()`: 1d ribbon wrapped according to number of rows and
+-   `facet_wrap()`: 1-d ribbon wrapped according to number of rows and
     columns specified or available plotting area
     
 # Your turn
 
-## First lets try a different way to cache our PATs in Posit Cloud
+## First we need to cache our PATs in Posit Cloud
 
 1. Open Posit Cloud
 2. Open any project
@@ -974,16 +978,13 @@ ggplot(penguins, aes(x = bill_depth_mm, y = bill_length_mm)) +
 gitcreds::gitcreds_set()
 ```
 
-Hopefully this will cache your PATs so you don't need to re-enter them every time you start a new Posit Cloud session.
+## ae-02: Data visualization practice
 
-## ae-02-dataviz
-
-- Go to our class GitHub organization page: https://github.com/MRNE222-sp25-activities
-- Find a repo titled ae-02-your-github-username
+- Go to our class GitHub organization page: https://github.com/MRNE222-sp26-activities
+- Find your ae-02 repo (ae-02-your-username)
 - Click on the green <> Code button and copy the repo URL
 - Go to the class Posit Cloud workspace
 - Go to File -> New project -> New project from Git repository
 - Paste the repo URL into the "URL of your Git Repository" box
 
-You should now be able to open the ae-02-dataviz file and edit it directly to complete the exercise
-Don't forget to **stage, commit, then push** your changes back to GitHub when you're done with the exercise.
+You should now be able to open the ae-02-yourusername.qmd file and edit it directly to complete the exercise. Don't forget to **render, stage, commit, then push** your changes when you're done.
