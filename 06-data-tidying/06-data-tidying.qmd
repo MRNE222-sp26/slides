@@ -1,7 +1,7 @@
 ---
 title: "Data tidying"
 subtitle: "<br><br> Environmental Data Analysis and Visualization"
-author: "[https://mrne222-sp25.github.io/website/](https://mrne222-sp25.github.io/website/)"
+author: "[https://mrne222-sp26.github.io/website/](https://mrne222-sp26.github.io/website/)"
 format: 
   revealjs:
     theme: simple
@@ -271,145 +271,6 @@ purchases |>
 
 ![](img/tidyr-longer-wider.gif)
 
-## Case study: Approval rating of Donald Trump
-
-![[Source: FiveThirtyEight](https://projects.fivethirtyeight.com/trump-approval-ratings/adults/)](img/trump-approval.png)
-
-
-## Data
-
-```{r include=FALSE}
-trump <- read_csv("data/trump/trump.csv")
-```
-
-```{r}
-trump
-```
-
-## Goal
-
-::: {.columns}
-::: {.column width = "60%"}
-```{r echo=FALSE}
-trump |>
-  pivot_longer(
-    cols = c(approval, disapproval),
-    names_to = "rating_type",
-    values_to = "rating_value"
-  ) |>
-  ggplot(aes(x = date, y = rating_value, 
-             color = rating_type, group = rating_type)) +
-  geom_line() +
-  facet_wrap(~ subgroup) +
-  scale_color_manual(values = c("darkgreen", "orange")) + 
-  labs( 
-    x = "Date", y = "Rating", 
-    color = NULL, 
-    title = "How (un)popular is Donald Trump?", 
-    subtitle = "Estimates based on polls of all adults and polls of likely/registered voters", 
-    caption = "Source: FiveThirtyEight modeling estimates" 
-  ) + 
-  theme_minimal() +
-  theme(legend.position = "bottom")
-```
-:::
-::: {.column width = "40%"}
-
-**Aesthetic mappings:**  
-`r emo::ji("check")`  x = `date`  
-`r emo::ji("x")`      y = `rating_value`  
-`r emo::ji("x")`      color = `rating_type`
-
-**Facet:**  
-`r emo::ji("check")`  `subgroup` (Adults and Voters)
-:::
-:::
-
-## Pivot
-
-::: {.columns}
-::: {.column width = "50%"}
-```{r approval-pivot, eval=FALSE}
-trump_longer <- trump |> 
-  pivot_longer(
-    cols = c(approval, disapproval),
-    names_to = "rating_type",
-    values_to = "rating_value"
-  )
-
-trump_longer
-```
-:::
-::: {.column width = "50%"}
-```{r ref.label = "approval-pivot", echo = FALSE}
-```
-:::
-:::
-
-## Plot
-
-```{r fig.asp = 0.5}
-ggplot(trump_longer, 
-       aes(x = date, y = rating_value, color = rating_type, group = rating_type)) +
-  geom_line() +
-  facet_wrap(~ subgroup)
-```
-
-## Pretty plot
-
-::: {.panel-tabset}
-## Plot
-```{r ref.label = "approval-plot", echo = FALSE}
-```
-
-## Code
-```{r approval-plot, eval=FALSE}
-#| code-line-numbers: "6,7,8,9,10,11,12,13"
-
-ggplot(trump_longer, 
-       aes(x = date, y = rating_value, 
-           color = rating_type, group = rating_type)) +
-  geom_line() +
-  facet_wrap(~ subgroup) +
-  scale_color_manual(values = c("darkgreen", "orange")) +
-  labs( 
-    x = "Date", y = "Rating", 
-    color = NULL, 
-    title = "How (un)popular is Donald Trump?", 
-    subtitle = "Estimates based on polls of all adults and polls of likely/registered voters",
-    caption = "Source: FiveThirtyEight modeling estimates" 
-  ) 
-```
-:::
-
-## Change theme and legend position
-
-::: {.panel-tabset}
-## Plot
-```{r ref.label = "approval-plot-theme", echo = FALSE}
-```
-
-## Code
-```{r approval-plot-theme, eval=FALSE}
-#| code-line-numbers: "14,15"
-
-ggplot(trump_longer, 
-       aes(x = date, y = rating_value, 
-           color = rating_type, group = rating_type)) +
-  geom_line() +
-  facet_wrap(~ subgroup) +
-  scale_color_manual(values = c("darkgreen", "orange")) +
-  labs( 
-    x = "Date", y = "Rating", 
-    color = NULL, 
-    title = "How (un)popular is Donald Trump?", 
-    subtitle = "Estimates based on polls of all adults and polls of likely/registered voters",
-    caption = "Source: FiveThirtyEight modeling estimates" 
-  )  + 
-  theme_minimal() + 
-  theme(legend.position = "bottom")
-```
-:::
 
 # More tidying functions
 
@@ -554,3 +415,7 @@ stocks |>
   complete(year, qtr)
 ```
 
+## Your turn
+
+- Clone ae-05 into Posit Cloud
+- Practice data tidying!

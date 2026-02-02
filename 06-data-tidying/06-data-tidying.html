@@ -9,7 +9,7 @@
 <link href="06-data-tidying_files/libs/quarto-html/quarto-syntax-highlighting-e26003cea8cd680ca0c55a263523d882.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
   <meta name="generator" content="quarto-1.6.39">
 
-  <meta name="author" content="https://mrne222-sp25.github.io/website/">
+  <meta name="author" content="https://mrne222-sp26.github.io/website/">
   <title>Data tidying</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -198,7 +198,7 @@
 <div class="quarto-title-authors">
 <div class="quarto-title-author">
 <div class="quarto-title-author-name">
-<a href="https://mrne222-sp25.github.io/website/">https://mrne222-sp25.github.io/website/</a> 
+<a href="https://mrne222-sp26.github.io/website/">https://mrne222-sp26.github.io/website/</a> 
 </div>
 </div>
 </div>
@@ -494,174 +494,7 @@
 <section id="pivoting-from-wide-to-long-back-to-wide" class="slide level2">
 <h2>Pivoting from wide to long back to wide</h2>
 
-<img data-src="img/tidyr-longer-wider.gif" class="r-stretch"></section>
-<section id="case-study-approval-rating-of-donald-trump" class="slide level2">
-<h2>Case study: Approval rating of Donald Trump</h2>
-
-<img data-src="img/trump-approval.png" class="r-stretch quarto-figure-center"><p class="caption"><a href="https://projects.fivethirtyeight.com/trump-approval-ratings/adults/">Source: FiveThirtyEight</a></p></section>
-<section id="data" class="slide level2">
-<h2>Data</h2>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href=""></a>trump</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 2,702 × 4
-   subgroup date       approval disapproval
-   &lt;chr&gt;    &lt;date&gt;        &lt;dbl&gt;       &lt;dbl&gt;
- 1 Voters   2020-10-04     44.7        52.2
- 2 Adults   2020-10-04     43.2        52.6
- 3 Adults   2020-10-03     43.2        52.6
- 4 Voters   2020-10-03     45.0        51.7
- 5 Adults   2020-10-02     43.3        52.4
- 6 Voters   2020-10-02     44.5        52.1
- 7 Voters   2020-10-01     44.1        52.8
- 8 Adults   2020-10-01     42.7        53.3
- 9 Adults   2020-09-30     42.2        53.7
-10 Voters   2020-09-30     44.2        52.7
-# ℹ 2,692 more rows</code></pre>
-</div>
-</div>
-</section>
-<section id="goal" class="slide level2">
-<h2>Goal</h2>
-<div class="columns">
-<div class="column" style="width:60%;">
-<div class="cell">
-<div class="cell-output-display">
-<div>
-<figure>
-<p><img data-src="06-data-tidying_files/figure-revealjs/unnamed-chunk-16-1.png" width="960"></p>
-</figure>
-</div>
-</div>
-</div>
-</div><div class="column" style="width:40%;">
-<p><strong>Aesthetic mappings:</strong><br>
-✅ x = <code>date</code><br>
-❌ y = <code>rating_value</code><br>
-❌ color = <code>rating_type</code></p>
-<p><strong>Facet:</strong><br>
-✅ <code>subgroup</code> (Adults and Voters)</p>
-</div></div>
-</section>
-<section id="pivot" class="slide level2">
-<h2>Pivot</h2>
-<div class="columns">
-<div class="column" style="width:50%;">
-<div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href=""></a>trump_longer <span class="ot">&lt;-</span> trump <span class="sc">|&gt;</span> </span>
-<span id="cb18-2"><a href=""></a>  <span class="fu">pivot_longer</span>(</span>
-<span id="cb18-3"><a href=""></a>    <span class="at">cols =</span> <span class="fu">c</span>(approval, disapproval),</span>
-<span id="cb18-4"><a href=""></a>    <span class="at">names_to =</span> <span class="st">"rating_type"</span>,</span>
-<span id="cb18-5"><a href=""></a>    <span class="at">values_to =</span> <span class="st">"rating_value"</span></span>
-<span id="cb18-6"><a href=""></a>  )</span>
-<span id="cb18-7"><a href=""></a></span>
-<span id="cb18-8"><a href=""></a>trump_longer</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</div><div class="column" style="width:50%;">
-<div class="cell">
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 5,404 × 4
-   subgroup date       rating_type rating_value
-   &lt;chr&gt;    &lt;date&gt;     &lt;chr&gt;              &lt;dbl&gt;
- 1 Voters   2020-10-04 approval            44.7
- 2 Voters   2020-10-04 disapproval         52.2
- 3 Adults   2020-10-04 approval            43.2
- 4 Adults   2020-10-04 disapproval         52.6
- 5 Adults   2020-10-03 approval            43.2
- 6 Adults   2020-10-03 disapproval         52.6
- 7 Voters   2020-10-03 approval            45.0
- 8 Voters   2020-10-03 disapproval         51.7
- 9 Adults   2020-10-02 approval            43.3
-10 Adults   2020-10-02 disapproval         52.4
-# ℹ 5,394 more rows</code></pre>
-</div>
-</div>
-</div></div>
-</section>
-<section id="plot" class="slide level2">
-<h2>Plot</h2>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href=""></a><span class="fu">ggplot</span>(trump_longer, </span>
-<span id="cb20-2"><a href=""></a>       <span class="fu">aes</span>(<span class="at">x =</span> date, <span class="at">y =</span> rating_value, <span class="at">color =</span> rating_type, <span class="at">group =</span> rating_type)) <span class="sc">+</span></span>
-<span id="cb20-3"><a href=""></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
-<span id="cb20-4"><a href=""></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> subgroup)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-
-</div>
-<img data-src="06-data-tidying_files/figure-revealjs/unnamed-chunk-18-1.png" width="960" class="r-stretch"></section>
-<section id="pretty-plot" class="slide level2">
-<h2>Pretty plot</h2>
-<div class="panel-tabset">
-<ul id="tabset-1" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-1-1">Plot</a></li><li><a href="#tabset-1-2">Code</a></li></ul>
-<div class="tab-content">
-<div id="tabset-1-1">
-<div class="cell">
-<div class="cell-output-display">
-<div>
-<figure>
-<p><img data-src="06-data-tidying_files/figure-revealjs/unnamed-chunk-19-1.png" width="960"></p>
-</figure>
-</div>
-</div>
-</div>
-</div>
-<div id="tabset-1-2">
-<div class="cell">
-<div class="sourceCode cell-code" id="cb21" data-code-line-numbers="6,7,8,9,10,11,12,13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href=""></a><span class="fu">ggplot</span>(trump_longer, </span>
-<span id="cb21-2"><a href=""></a>       <span class="fu">aes</span>(<span class="at">x =</span> date, <span class="at">y =</span> rating_value, </span>
-<span id="cb21-3"><a href=""></a>           <span class="at">color =</span> rating_type, <span class="at">group =</span> rating_type)) <span class="sc">+</span></span>
-<span id="cb21-4"><a href=""></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
-<span id="cb21-5"><a href=""></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> subgroup) <span class="sc">+</span></span>
-<span id="cb21-6"><a href=""></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"darkgreen"</span>, <span class="st">"orange"</span>)) <span class="sc">+</span></span>
-<span id="cb21-7"><a href=""></a>  <span class="fu">labs</span>( </span>
-<span id="cb21-8"><a href=""></a>    <span class="at">x =</span> <span class="st">"Date"</span>, <span class="at">y =</span> <span class="st">"Rating"</span>, </span>
-<span id="cb21-9"><a href=""></a>    <span class="at">color =</span> <span class="cn">NULL</span>, </span>
-<span id="cb21-10"><a href=""></a>    <span class="at">title =</span> <span class="st">"How (un)popular is Donald Trump?"</span>, </span>
-<span id="cb21-11"><a href=""></a>    <span class="at">subtitle =</span> <span class="st">"Estimates based on polls of all adults and polls of likely/registered voters"</span>,</span>
-<span id="cb21-12"><a href=""></a>    <span class="at">caption =</span> <span class="st">"Source: FiveThirtyEight modeling estimates"</span> </span>
-<span id="cb21-13"><a href=""></a>  ) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</div>
-</div>
-</div>
-</section>
-<section id="change-theme-and-legend-position" class="slide level2">
-<h2>Change theme and legend position</h2>
-<div class="panel-tabset">
-<ul id="tabset-2" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-2-1">Plot</a></li><li><a href="#tabset-2-2">Code</a></li></ul>
-<div class="tab-content">
-<div id="tabset-2-1">
-<div class="cell">
-<div class="cell-output-display">
-<div>
-<figure>
-<p><img data-src="06-data-tidying_files/figure-revealjs/unnamed-chunk-20-1.png" width="960"></p>
-</figure>
-</div>
-</div>
-</div>
-</div>
-<div id="tabset-2-2">
-<div class="cell">
-<div class="sourceCode cell-code" id="cb22" data-code-line-numbers="14,15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href=""></a><span class="fu">ggplot</span>(trump_longer, </span>
-<span id="cb22-2"><a href=""></a>       <span class="fu">aes</span>(<span class="at">x =</span> date, <span class="at">y =</span> rating_value, </span>
-<span id="cb22-3"><a href=""></a>           <span class="at">color =</span> rating_type, <span class="at">group =</span> rating_type)) <span class="sc">+</span></span>
-<span id="cb22-4"><a href=""></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
-<span id="cb22-5"><a href=""></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> subgroup) <span class="sc">+</span></span>
-<span id="cb22-6"><a href=""></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"darkgreen"</span>, <span class="st">"orange"</span>)) <span class="sc">+</span></span>
-<span id="cb22-7"><a href=""></a>  <span class="fu">labs</span>( </span>
-<span id="cb22-8"><a href=""></a>    <span class="at">x =</span> <span class="st">"Date"</span>, <span class="at">y =</span> <span class="st">"Rating"</span>, </span>
-<span id="cb22-9"><a href=""></a>    <span class="at">color =</span> <span class="cn">NULL</span>, </span>
-<span id="cb22-10"><a href=""></a>    <span class="at">title =</span> <span class="st">"How (un)popular is Donald Trump?"</span>, </span>
-<span id="cb22-11"><a href=""></a>    <span class="at">subtitle =</span> <span class="st">"Estimates based on polls of all adults and polls of likely/registered voters"</span>,</span>
-<span id="cb22-12"><a href=""></a>    <span class="at">caption =</span> <span class="st">"Source: FiveThirtyEight modeling estimates"</span> </span>
-<span id="cb22-13"><a href=""></a>  )  <span class="sc">+</span> </span>
-<span id="cb22-14"><a href=""></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span> </span>
-<span id="cb22-15"><a href=""></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"bottom"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</div>
-</div>
-</div>
-</section></section>
+<img data-src="img/tidyr-longer-wider.gif" class="r-stretch"></section></section>
 <section>
 <section id="more-tidying-functions" class="title-slide slide level1 center">
 <h1>More tidying functions</h1>
@@ -670,7 +503,7 @@
 <section id="use-separate-if-two-or-more-variables-are-contained-in-one-column" class="slide level2">
 <h2>Use <code>separate</code> if two (or more) variables are contained in one column</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href=""></a>table3</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href=""></a>table3</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 6 × 3
   country      year rate             
@@ -688,10 +521,10 @@
 <h2>Use <code>separate</code> if two (or more) variables are contained in one column</h2>
 <p>Use the <code>sep=</code> argument to identify the character that separates the two variables.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href=""></a>table3 <span class="sc">|&gt;</span></span>
-<span id="cb25-2"><a href=""></a>  <span class="fu">separate</span>(rate, </span>
-<span id="cb25-3"><a href=""></a>           <span class="at">into =</span> <span class="fu">c</span>(<span class="st">"cases"</span>, <span class="st">"population"</span>), </span>
-<span id="cb25-4"><a href=""></a>           <span class="at">sep =</span> <span class="st">"/"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href=""></a>table3 <span class="sc">|&gt;</span></span>
+<span id="cb18-2"><a href=""></a>  <span class="fu">separate</span>(rate, </span>
+<span id="cb18-3"><a href=""></a>           <span class="at">into =</span> <span class="fu">c</span>(<span class="st">"cases"</span>, <span class="st">"population"</span>), </span>
+<span id="cb18-4"><a href=""></a>           <span class="at">sep =</span> <span class="st">"/"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 6 × 4
   country      year cases  population
@@ -710,11 +543,11 @@
 <h2>Use <code>separate</code> if two (or more) variables are contained in one column</h2>
 <p>Use <code>convert = TRUE</code> to try and convert into a better data type.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href=""></a>table3 <span class="sc">|&gt;</span></span>
-<span id="cb27-2"><a href=""></a>  <span class="fu">separate</span>(rate, </span>
-<span id="cb27-3"><a href=""></a>           <span class="at">into =</span> <span class="fu">c</span>(<span class="st">"cases"</span>, <span class="st">"population"</span>), </span>
-<span id="cb27-4"><a href=""></a>           <span class="at">sep =</span> <span class="st">"/"</span>, </span>
-<span id="cb27-5"><a href=""></a>           <span class="at">convert =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href=""></a>table3 <span class="sc">|&gt;</span></span>
+<span id="cb20-2"><a href=""></a>  <span class="fu">separate</span>(rate, </span>
+<span id="cb20-3"><a href=""></a>           <span class="at">into =</span> <span class="fu">c</span>(<span class="st">"cases"</span>, <span class="st">"population"</span>), </span>
+<span id="cb20-4"><a href=""></a>           <span class="at">sep =</span> <span class="st">"/"</span>, </span>
+<span id="cb20-5"><a href=""></a>           <span class="at">convert =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 6 × 4
   country      year  cases population
@@ -732,7 +565,7 @@
 <section id="use-unite-to-gather-data-contained-in-two-columns-into-one-column" class="slide level2">
 <h2>Use <code>unite</code> to gather data contained in two columns into one column</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href=""></a>table5</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href=""></a>table5</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 6 × 4
   country     century year  rate             
@@ -749,8 +582,8 @@
 <section id="use-unite-to-gather-data-contained-in-two-columns-into-one-column-1" class="slide level2">
 <h2>Use <code>unite</code> to gather data contained in two columns into one column</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href=""></a>table5 <span class="sc">|&gt;</span></span>
-<span id="cb31-2"><a href=""></a>  <span class="fu">unite</span>(date, century, year)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href=""></a>table5 <span class="sc">|&gt;</span></span>
+<span id="cb24-2"><a href=""></a>  <span class="fu">unite</span>(date, century, year)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 6 × 3
   country     date  rate             
@@ -769,9 +602,9 @@
 <h2>Use <code>unite</code> to gather data contained in two columns into one column</h2>
 <p>Use <code>sep = ""</code> to remove the separator.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href=""></a>table5 <span class="sc">|&gt;</span></span>
-<span id="cb33-2"><a href=""></a>  <span class="fu">unite</span>(date, century, year,</span>
-<span id="cb33-3"><a href=""></a>        <span class="at">sep =</span> <span class="st">""</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href=""></a>table5 <span class="sc">|&gt;</span></span>
+<span id="cb26-2"><a href=""></a>  <span class="fu">unite</span>(date, century, year,</span>
+<span id="cb26-3"><a href=""></a>        <span class="at">sep =</span> <span class="st">""</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 6 × 3
   country     date  rate             
@@ -790,10 +623,10 @@
 <h2>Use <code>unite</code> to gather data contained in two columns into one column</h2>
 <p><code>convert = TRUE</code> doesn’t work with the <code>unite()</code> function, but we can wrangle further to coerce into a number.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href=""></a>table5 <span class="sc">|&gt;</span></span>
-<span id="cb35-2"><a href=""></a>  <span class="fu">unite</span>(date, century, year,</span>
-<span id="cb35-3"><a href=""></a>        <span class="at">sep =</span> <span class="st">""</span>) <span class="sc">|&gt;</span></span>
-<span id="cb35-4"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">date =</span> <span class="fu">as.integer</span>(date))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href=""></a>table5 <span class="sc">|&gt;</span></span>
+<span id="cb28-2"><a href=""></a>  <span class="fu">unite</span>(date, century, year,</span>
+<span id="cb28-3"><a href=""></a>        <span class="at">sep =</span> <span class="st">""</span>) <span class="sc">|&gt;</span></span>
+<span id="cb28-4"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">date =</span> <span class="fu">as.integer</span>(date))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 6 × 3
   country      date rate             
@@ -815,7 +648,7 @@
 <p>How many missing values are in this dataset?</p>
 </div><div class="column" style="width:50%;">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href=""></a>stocks</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href=""></a>stocks</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 7 × 3
    year   qtr return
@@ -843,7 +676,7 @@
 </ul>
 </div><div class="column" style="width:50%;">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href=""></a>stocks</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href=""></a>stocks</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 7 × 3
    year   qtr return
@@ -863,8 +696,8 @@
 <h2>Use <code>drop_na</code> if you do not want your data to include <code>NA</code>s</h2>
 <p>By including the <code>return</code> column as an argument, we drop all observations where <code>return</code> is <code>NA</code></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href=""></a>stocks <span class="sc">|&gt;</span></span>
-<span id="cb41-2"><a href=""></a>  <span class="fu">drop_na</span>(return)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href=""></a>stocks <span class="sc">|&gt;</span></span>
+<span id="cb34-2"><a href=""></a>  <span class="fu">drop_na</span>(return)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 6 × 3
    year   qtr return
@@ -882,8 +715,8 @@
 <h2>Use <code>complete</code> to explicitly include all missing values</h2>
 <p>Output now includes returns for all possible combinations of <code>year</code> and <code>qtr</code>. <code>NA</code>s are added where they were not explicitly included.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href=""></a>stocks <span class="sc">|&gt;</span></span>
-<span id="cb43-2"><a href=""></a>  <span class="fu">complete</span>(year, qtr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href=""></a>stocks <span class="sc">|&gt;</span></span>
+<span id="cb36-2"><a href=""></a>  <span class="fu">complete</span>(year, qtr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 8 × 3
    year   qtr return
@@ -898,6 +731,13 @@
 8  2016     4   2.66</code></pre>
 </div>
 </div>
+</section>
+<section id="your-turn" class="slide level2">
+<h2>Your turn</h2>
+<ul>
+<li>Clone ae-05 into Posit Cloud</li>
+<li>Practice data tidying!</li>
+</ul>
 
 </section></section>
     </div>
