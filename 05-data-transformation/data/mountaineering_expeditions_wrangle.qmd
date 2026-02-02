@@ -33,9 +33,38 @@ exped_small <- exped |>
 write_csv(exped_small, "05-data-transformation/data/mountaineering_expeditions.csv")
 ```
 
-Select
+- filter
+- filter with multiple logical statements
+- more likely to have successful expedition to everest with o2 or without. Does this change depending on peak height?
+- frequency table of number of expeditions to everest by season
+- frequency table of number of successful and unsuccessful expeditions to everest by season
+- grouped summary stats
+
 
 ```{r}
-exped_small |>
-  select(highpoint, days_to_summit)
+exp_sm <- exped |>
+  select(expid, peakid, year, season_factor, nation, success1, success2, success3, success4, claimed, totdays, highpoint, o2used, accidents) |>
+   mutate(success = case_when(success1 == "TRUE" | success2 == "TRUE" | 
+                               success3 == "TRUE"| success4 == "TRUE" ~ "yes",
+                             TRUE ~ "no"),
+          o2used = case_when(o2used == "TRUE" ~ "yes",
+                             TRUE ~ "no")) |>
+  select(-c(success1, success2, success3, success4)) |>
+  rename(season = season_factor) |>
+  filter(totdays > 0)
+
+peaks_sm <- peaks |>
+  select(peakid, pkname)
+
+expeds <- exp_sm |>
+  left_join(peaks_sm) |>
+  relocate(pkname, .before = year)
+
+peaks_out <- peaks |>
+  select(peakid, pkname, heightm, pyear, psmtdate, pcountry)
+
+write_csv(expeds, "data/exped.csv")
+
+write_csv(peaks_out, "data/peaks.csv")
 ```
+

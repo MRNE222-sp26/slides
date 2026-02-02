@@ -43,7 +43,7 @@ execute:
 - How can I remove missing values (NAs)?
 
 
-## We almost always need to transform our data
+## First, we almost always need to transform our data
 
 ![](img/dplyr-horst.png){fig-align="center" fig-alt="cartoon of dplyr R package"}
 
@@ -83,80 +83,55 @@ How functions work in R: `function_name(arguments...)` = output...
 - A data frame is always returned as the output
 
 
-## Example data: Hotel bookings
+## Example data: Himalayn mountaineering expeditions
 
-- Data[^1] from two hotels: one resort and one city hotel
-- Observations: Each row represents a hotel booking
-- Goal for original data collection: Development of prediction models to classify a hotel booking's likelihood to be cancelled ([Antonia et al., 2019](https://www.sciencedirect.com/science/article/pii/S2352340918315191#bib5))
+- Data[^1] from an archive documenting mountaineering expeditions in the Nepal Himalaya
+- Observations: Each row represents a climbing expedition
+- Goal for original data collection: Catalog climbing history in the region ([History of the Himalayan Database](https://www.himalayandatabase.com/history.html))
 
 ```{r message=FALSE}
 library(tidyverse)
-hotels <- read_csv("data/hotels.csv")
+exped <- read_csv("data/mountaineering_expeditions.csv")
 ```
 
-[^1]: Source: [TidyTuesday](https://github.com/rfordatascience/tidytuesday/blob/master/data/2020/2020-02-11/readme.md)
+[^1]: Source: [TidyTuesday](https://github.com/rfordatascience/tidytuesday/blob/main/data/2025/2025-01-21/readme.md)
 
 
-## Look at the variable names in the `hotels` data frame
+## Look at the variable names in the `exped` data frame
 
 ```{r output.lines=18}
-names(hotels)
+names(exped)
 ```
 
 
-## Look at data types and first few observations in the `hotels` data frame
+## Look at data types and first few observations in the `exped` data frame
 
 ```{r output.lines=18}
-glimpse(hotels)
+glimpse(exped)
 ```
 
 
 ## How to use `dplyr` functions: example with `select`
 
-We want to only include the `lead_time` column (`lead_time`= number of days between booking and arrival date):
+We want to only include the `days_to_high_point` column (`days_to_high_point`= number of days between expedition start date and summit date):
 
 ::: {.columns}
 
 ::: {.column width = "50%" .fragment}
 ```{r}
-hotels # original hotels data frame
+exped # original exped data frame
 ```
 :::
 
 ::: {.column width = "50%" .fragment}
 
 ```{r}
-select(hotels, lead_time) # select only lead_time
+select(exped, days_to_high_point) # select only days_to_summit
 ```
 :::
 :::
 
-## FYI - commenting
 
-::: {style="font-size: 80%;"}
-In R, you can use the `#` for adding comments to your code. 
-Any text following `#` will be printed as is, and won't be run as R code.
-This is useful for leaving comments in your code and for temporarily disabling 
-certain lines of code while debugging.
-<br>
-<br>
-:::
-
-::: {.columns}
-::: {.column width = "70%"}
-```{r comment, eval=FALSE}
-#| code-line-numbers: "|2|3|4"
-hotels |> 
-  # slice the first five rows   # this line is a comment
-  # select(hotel) |>            # this one has code but doesn't run
-  select(is_canceled)           # this line runs (no #)
-```
-:::
-::: {.column width = "30%"}
-```{r ref.label = "comment", echo=FALSE}
-```
-:::
-:::
 ## How to use `dplyr` functions: example with `select` {visibility="uncounted"}
 
 ::: {.columns}
@@ -165,8 +140,8 @@ hotels |>
 ```{r eval=FALSE}
 #| code-line-numbers: 1
 select( 
-  hotels, 
-  lead_time
+  exped, 
+  days_to_high_point
   )
 ```
 
@@ -185,8 +160,8 @@ select(
 ```{r eval=FALSE}
 #| code-line-numbers: "2"
 select( 
-  hotels, 
-  lead_time
+  exped, 
+  days_to_high_point
   )
 ```
 
@@ -194,7 +169,7 @@ select(
 
 :::{.columnn width = "50%"}
 - Start with the function (a verb): `select()`
-- First argument: name of the data object we're working with (`hotels`)
+- First argument: name of the data object we're working with (`exped`)
 :::
 :::
 
@@ -206,8 +181,8 @@ select(
 ```{r eval=FALSE}
 #| code-line-numbers: "3"
 select( 
-  hotels, 
-  lead_time
+  exped, 
+  days_to_high_point
   )
 ```
 
@@ -215,8 +190,8 @@ select(
 
 :::{.columnn width = "50%"}
 - Start with the function (a verb): `select()`
-- First argument: name of the data object we're working with (`hotels`)
-- Second argument: variable we want to select, `lead_time`
+- First argument: name of the data object we're working with (`exped`)
+- Second argument: variable we want to select, `days_to_high_point`
 :::
 :::
 
@@ -228,15 +203,15 @@ select(
 ```{r}
 #| code-line-numbers: "3"
 select( 
-  hotels, 
-  lead_time
+  exped, 
+  days_to_high_point
   )
 ```
 
 :::
 
 :::{.columnn width = "50%"}
-- Result: data frame with `r nrow(hotels)` rows and 1 column
+- Result: data frame with `r nrow(exped)` rows and 1 column
 :::
 :::
 
@@ -245,13 +220,13 @@ select(
 
 ## Select multiple columns
 
-View only the `hotel` type and `lead_time`:
+View only the `pkname` and `days_to_high_point` variables:
 
 ```{r}
-select(hotels, hotel, lead_time)
+select(exped, pkname, days_to_high_point)
 ```
 
-# What if we wanted to select these columns, and *then* arrange the data in descending order of lead time?
+# What if we wanted to select these columns, and *then* arrange the data in descending order of days to reach a high point?
 
 # Use the pipe operator `|>` 
 
@@ -263,16 +238,16 @@ In programming, a pipe is a technique for passing information from one process t
 ::: {.columns}
 ::: {.column width = "50%"}
 
-- Start with the `hotels` data frame and pass it to the `select()` function
-- Select the variables `hotel` and `lead_time`
+- Start with the `exped` data frame and pass it to the `select()` function
+- Select the variables `exped` and `days_to_high_point`
 :::
 ::: {.column width = "50%"}
 ```{r}
 #| code-line-numbers: "1,2"
 
-hotels |> 
-  select(hotel, lead_time) |> 
-  arrange(desc(lead_time))
+exped |> 
+  select(pkname, days_to_high_point) |> 
+  arrange(desc(days_to_high_point))
 ```
 :::
 :::
@@ -307,23 +282,23 @@ find("keys") |>
 
 Start with a data frame
 ```{r}
-hotels
+exped
 ```
 
 ## How does a pipe work? {visibility="uncounted"}
 
 Pipe the data down to the next line. With `dplyr` functions, data is *always* the first argument. When we pipe, we are telling R to use the output of the previous line as the data argument. The data argument is now implicit. 
 ```{r}
-hotels |>                     
-  select(lead_time, is_canceled)
+exped |>                     
+  select(pkname, days_to_high_point)
 ```
 
 ## How does a pipe work? {visibility="uncounted"}
 
 Now, pipe the output of line 2 to line 3. The output of line 2 implicitly becomes the data argument for line 3. 
 ```{r}
-hotels |>                     
-  select(lead_time, is_canceled) |>           
+exped |>                     
+  select(pkname, days_to_high_point) |>           
   slice_head(n=5) 
 ```
 
@@ -331,17 +306,17 @@ hotels |>
 
 Pipe one more time from line 3 to line 4. The output of line 3 implicitly becomes the data argument for line 4. You can pipe as many more times as you want/need. 
 ```{r}
-hotels |>                     
-  select(lead_time, is_canceled) |>           
-  slice_head(n = 5) |> 
-  arrange(lead_time)
+exped |>                     
+  select(pkname, days_to_high_point) |>     
+  arrange(days_to_high_point) |>
+  slice_head(n=5)
 ```
 
 ## How does a pipe work? {visibility="uncounted"}
 
 Pipes allow us to use a sequence of functions on a dataset without having to save the output as a new object at each step. The output is piped from one step to the next and implicitly used as the data argument.
 
-![](img/pipes.png){fig-align="center"}
+![](img/pipes.png){fig-align="center" alt-text="cartoon of pipes in R"}
 
 ## A note on piping (dplyr) and layering (ggplot)
 
@@ -354,16 +329,16 @@ Pipes allow us to use a sequence of functions on a dataset without having to sav
 <br>
 Nope!
 ```{r error=TRUE}
-hotels +
-  select(hotel, lead_time)
+exped +
+  select(pkname, days_to_high_point)
 ```
 
 <br>
 
 Yep!
 ```{r eval=FALSE}
-hotels |> 
-  select(hotel, lead_time)
+exped |>
+  select(pkname, days_to_high_point)
 ```
 
 ::: {style="font-size: 75%;"}
@@ -379,8 +354,8 @@ hotels |>
 ```{r}
 #| code-line-numbers: "2"
 
-hotels |>
-  select(-agent) 
+exped |>
+  select(-o2used) 
 ```
 
 
@@ -389,8 +364,8 @@ hotels |>
 ```{r}
 #| code-line-numbers: "2"
 
-hotels |>
-  select(hotel:arrival_date_month) 
+exped |>
+  select(expid:pkname) 
 ```
 
 ## `select` variables with certain characteristics
@@ -398,8 +373,8 @@ hotels |>
 ```{r}
 #| code-line-numbers: "2"
 
-hotels |>
-  select(starts_with("arrival")) 
+exped |>
+  select(starts_with("pk")) 
 ```
 
 ## `select` variables with certain characteristics
@@ -407,8 +382,8 @@ hotels |>
 ```{r}
 #| code-line-numbers: "2"
 
-hotels |>
-  select(ends_with("type")) 
+exped |>
+  select(ends_with("id")) 
 ```
 
 ## Some select helpers
@@ -433,9 +408,9 @@ hotels |>
 ```{r}
 #| code-line-numbers: "3"
 
-hotels |>
-  select(adults, children, babies) |>
-  arrange(babies) 
+exped |>
+  select(pkname, year, highpoint) |>
+  arrange(year) 
 ```
 :::
 
@@ -444,9 +419,9 @@ hotels |>
 ```{r}
 #| code-line-numbers: "3"
 
-hotels |>
-  select(adults, children, babies) |>
-  arrange(desc(babies)) 
+exped |>
+  select(pkname, year, highpoint) |>
+  arrange(desc(year))  
 ```
 :::
 :::
@@ -459,7 +434,7 @@ hotels |>
 ```{r}
 #| code-line-numbers: "2"
 
-hotels |>
+exped |>
   slice(1:5) 
 ```
 
@@ -471,9 +446,9 @@ hotels |>
 ```{r}
 #| code-line-numbers: "1,3"
 
-# bookings in City Hotels
-hotels |>
-  filter(hotel == "City Hotel")
+# Expeditions on Lhotse
+exped |>
+  filter(pkname == "Lhotse")
 ```
 
 ## `filter` for many conditions at once
@@ -483,12 +458,12 @@ hotels |>
 ```{r}
 #| code-line-numbers: "2,3,4,5"
 
-hotels |>
+exped |>
   filter( 
-    adults == 0,     
-    children >= 1    
+    pkname == "Lhotse",     
+    days_to_high_point >= 40    
     ) |> 
-  select(adults, babies, children)
+  select(year, season_factor, days_to_high_point)
 ```
 :::
 
@@ -496,7 +471,7 @@ hotels |>
 ::: {.incremental}
 -  `==` and `>=` are two of many "logical operators" that we use to produce TRUE/FALSE results. 
 - When used in conjunction with `filter`, only the TRUE results are retained in the resulting data frame 
-- e.g., only results where `adults` is equal to 0 and `children` is greater than or equal to 1 are retained.
+- e.g., only results where `pkname` is equal to Lhotse and `days_to_high_point` is greater than or equal to 40 are retained.
 :::
 :::
 :::
@@ -529,31 +504,31 @@ operator     | definition
 
 ## Try it: ae-04 1-4
 
-- Before you try to push any changes, don't forget to use `gitcreds::gitcreds_set` to set your PAT.
-- Before pushing, make sure to *render, stage, commit* and then *push*
+- Before you try to push any changes, don't forget to use `gitcreds::gitcreds_set()` to set your PAT.
+- Before pushing, make sure to *render, stage, commit* and then *push* to GitHub
 
 # `dplyr::distinct` and `dplyr::count`
 
 ## `distinct` to filter for unique rows
 
-Get unique values of the `market_segment` variable and arrange in alphabetical order.
+Get unique values of the `pkname` variable and arrange in alphabetical order.
 ```{r}
 #| code-line-numbers: "2,3"
 
-hotels |> 
-  distinct(market_segment) |> 
-  arrange(market_segment)
+exped |> 
+  distinct(pkname) |> 
+  arrange(pkname)
 ```
 
 ## `distinct` to filter for unique rows
 
-Get unique combinations of the `hotel` and `market_segment` variables and arrange in alphabetical order by `hotel` first and `market_segment` second.
+Get unique combinations of the `pkname` and `season_factor` variables and arrange in alphabetical order by `pkname` first and `season_factor` second.
 ```{r}
 #| code-line-numbers: "2,3"
 
-hotels |> 
-  distinct(hotel, market_segment) |>
-  arrange(hotel, market_segment)
+exped |> 
+  distinct(pkname, season_factor) |>
+  arrange(pkname, season_factor)
 ```
 
 
@@ -565,8 +540,8 @@ Alphabetical order by default
 ```{r}
 #| code-line-numbers: "2"
 
-hotels |>
-  count(market_segment) 
+exped |>
+  count(pkname) 
 ```
 :::
 ::: {.column width = "50%" .fragment}
@@ -574,20 +549,20 @@ Descending order by frequency
 ```{r}
 #| code-line-numbers: "2"
 
-hotels |>
-  count(market_segment, sort = TRUE) 
+exped |>
+  count(pkname, sort = TRUE) 
 ```
 :::
 :::
 
 ## `count` for multiple variables
 
-Get the number of observations for each unique combination of `hotel` and `market_segment`
+Get the number of observations for each unique combination of `pkname` and `season_factor`
 ```{r}
 #| code-line-numbers: "2"
 
-hotels |>
-  count(hotel, market_segment) 
+exped |>
+  count(pkname, season_factor) 
 ```
 
 # Try it: ae-04 5-6
@@ -601,23 +576,23 @@ hotels |>
 ```{r}
 #| code-line-numbers: "2,3,4"
 
-hotels |>
-  mutate(little_ones = children + babies) |> 
-  select(children, babies, little_ones) |>
-  arrange(desc(little_ones))
+exped |>
+  mutate(weeks_to_high_point = days_to_high_point / 7) |> 
+  select(expid, days_to_high_point, weeks_to_high_point) |>
+  arrange(desc(weeks_to_high_point))
 ```
 
 # `dplyr::summarise` and `dplyr::group_by`
 
 ## use `summarise` to calculate summary stats
 
-Calculate mean `adr` (average daily rate) for all bookings. Assign the resulting output to a variable named `mean_adr`.
+Calculate mean `days_to_high_point` for all expeditions and assign the resulting output to a variable named `mean_days`.
 
 ```{r}
 #| code-line-numbers: "2"
 
-hotels |>
-  summarise(mean_adr = mean(adr)) 
+exped |>
+  summarise(mean_days = mean(days_to_high_point)) 
 ```
 ::: {.incremental}
 - `summarise()` changes the data frame entirely: it collapses rows down to a single 
@@ -626,13 +601,13 @@ summary statistic, and removes all columns that are not included in the calculat
 
 ## `group_by` for grouped summary calculations
 
-Calculate mean average daily rate for all booking at city and resort hotels
+Calculate mean average days to high point for all expeditions for each peak
 ```{r}
 #| code-line-numbers: "2"
 
-hotels |>
-  group_by(hotel) |> 
-  summarise(mean_adr = mean(adr))
+exped |>
+  group_by(pkname) |> 
+  summarise(mean_days = mean(days_to_high_point))
 ```
 
 ## Multiple summary statistics
@@ -642,12 +617,12 @@ hotels |>
 ```{r}
 #| code-line-numbers: "2,3,4,5,6,7"
 
-hotels |>
+exped |>
   summarise(
-    min_adr = min(adr),
-    mean_adr = mean(adr),
-    median_adr = median(adr),
-    max_adr = max(adr)
+    min_days = min(days_to_high_point),
+    mean_days = mean(days_to_high_point),
+    median_days = median(days_to_high_point),
+    max_days = max(days_to_high_point)
     )
 ```
 
