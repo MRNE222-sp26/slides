@@ -221,15 +221,6 @@
 <p><br></p>
 
 <img data-src="img/draw-the-owl.jpg" class="quarto-figure quarto-figure-center r-stretch" alt="Drawing of an owl joke cartoon"></section>
-<section id="you-are-already-asking-the-right-questions" class="slide level2">
-<h2>You are already asking the right questions</h2>
-<ul>
-<li>How can I change the values of a categorical variable if they are not informative (e.g., change “OG” to “old growth”)</li>
-<li>How can I calculate summary statistics (e.g., mean, max, min, etc.)</li>
-<li>What if I only want to analyze a subset of the columns or rows?</li>
-<li>How can I remove missing values (NAs)?</li>
-</ul>
-</section>
 <section id="first-we-almost-always-need-to-transform-our-data" class="slide level2">
 <h2>First, we almost always need to transform our data</h2>
 
@@ -276,21 +267,10 @@
 <span id="cb1-2"><a href=""></a>exped <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/mountaineering_expeditions.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <aside><ol class="aside-footnotes"><li id="fn1"><p>Source: <a href="https://github.com/rfordatascience/tidytuesday/blob/main/data/2025/2025-01-21/readme.md">TidyTuesday</a></p></li></ol></aside></section>
-<section id="look-at-the-variable-names-in-the-exped-data-frame" class="slide level2">
-<h2>Look at the variable names in the <code>exped</code> data frame</h2>
+<section id="look-at-variables-data-types-and-first-few-observations-in-the-exped-data-frame" class="slide level2">
+<h2>Look at variables, data types, and first few observations in the <code>exped</code> data frame</h2>
 <div class="cell" data-output.lines="18">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href=""></a><span class="fu">names</span>(exped)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] "expid"              "year"               "pkname"            
-[4] "season_factor"      "highpoint"          "rope"              
-[7] "o2used"             "days_to_high_point"</code></pre>
-</div>
-</div>
-</section>
-<section id="look-at-data-types-and-first-few-observations-in-the-exped-data-frame" class="slide level2">
-<h2>Look at data types and first few observations in the <code>exped</code> data frame</h2>
-<div class="cell" data-output.lines="18">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href=""></a><span class="fu">glimpse</span>(exped)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href=""></a><span class="fu">glimpse</span>(exped)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Rows: 259
 Columns: 8
@@ -311,7 +291,7 @@ $ days_to_high_point &lt;dbl&gt; 35, 1, 9, 16, 3, 10, 13, 16, 2, 14, 7, 24, 14, 
 <div class="columns">
 <div class="column fragment" style="width:50%;">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href=""></a>exped <span class="co"># original exped data frame</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href=""></a>exped <span class="co"># original exped data frame</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 259 × 8
    expid     year pkname season_factor highpoint  rope o2used days_to_high_point
@@ -331,7 +311,7 @@ $ days_to_high_point &lt;dbl&gt; 35, 1, 9, 16, 3, 10, 13, 16, 2, 14, 7, 24, 14, 
 </div>
 </div><div class="column fragment" style="width:50%;">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href=""></a><span class="fu">select</span>(exped, days_to_high_point) <span class="co"># select only days_to_summit</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href=""></a><span class="fu">select</span>(exped, days_to_high_point) <span class="co"># select only days_to_summit</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 259 × 1
    days_to_high_point
@@ -356,10 +336,10 @@ $ days_to_high_point &lt;dbl&gt; 35, 1, 9, 16, 3, 10, 13, 16, 2, 14, 7, 24, 14, 
 <div class="columns">
 <div class="column" style="width:50%;">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href=""></a><span class="fu">select</span>( </span>
-<span id="cb10-2"><a href=""></a>  exped, </span>
-<span id="cb10-3"><a href=""></a>  days_to_high_point</span>
-<span id="cb10-4"><a href=""></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href=""></a><span class="fu">select</span>( </span>
+<span id="cb8-2"><a href=""></a>  exped, </span>
+<span id="cb8-3"><a href=""></a>  days_to_high_point</span>
+<span id="cb8-4"><a href=""></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div><div class="columnn" width="50%">
 <ul>
@@ -373,10 +353,10 @@ $ days_to_high_point &lt;dbl&gt; 35, 1, 9, 16, 3, 10, 13, 16, 2, 14, 7, 24, 14, 
 <div class="columns">
 <div class="column" style="width:50%;">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11" data-code-line-numbers="2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href=""></a><span class="fu">select</span>( </span>
-<span id="cb11-2"><a href=""></a>  exped, </span>
-<span id="cb11-3"><a href=""></a>  days_to_high_point</span>
-<span id="cb11-4"><a href=""></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9" data-code-line-numbers="2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href=""></a><span class="fu">select</span>( </span>
+<span id="cb9-2"><a href=""></a>  exped, </span>
+<span id="cb9-3"><a href=""></a>  days_to_high_point</span>
+<span id="cb9-4"><a href=""></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div><div class="columnn" width="50%">
 <ul>
@@ -391,10 +371,10 @@ $ days_to_high_point &lt;dbl&gt; 35, 1, 9, 16, 3, 10, 13, 16, 2, 14, 7, 24, 14, 
 <div class="columns">
 <div class="column" style="width:50%;">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12" data-code-line-numbers="3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href=""></a><span class="fu">select</span>( </span>
-<span id="cb12-2"><a href=""></a>  exped, </span>
-<span id="cb12-3"><a href=""></a>  days_to_high_point</span>
-<span id="cb12-4"><a href=""></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10" data-code-line-numbers="3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href=""></a><span class="fu">select</span>( </span>
+<span id="cb10-2"><a href=""></a>  exped, </span>
+<span id="cb10-3"><a href=""></a>  days_to_high_point</span>
+<span id="cb10-4"><a href=""></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div><div class="columnn" width="50%">
 <ul>
@@ -410,10 +390,10 @@ $ days_to_high_point &lt;dbl&gt; 35, 1, 9, 16, 3, 10, 13, 16, 2, 14, 7, 24, 14, 
 <div class="columns">
 <div class="column" style="width:50%;">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13" data-code-line-numbers="3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href=""></a><span class="fu">select</span>( </span>
-<span id="cb13-2"><a href=""></a>  exped, </span>
-<span id="cb13-3"><a href=""></a>  days_to_high_point</span>
-<span id="cb13-4"><a href=""></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11" data-code-line-numbers="3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href=""></a><span class="fu">select</span>( </span>
+<span id="cb11-2"><a href=""></a>  exped, </span>
+<span id="cb11-3"><a href=""></a>  days_to_high_point</span>
+<span id="cb11-4"><a href=""></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 259 × 1
    days_to_high_point
@@ -447,7 +427,7 @@ $ days_to_high_point &lt;dbl&gt; 35, 1, 9, 16, 3, 10, 13, 16, 2, 14, 7, 24, 14, 
 <h2>Select multiple columns</h2>
 <p>View only the <code>pkname</code> and <code>days_to_high_point</code> variables:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href=""></a><span class="fu">select</span>(exped, pkname, days_to_high_point)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href=""></a><span class="fu">select</span>(exped, pkname, days_to_high_point)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 259 × 2
    pkname        days_to_high_point
@@ -487,9 +467,9 @@ $ days_to_high_point &lt;dbl&gt; 35, 1, 9, 16, 3, 10, 13, 16, 2, 14, 7, 24, 14, 
 </ul>
 </div><div class="column" style="width:50%;">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb17" data-code-line-numbers="1,2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href=""></a>exped <span class="sc">|&gt;</span> </span>
-<span id="cb17-2"><a href=""></a>  <span class="fu">select</span>(pkname, days_to_high_point) <span class="sc">|&gt;</span> </span>
-<span id="cb17-3"><a href=""></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(days_to_high_point))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href=""></a>exped <span class="sc">|&gt;</span> </span>
+<span id="cb15-2"><a href=""></a>  <span class="fu">select</span>(pkname, days_to_high_point) <span class="sc">|&gt;</span> </span>
+<span id="cb15-3"><a href=""></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(days_to_high_point))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 259 × 2
    pkname        days_to_high_point
@@ -509,33 +489,11 @@ $ days_to_high_point &lt;dbl&gt; 35, 1, 9, 16, 3, 10, 13, 16, 2, 14, 7, 24, 14, 
 </div>
 </div></div>
 </section>
-<section id="what-is-a-pipe-1" class="slide level2" data-visibility="uncounted">
-<h2>What is a pipe?</h2>
-<p>In programming, a pipe is a technique for passing information from one process to another.</p>
-<ul>
-<li>You can think about the following sequence of actions - find keys, unlock car, start car, drive to work, park.</li>
-<li>You need the first action in order to complete the second action</li>
-<li>Expressed as a set of nested functions in R pseudocode this would look like: <br></li>
-</ul>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href=""></a><span class="fu">park</span>(<span class="fu">drive</span>(<span class="fu">start_car</span>(<span class="fu">find</span>(<span class="st">"keys"</span>))))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</section>
 <section id="how-does-a-pipe-work" class="slide level2" data-visibility="uncounted">
-<h2>How does a pipe work?</h2>
-<p>Writing it out using pipes give it a more natural (and easier to read) structure: <br></p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href=""></a><span class="fu">find</span>(<span class="st">"keys"</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb20-2"><a href=""></a>  <span class="fu">start_car</span>() <span class="sc">|&gt;</span> </span>
-<span id="cb20-3"><a href=""></a>  <span class="fu">drive</span>(<span class="at">to =</span> <span class="st">"work"</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb20-4"><a href=""></a>  <span class="fu">park</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</section>
-<section id="how-does-a-pipe-work-1" class="slide level2" data-visibility="uncounted">
 <h2>How does a pipe work?</h2>
 <p>Start with a data frame</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href=""></a>exped</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href=""></a>exped</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 259 × 8
    expid     year pkname season_factor highpoint  rope o2used days_to_high_point
@@ -554,12 +512,12 @@ $ days_to_high_point &lt;dbl&gt; 35, 1, 9, 16, 3, 10, 13, 16, 2, 14, 7, 24, 14, 
 </div>
 </div>
 </section>
-<section id="how-does-a-pipe-work-2" class="slide level2" data-visibility="uncounted">
+<section id="how-does-a-pipe-work-1" class="slide level2" data-visibility="uncounted">
 <h2>How does a pipe work?</h2>
 <p>Pipe the data down to the next line. With <code>dplyr</code> functions, data is <em>always</em> the first argument. When we pipe, we are telling R to use the output of the previous line as the data argument. The data argument is now implicit.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href=""></a>exped <span class="sc">|&gt;</span>                     </span>
-<span id="cb23-2"><a href=""></a>  <span class="fu">select</span>(pkname, days_to_high_point)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href=""></a>exped <span class="sc">|&gt;</span>                     </span>
+<span id="cb19-2"><a href=""></a>  <span class="fu">select</span>(pkname, days_to_high_point)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 259 × 2
    pkname        days_to_high_point
@@ -578,13 +536,13 @@ $ days_to_high_point &lt;dbl&gt; 35, 1, 9, 16, 3, 10, 13, 16, 2, 14, 7, 24, 14, 
 </div>
 </div>
 </section>
-<section id="how-does-a-pipe-work-3" class="slide level2" data-visibility="uncounted">
+<section id="how-does-a-pipe-work-2" class="slide level2" data-visibility="uncounted">
 <h2>How does a pipe work?</h2>
 <p>Now, pipe the output of line 2 to line 3. The output of line 2 implicitly becomes the data argument for line 3.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href=""></a>exped <span class="sc">|&gt;</span>                     </span>
-<span id="cb25-2"><a href=""></a>  <span class="fu">select</span>(pkname, days_to_high_point) <span class="sc">|&gt;</span>           </span>
-<span id="cb25-3"><a href=""></a>  <span class="fu">slice_head</span>(<span class="at">n=</span><span class="dv">5</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href=""></a>exped <span class="sc">|&gt;</span>                     </span>
+<span id="cb21-2"><a href=""></a>  <span class="fu">select</span>(pkname, days_to_high_point) <span class="sc">|&gt;</span>           </span>
+<span id="cb21-3"><a href=""></a>  <span class="fu">slice_head</span>(<span class="at">n=</span><span class="dv">5</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 5 × 2
   pkname     days_to_high_point
@@ -597,14 +555,14 @@ $ days_to_high_point &lt;dbl&gt; 35, 1, 9, 16, 3, 10, 13, 16, 2, 14, 7, 24, 14, 
 </div>
 </div>
 </section>
-<section id="how-does-a-pipe-work-4" class="slide level2" data-visibility="uncounted">
+<section id="how-does-a-pipe-work-3" class="slide level2" data-visibility="uncounted">
 <h2>How does a pipe work?</h2>
 <p>Pipe one more time from line 3 to line 4. The output of line 3 implicitly becomes the data argument for line 4. You can pipe as many more times as you want/need.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href=""></a>exped <span class="sc">|&gt;</span>                     </span>
-<span id="cb27-2"><a href=""></a>  <span class="fu">select</span>(pkname, days_to_high_point) <span class="sc">|&gt;</span>     </span>
-<span id="cb27-3"><a href=""></a>  <span class="fu">arrange</span>(days_to_high_point) <span class="sc">|&gt;</span></span>
-<span id="cb27-4"><a href=""></a>  <span class="fu">slice_head</span>(<span class="at">n=</span><span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href=""></a>exped <span class="sc">|&gt;</span>                     </span>
+<span id="cb23-2"><a href=""></a>  <span class="fu">select</span>(pkname, days_to_high_point) <span class="sc">|&gt;</span>     </span>
+<span id="cb23-3"><a href=""></a>  <span class="fu">arrange</span>(days_to_high_point) <span class="sc">|&gt;</span></span>
+<span id="cb23-4"><a href=""></a>  <span class="fu">slice_head</span>(<span class="at">n=</span><span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 5 × 2
   pkname       days_to_high_point
@@ -617,7 +575,7 @@ $ days_to_high_point &lt;dbl&gt; 35, 1, 9, 16, 3, 10, 13, 16, 2, 14, 7, 24, 14, 
 </div>
 </div>
 </section>
-<section id="how-does-a-pipe-work-5" class="slide level2" data-visibility="uncounted">
+<section id="how-does-a-pipe-work-4" class="slide level2" data-visibility="uncounted">
 <h2>How does a pipe work?</h2>
 <p>Pipes allow us to use a sequence of functions on a dataset without having to save the output as a new object at each step. The output is piped from one step to the next and implicitly used as the data argument.</p>
 
@@ -633,8 +591,8 @@ $ days_to_high_point &lt;dbl&gt; 35, 1, 9, 16, 3, 10, 13, 16, 2, 14, 7, 24, 14, 
 <h2>piping vs.&nbsp;layering</h2>
 <p><br> Nope!</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href=""></a>exped <span class="sc">+</span></span>
-<span id="cb29-2"><a href=""></a>  <span class="fu">select</span>(pkname, days_to_high_point)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href=""></a>exped <span class="sc">+</span></span>
+<span id="cb25-2"><a href=""></a>  <span class="fu">select</span>(pkname, days_to_high_point)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-error">
 <pre><code>Error in eval(expr, envir, enclos): object 'pkname' not found</code></pre>
 </div>
@@ -642,8 +600,8 @@ $ days_to_high_point &lt;dbl&gt; 35, 1, 9, 16, 3, 10, 13, 16, 2, 14, 7, 24, 14, 
 <p><br></p>
 <p>Yep!</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href=""></a>exped <span class="sc">|&gt;</span></span>
-<span id="cb31-2"><a href=""></a>  <span class="fu">select</span>(pkname, days_to_high_point)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href=""></a>exped <span class="sc">|&gt;</span></span>
+<span id="cb27-2"><a href=""></a>  <span class="fu">select</span>(pkname, days_to_high_point)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section></section>
 <section id="you-might-see-.-this-is-also-a-pipe-from-the-magrittr-package.-r-now-has-its-own-build-in-pipe-operator-so-thats-what-most-people-use." class="title-slide slide level1 center" style="font-size: 75%;">
@@ -664,8 +622,8 @@ $ days_to_high_point &lt;dbl&gt; 35, 1, 9, 16, 3, 10, 13, 16, 2, 14, 7, 24, 14, 
 <section id="select-to-exclude-variables" class="slide level2">
 <h2><code>select</code> to exclude variables</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb32" data-code-line-numbers="2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href=""></a>exped <span class="sc">|&gt;</span></span>
-<span id="cb32-2"><a href=""></a>  <span class="fu">select</span>(<span class="sc">-</span>o2used) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href=""></a>exped <span class="sc">|&gt;</span></span>
+<span id="cb28-2"><a href=""></a>  <span class="fu">select</span>(<span class="sc">-</span>o2used) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 259 × 7
    expid      year pkname       season_factor highpoint  rope days_to_high_point
@@ -687,8 +645,8 @@ $ days_to_high_point &lt;dbl&gt; 35, 1, 9, 16, 3, 10, 13, 16, 2, 14, 7, 24, 14, 
 <section id="select-a-range-of-variables" class="slide level2">
 <h2><code>select</code> a range of variables</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb34" data-code-line-numbers="2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href=""></a>exped <span class="sc">|&gt;</span></span>
-<span id="cb34-2"><a href=""></a>  <span class="fu">select</span>(expid<span class="sc">:</span>pkname) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href=""></a>exped <span class="sc">|&gt;</span></span>
+<span id="cb30-2"><a href=""></a>  <span class="fu">select</span>(expid<span class="sc">:</span>pkname) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 259 × 3
    expid      year pkname       
@@ -710,8 +668,8 @@ $ days_to_high_point &lt;dbl&gt; 35, 1, 9, 16, 3, 10, 13, 16, 2, 14, 7, 24, 14, 
 <section id="select-variables-with-certain-characteristics" class="slide level2">
 <h2><code>select</code> variables with certain characteristics</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb36" data-code-line-numbers="2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href=""></a>exped <span class="sc">|&gt;</span></span>
-<span id="cb36-2"><a href=""></a>  <span class="fu">select</span>(<span class="fu">starts_with</span>(<span class="st">"pk"</span>)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href=""></a>exped <span class="sc">|&gt;</span></span>
+<span id="cb32-2"><a href=""></a>  <span class="fu">select</span>(<span class="fu">starts_with</span>(<span class="st">"pk"</span>)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 259 × 1
    pkname       
@@ -733,8 +691,8 @@ $ days_to_high_point &lt;dbl&gt; 35, 1, 9, 16, 3, 10, 13, 16, 2, 14, 7, 24, 14, 
 <section id="select-variables-with-certain-characteristics-1" class="slide level2">
 <h2><code>select</code> variables with certain characteristics</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb38" data-code-line-numbers="2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href=""></a>exped <span class="sc">|&gt;</span></span>
-<span id="cb38-2"><a href=""></a>  <span class="fu">select</span>(<span class="fu">ends_with</span>(<span class="st">"id"</span>)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href=""></a>exped <span class="sc">|&gt;</span></span>
+<span id="cb34-2"><a href=""></a>  <span class="fu">select</span>(<span class="fu">ends_with</span>(<span class="st">"id"</span>)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 259 × 1
    expid    
@@ -777,9 +735,9 @@ $ days_to_high_point &lt;dbl&gt; 35, 1, 9, 16, 3, 10, 13, 16, 2, 14, 7, 24, 14, 
 <div class="column fragment" style="width:50%;">
 <p><strong>Ascending</strong></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb40" data-code-line-numbers="3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href=""></a>exped <span class="sc">|&gt;</span></span>
-<span id="cb40-2"><a href=""></a>  <span class="fu">select</span>(pkname, year, highpoint) <span class="sc">|&gt;</span></span>
-<span id="cb40-3"><a href=""></a>  <span class="fu">arrange</span>(year) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb36" data-code-line-numbers="3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href=""></a>exped <span class="sc">|&gt;</span></span>
+<span id="cb36-2"><a href=""></a>  <span class="fu">select</span>(pkname, year, highpoint) <span class="sc">|&gt;</span></span>
+<span id="cb36-3"><a href=""></a>  <span class="fu">arrange</span>(year) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 259 × 3
    pkname         year highpoint
@@ -800,9 +758,9 @@ $ days_to_high_point &lt;dbl&gt; 35, 1, 9, 16, 3, 10, 13, 16, 2, 14, 7, 24, 14, 
 </div><div class="column fragment" style="width:50%;">
 <p><strong>Descending</strong></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb42" data-code-line-numbers="3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href=""></a>exped <span class="sc">|&gt;</span></span>
-<span id="cb42-2"><a href=""></a>  <span class="fu">select</span>(pkname, year, highpoint) <span class="sc">|&gt;</span></span>
-<span id="cb42-3"><a href=""></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(year))  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb38" data-code-line-numbers="3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href=""></a>exped <span class="sc">|&gt;</span></span>
+<span id="cb38-2"><a href=""></a>  <span class="fu">select</span>(pkname, year, highpoint) <span class="sc">|&gt;</span></span>
+<span id="cb38-3"><a href=""></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(year))  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 259 × 3
    pkname      year highpoint
@@ -831,8 +789,8 @@ $ days_to_high_point &lt;dbl&gt; 35, 1, 9, 16, 3, 10, 13, 16, 2, 14, 7, 24, 14, 
 <h2><code>slice</code> to select certain observations by row number</h2>
 <p><code>slice</code> to select first five rows</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb44" data-code-line-numbers="2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href=""></a>exped <span class="sc">|&gt;</span></span>
-<span id="cb44-2"><a href=""></a>  <span class="fu">slice</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href=""></a>exped <span class="sc">|&gt;</span></span>
+<span id="cb40-2"><a href=""></a>  <span class="fu">slice</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 5 × 8
   expid      year pkname season_factor highpoint  rope o2used days_to_high_point
@@ -853,9 +811,9 @@ $ days_to_high_point &lt;dbl&gt; 35, 1, 9, 16, 3, 10, 13, 16, 2, 14, 7, 24, 14, 
 <section id="filter-to-select-a-subset-of-rows" class="slide level2">
 <h2><code>filter</code> to select a subset of rows</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb46" data-code-line-numbers="1,3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href=""></a><span class="co"># Expeditions on Lhotse</span></span>
-<span id="cb46-2"><a href=""></a>exped <span class="sc">|&gt;</span></span>
-<span id="cb46-3"><a href=""></a>  <span class="fu">filter</span>(pkname <span class="sc">==</span> <span class="st">"Lhotse"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href=""></a><span class="co"># Expeditions on Lhotse</span></span>
+<span id="cb42-2"><a href=""></a>exped <span class="sc">|&gt;</span></span>
+<span id="cb42-3"><a href=""></a>  <span class="fu">filter</span>(pkname <span class="sc">==</span> <span class="st">"Lhotse"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 26 × 8
    expid     year pkname season_factor highpoint  rope o2used days_to_high_point
@@ -879,21 +837,20 @@ $ days_to_high_point &lt;dbl&gt; 35, 1, 9, 16, 3, 10, 13, 16, 2, 14, 7, 24, 14, 
 <div class="columns">
 <div class="column" style="width:50%;">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb48" data-code-line-numbers="2,3,4,5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href=""></a>exped <span class="sc">|&gt;</span></span>
-<span id="cb48-2"><a href=""></a>  <span class="fu">filter</span>( </span>
-<span id="cb48-3"><a href=""></a>    pkname <span class="sc">==</span> <span class="st">"Lhotse"</span>,     </span>
-<span id="cb48-4"><a href=""></a>    days_to_high_point <span class="sc">&gt;=</span> <span class="dv">40</span>    </span>
-<span id="cb48-5"><a href=""></a>    ) <span class="sc">|&gt;</span> </span>
-<span id="cb48-6"><a href=""></a>  <span class="fu">select</span>(year, season_factor, days_to_high_point)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb44" data-code-line-numbers="2,3,4,5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href=""></a>exped <span class="sc">|&gt;</span></span>
+<span id="cb44-2"><a href=""></a>  <span class="fu">filter</span>( </span>
+<span id="cb44-3"><a href=""></a>    pkname <span class="sc">==</span> <span class="st">"Lhotse"</span>,     </span>
+<span id="cb44-4"><a href=""></a>    days_to_high_point <span class="sc">&gt;=</span> <span class="dv">40</span>    </span>
+<span id="cb44-5"><a href=""></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 5 × 3
-   year season_factor days_to_high_point
-  &lt;dbl&gt; &lt;chr&gt;                      &lt;dbl&gt;
-1  2021 Spring                        44
-2  2021 Spring                        40
-3  2023 Spring                        48
-4  2023 Spring                        42
-5  2023 Spring                        48</code></pre>
+<pre><code># A tibble: 5 × 8
+  expid      year pkname season_factor highpoint  rope o2used days_to_high_point
+  &lt;chr&gt;     &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;             &lt;dbl&gt; &lt;dbl&gt; &lt;lgl&gt;               &lt;dbl&gt;
+1 LHOT21102  2021 Lhotse Spring             8516     0 TRUE                   44
+2 LHOT21104  2021 Lhotse Spring             8516     0 TRUE                   40
+3 LHOT23103  2023 Lhotse Spring             8516     0 TRUE                   48
+4 LHOT23104  2023 Lhotse Spring             8516     0 TRUE                   42
+5 LHOT23119  2023 Lhotse Spring             8516     0 FALSE                  48</code></pre>
 </div>
 </div>
 </div><div class="column" style="width:50%;">
@@ -984,13 +941,6 @@ $ days_to_high_point &lt;dbl&gt; 35, 1, 9, 16, 3, 10, 13, 16, 2, 14, 7, 24, 14, 
 </tbody>
 </table>
 </div></div>
-</section>
-<section id="try-it-ae-04-1-4" class="slide level2">
-<h2>Try it: ae-04 1-4</h2>
-<ul>
-<li>Before you try to push any changes, don’t forget to use <code>gitcreds::gitcreds_set()</code> to set your PAT.</li>
-<li>Before pushing, make sure to <em>render, stage, commit</em> and then <em>push</em> to GitHub</li>
-</ul>
 </section></section>
 <section>
 <section id="dplyrdistinct-and-dplyrcount" class="title-slide slide level1 center">
@@ -1001,9 +951,9 @@ $ days_to_high_point &lt;dbl&gt; 35, 1, 9, 16, 3, 10, 13, 16, 2, 14, 7, 24, 14, 
 <h2><code>distinct</code> to filter for unique rows</h2>
 <p>Get unique values of the <code>pkname</code> variable and arrange in alphabetical order.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb50" data-code-line-numbers="2,3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href=""></a>exped <span class="sc">|&gt;</span> </span>
-<span id="cb50-2"><a href=""></a>  <span class="fu">distinct</span>(pkname) <span class="sc">|&gt;</span> </span>
-<span id="cb50-3"><a href=""></a>  <span class="fu">arrange</span>(pkname)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href=""></a>exped <span class="sc">|&gt;</span> </span>
+<span id="cb46-2"><a href=""></a>  <span class="fu">distinct</span>(pkname) <span class="sc">|&gt;</span> </span>
+<span id="cb46-3"><a href=""></a>  <span class="fu">arrange</span>(pkname)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 58 × 1
    pkname       
@@ -1026,9 +976,9 @@ $ days_to_high_point &lt;dbl&gt; 35, 1, 9, 16, 3, 10, 13, 16, 2, 14, 7, 24, 14, 
 <h2><code>distinct</code> to filter for unique rows</h2>
 <p>Get unique combinations of the <code>pkname</code> and <code>season_factor</code> variables and arrange in alphabetical order by <code>pkname</code> first and <code>season_factor</code> second.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb52" data-code-line-numbers="2,3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href=""></a>exped <span class="sc">|&gt;</span> </span>
-<span id="cb52-2"><a href=""></a>  <span class="fu">distinct</span>(pkname, season_factor) <span class="sc">|&gt;</span></span>
-<span id="cb52-3"><a href=""></a>  <span class="fu">arrange</span>(pkname, season_factor)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href=""></a>exped <span class="sc">|&gt;</span> </span>
+<span id="cb48-2"><a href=""></a>  <span class="fu">distinct</span>(pkname, season_factor) <span class="sc">|&gt;</span></span>
+<span id="cb48-3"><a href=""></a>  <span class="fu">arrange</span>(pkname, season_factor)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 69 × 2
    pkname        season_factor
@@ -1053,8 +1003,8 @@ $ days_to_high_point &lt;dbl&gt; 35, 1, 9, 16, 3, 10, 13, 16, 2, 14, 7, 24, 14, 
 <div class="column fragment" style="width:50%;">
 <p>Alphabetical order by default</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb54" data-code-line-numbers="2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href=""></a>exped <span class="sc">|&gt;</span></span>
-<span id="cb54-2"><a href=""></a>  <span class="fu">count</span>(pkname) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href=""></a>exped <span class="sc">|&gt;</span></span>
+<span id="cb50-2"><a href=""></a>  <span class="fu">count</span>(pkname) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 58 × 2
    pkname            n
@@ -1075,8 +1025,8 @@ $ days_to_high_point &lt;dbl&gt; 35, 1, 9, 16, 3, 10, 13, 16, 2, 14, 7, 24, 14, 
 </div><div class="column fragment" style="width:50%;">
 <p>Descending order by frequency</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb56" data-code-line-numbers="2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href=""></a>exped <span class="sc">|&gt;</span></span>
-<span id="cb56-2"><a href=""></a>  <span class="fu">count</span>(pkname, <span class="at">sort =</span> <span class="cn">TRUE</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href=""></a>exped <span class="sc">|&gt;</span></span>
+<span id="cb52-2"><a href=""></a>  <span class="fu">count</span>(pkname, <span class="at">sort =</span> <span class="cn">TRUE</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 58 × 2
    pkname            n
@@ -1100,8 +1050,8 @@ $ days_to_high_point &lt;dbl&gt; 35, 1, 9, 16, 3, 10, 13, 16, 2, 14, 7, 24, 14, 
 <h2><code>count</code> for multiple variables</h2>
 <p>Get the number of observations for each unique combination of <code>pkname</code> and <code>season_factor</code></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb58" data-code-line-numbers="2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href=""></a>exped <span class="sc">|&gt;</span></span>
-<span id="cb58-2"><a href=""></a>  <span class="fu">count</span>(pkname, season_factor) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href=""></a>exped <span class="sc">|&gt;</span></span>
+<span id="cb54-2"><a href=""></a>  <span class="fu">count</span>(pkname, season_factor) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 69 × 3
    pkname        season_factor     n
@@ -1120,11 +1070,6 @@ $ days_to_high_point &lt;dbl&gt; 35, 1, 9, 16, 3, 10, 13, 16, 2, 14, 7, 24, 14, 
 </div>
 </div>
 </section></section>
-<section id="try-it-ae-04-5-6" class="title-slide slide level1 center">
-<h1>Try it: ae-04 5-6</h1>
-
-</section>
-
 <section>
 <section id="dplyrmutate" class="title-slide slide level1 center">
 <h1><code>dplyr::mutate</code></h1>
@@ -1134,10 +1079,10 @@ $ days_to_high_point &lt;dbl&gt; 35, 1, 9, 16, 3, 10, 13, 16, 2, 14, 7, 24, 14, 
 <h2><code>mutate</code> to add a new variable</h2>
 <p><code>mutate</code> creates a new column based on whatever arguments you provide, often using other existing colunns in the dataframe.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb60" data-code-line-numbers="2,3,4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href=""></a>exped <span class="sc">|&gt;</span></span>
-<span id="cb60-2"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">weeks_to_high_point =</span> days_to_high_point <span class="sc">/</span> <span class="dv">7</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb60-3"><a href=""></a>  <span class="fu">select</span>(expid, days_to_high_point, weeks_to_high_point) <span class="sc">|&gt;</span></span>
-<span id="cb60-4"><a href=""></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(weeks_to_high_point))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb56" data-code-line-numbers="2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href=""></a>exped <span class="sc">|&gt;</span></span>
+<span id="cb56-2"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">weeks_to_high_point =</span> days_to_high_point <span class="sc">/</span> <span class="dv">7</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb56-3"><a href=""></a>  <span class="fu">select</span>(expid, days_to_high_point, weeks_to_high_point) <span class="sc">|&gt;</span></span>
+<span id="cb56-4"><a href=""></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(weeks_to_high_point))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 259 × 3
    expid     days_to_high_point weeks_to_high_point
@@ -1165,8 +1110,8 @@ $ days_to_high_point &lt;dbl&gt; 35, 1, 9, 16, 3, 10, 13, 16, 2, 14, 7, 24, 14, 
 <h2>use <code>summarise</code> to calculate summary stats</h2>
 <p>Calculate mean <code>days_to_high_point</code> for all expeditions and assign the resulting output to a variable named <code>mean_days</code>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb62" data-code-line-numbers="2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href=""></a>exped <span class="sc">|&gt;</span></span>
-<span id="cb62-2"><a href=""></a>  <span class="fu">summarise</span>(<span class="at">mean_days =</span> <span class="fu">mean</span>(days_to_high_point)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href=""></a>exped <span class="sc">|&gt;</span></span>
+<span id="cb58-2"><a href=""></a>  <span class="fu">summarise</span>(<span class="at">mean_days =</span> <span class="fu">mean</span>(days_to_high_point)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1 × 1
   mean_days
@@ -1184,9 +1129,9 @@ $ days_to_high_point &lt;dbl&gt; 35, 1, 9, 16, 3, 10, 13, 16, 2, 14, 7, 24, 14, 
 <h2><code>group_by</code> for grouped summary calculations</h2>
 <p>Calculate mean average days to high point for all expeditions for each peak</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb64" data-code-line-numbers="2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href=""></a>exped <span class="sc">|&gt;</span></span>
-<span id="cb64-2"><a href=""></a>  <span class="fu">group_by</span>(pkname) <span class="sc">|&gt;</span> </span>
-<span id="cb64-3"><a href=""></a>  <span class="fu">summarise</span>(<span class="at">mean_days =</span> <span class="fu">mean</span>(days_to_high_point))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb60" data-code-line-numbers="2, 3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href=""></a>exped <span class="sc">|&gt;</span></span>
+<span id="cb60-2"><a href=""></a>  <span class="fu">group_by</span>(pkname) <span class="sc">|&gt;</span> </span>
+<span id="cb60-3"><a href=""></a>  <span class="fu">summarise</span>(<span class="at">mean_days =</span> <span class="fu">mean</span>(days_to_high_point))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 58 × 2
    pkname        mean_days
@@ -1209,13 +1154,13 @@ $ days_to_high_point &lt;dbl&gt; 35, 1, 9, 16, 3, 10, 13, 16, 2, 14, 7, 24, 14, 
 <h2>Multiple summary statistics</h2>
 <p><code>summarise</code> can be used for multiple summary statistics</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb66" data-code-line-numbers="2,3,4,5,6,7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href=""></a>exped <span class="sc">|&gt;</span></span>
-<span id="cb66-2"><a href=""></a>  <span class="fu">summarise</span>(</span>
-<span id="cb66-3"><a href=""></a>    <span class="at">min_days =</span> <span class="fu">min</span>(days_to_high_point),</span>
-<span id="cb66-4"><a href=""></a>    <span class="at">mean_days =</span> <span class="fu">mean</span>(days_to_high_point),</span>
-<span id="cb66-5"><a href=""></a>    <span class="at">median_days =</span> <span class="fu">median</span>(days_to_high_point),</span>
-<span id="cb66-6"><a href=""></a>    <span class="at">max_days =</span> <span class="fu">max</span>(days_to_high_point)</span>
-<span id="cb66-7"><a href=""></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb62" data-code-line-numbers="2,3,4,5,6,7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href=""></a>exped <span class="sc">|&gt;</span></span>
+<span id="cb62-2"><a href=""></a>  <span class="fu">summarise</span>(</span>
+<span id="cb62-3"><a href=""></a>    <span class="at">min_days =</span> <span class="fu">min</span>(days_to_high_point),</span>
+<span id="cb62-4"><a href=""></a>    <span class="at">mean_days =</span> <span class="fu">mean</span>(days_to_high_point),</span>
+<span id="cb62-5"><a href=""></a>    <span class="at">median_days =</span> <span class="fu">median</span>(days_to_high_point),</span>
+<span id="cb62-6"><a href=""></a>    <span class="at">max_days =</span> <span class="fu">max</span>(days_to_high_point)</span>
+<span id="cb62-7"><a href=""></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1 × 4
   min_days mean_days median_days max_days
@@ -1224,8 +1169,12 @@ $ days_to_high_point &lt;dbl&gt; 35, 1, 9, 16, 3, 10, 13, 16, 2, 14, 7, 24, 14, 
 </div>
 </div>
 </section></section>
-<section id="try-it-ae-04-7-8" class="title-slide slide level1 center">
-<h1>Try it: ae-04 7-8</h1>
+<section id="try-it-ae-04" class="title-slide slide level1 center">
+<h1>Try it: ae-04</h1>
+<ul>
+<li>Before you try to push any changes, don’t forget to use <code>gitcreds::gitcreds_set()</code> to set your PAT.</li>
+<li>Before pushing, make sure to <em>render, stage, commit</em> and then <em>push</em> to GitHub</li>
+</ul>
 
 </section>
 

@@ -34,15 +34,6 @@ execute:
 ![](img/draw-the-owl.jpg){fig-align="center" fig-alt="Drawing of an owl joke cartoon"}
 
 
-
-## You are already asking the right questions
-
-- How can I change the values of a categorical variable if they are not informative (e.g., change "OG" to "old growth")
-- How can I calculate summary statistics (e.g., mean, max, min, etc.)
-- What if I only want to analyze a subset of the columns or rows?
-- How can I remove missing values (NAs)?
-
-
 ## First, we almost always need to transform our data
 
 ![](img/dplyr-horst.png){fig-align="center" fig-alt="cartoon of dplyr R package"}
@@ -97,14 +88,7 @@ exped <- read_csv("data/mountaineering_expeditions.csv")
 [^1]: Source: [TidyTuesday](https://github.com/rfordatascience/tidytuesday/blob/main/data/2025/2025-01-21/readme.md)
 
 
-## Look at the variable names in the `exped` data frame
-
-```{r output.lines=18}
-names(exped)
-```
-
-
-## Look at data types and first few observations in the `exped` data frame
+## Look at variables, data types, and first few observations in the `exped` data frame
 
 ```{r output.lines=18}
 glimpse(exped)
@@ -243,8 +227,6 @@ In programming, a pipe is a technique for passing information from one process t
 :::
 ::: {.column width = "50%"}
 ```{r}
-#| code-line-numbers: "1,2"
-
 exped |> 
   select(pkname, days_to_high_point) |> 
   arrange(desc(days_to_high_point))
@@ -252,31 +234,6 @@ exped |>
 :::
 :::
 
-
-## What is a pipe? {visibility="uncounted"}
-
-In programming, a pipe is a technique for passing information from one process to another.
-
-- You can think about the following sequence of actions - find keys, 
-unlock car, start car, drive to work, park.
-- You need the first action in order to complete the second action
-- Expressed as a set of nested functions in R pseudocode this would look like:
-<br>
-```{r eval=FALSE}
-park(drive(start_car(find("keys"))))
-```
-
-## How does a pipe work? {visibility="uncounted"}
-
-Writing it out using pipes give it a more natural (and easier to read) 
-structure:
-<br>
-```{r eval=FALSE}
-find("keys") |> 
-  start_car() |> 
-  drive(to = "work") |> 
-  park()
-```
 
 ## How does a pipe work? {visibility="uncounted"}
 
@@ -352,8 +309,6 @@ exped |>
 ## `select` to exclude variables
 
 ```{r}
-#| code-line-numbers: "2"
-
 exped |>
   select(-o2used) 
 ```
@@ -362,8 +317,6 @@ exped |>
 ## `select` a range of variables
 
 ```{r}
-#| code-line-numbers: "2"
-
 exped |>
   select(expid:pkname) 
 ```
@@ -371,8 +324,6 @@ exped |>
 ## `select` variables with certain characteristics
 
 ```{r}
-#| code-line-numbers: "2"
-
 exped |>
   select(starts_with("pk")) 
 ```
@@ -380,8 +331,6 @@ exped |>
 ## `select` variables with certain characteristics
 
 ```{r}
-#| code-line-numbers: "2"
-
 exped |>
   select(ends_with("id")) 
 ```
@@ -432,8 +381,6 @@ exped |>
 
 `slice` to select first five rows
 ```{r}
-#| code-line-numbers: "2"
-
 exped |>
   slice(1:5) 
 ```
@@ -444,8 +391,6 @@ exped |>
 ## `filter` to select a subset of rows
 
 ```{r}
-#| code-line-numbers: "1,3"
-
 # Expeditions on Lhotse
 exped |>
   filter(pkname == "Lhotse")
@@ -462,8 +407,7 @@ exped |>
   filter( 
     pkname == "Lhotse",     
     days_to_high_point >= 40    
-    ) |> 
-  select(year, season_factor, days_to_high_point)
+    )
 ```
 :::
 
@@ -502,10 +446,6 @@ operator     | definition
 :::
 :::
 
-## Try it: ae-04 1-4
-
-- Before you try to push any changes, don't forget to use `gitcreds::gitcreds_set()` to set your PAT.
-- Before pushing, make sure to *render, stage, commit* and then *push* to GitHub
 
 # `dplyr::distinct` and `dplyr::count`
 
@@ -513,8 +453,6 @@ operator     | definition
 
 Get unique values of the `pkname` variable and arrange in alphabetical order.
 ```{r}
-#| code-line-numbers: "2,3"
-
 exped |> 
   distinct(pkname) |> 
   arrange(pkname)
@@ -524,8 +462,6 @@ exped |>
 
 Get unique combinations of the `pkname` and `season_factor` variables and arrange in alphabetical order by `pkname` first and `season_factor` second.
 ```{r}
-#| code-line-numbers: "2,3"
-
 exped |> 
   distinct(pkname, season_factor) |>
   arrange(pkname, season_factor)
@@ -538,8 +474,6 @@ exped |>
 :::{.column width = "50%" .fragment}
 Alphabetical order by default
 ```{r}
-#| code-line-numbers: "2"
-
 exped |>
   count(pkname) 
 ```
@@ -547,8 +481,6 @@ exped |>
 ::: {.column width = "50%" .fragment}
 Descending order by frequency
 ```{r}
-#| code-line-numbers: "2"
-
 exped |>
   count(pkname, sort = TRUE) 
 ```
@@ -559,13 +491,9 @@ exped |>
 
 Get the number of observations for each unique combination of `pkname` and `season_factor`
 ```{r}
-#| code-line-numbers: "2"
-
 exped |>
   count(pkname, season_factor) 
 ```
-
-# Try it: ae-04 5-6
 
 # `dplyr::mutate`
 
@@ -574,7 +502,7 @@ exped |>
 `mutate` creates a new column based on whatever arguments you provide, often using other existing colunns in the dataframe.
 
 ```{r}
-#| code-line-numbers: "2,3,4"
+#| code-line-numbers: "2"
 
 exped |>
   mutate(weeks_to_high_point = days_to_high_point / 7) |> 
@@ -589,8 +517,6 @@ exped |>
 Calculate mean `days_to_high_point` for all expeditions and assign the resulting output to a variable named `mean_days`.
 
 ```{r}
-#| code-line-numbers: "2"
-
 exped |>
   summarise(mean_days = mean(days_to_high_point)) 
 ```
@@ -603,7 +529,7 @@ summary statistic, and removes all columns that are not included in the calculat
 
 Calculate mean average days to high point for all expeditions for each peak
 ```{r}
-#| code-line-numbers: "2"
+#| code-line-numbers: "2, 3"
 
 exped |>
   group_by(pkname) |> 
@@ -626,4 +552,7 @@ exped |>
     )
 ```
 
-# Try it: ae-04 7-8
+# Try it: ae-04 
+
+- Before you try to push any changes, don't forget to use `gitcreds::gitcreds_set()` to set your PAT.
+- Before pushing, make sure to *render, stage, commit* and then *push* to GitHub
