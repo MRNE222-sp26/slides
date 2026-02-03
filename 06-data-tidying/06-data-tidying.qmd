@@ -26,28 +26,28 @@ execute:
 
 ---
 
-![Source: [Allison Horst](https://openscapes.org/blog/2020-10-12-tidy-data/)](img/horst_tidydata-messy.jpg)
+![Source: [Allison Horst](https://openscapes.org/blog/2020-10-12-tidy-data/)](img/horst_tidydata-messy.jpg){fig-alt="tidy data cartoon"}
 
 ---
 
-![Source: [Allison Horst](https://openscapes.org/blog/2020-10-12-tidy-data/)](img/horst_tidydata.jpg)
+![Source: [Allison Horst](https://openscapes.org/blog/2020-10-12-tidy-data/)](img/horst_tidydata.jpg){fig-alt="tidy data cartoon"}
 
 ---
 
 ## What makes this data not tidy?
 
-![Source: [Army Air Forces Statistical Digest, WW II](https://www.ibiblio.org/hyperwar/AAF/StatDigest/aafsd-3.html)](img/hyperwar-airplanes.png){fig-align="center"}
+![Source: [Army Air Forces Statistical Digest, WW II](https://www.ibiblio.org/hyperwar/AAF/StatDigest/aafsd-3.html)](img/hyperwar-airplanes.png){fig-align="center" fig-alt="example messy dataset"}
 
 
 ## What makes this data not tidy?
 
 ![Source: [Gapminder, Estimated HIV prevalence among 15-49 year olds](https://www.gapminder.org/data)
-](img/hiv-est-prevalence.png){fig-align="center"}
+](img/hiv-est-prevalence.png){fig-align="center" fig-alt="example messy dataset"}
 
 
 ## What makes this data not tidy?
 
-![Source: [US Census Fact Finder, General Economic Characteristics, ACS 2017](https://factfinder.census.gov/faces/tableservices/jsf/pages/productview.xhtml?pid=ACS_17_5YR_DP03&src=pt)](img/us-general-economic.png){fig-align="center"}
+![Source: [US Census Fact Finder, General Economic Characteristics, ACS 2017](https://factfinder.census.gov/faces/tableservices/jsf/pages/productview.xhtml?pid=ACS_17_5YR_DP03&src=pt)](img/us-general-economic.png){fig-align="center" fig-alt="example messy dataset"}
 
 
 # What is the problem with "un-tidy" data?
@@ -55,11 +55,11 @@ execute:
 
 ## We need to wrangle to make the data tidy
 
-![Source: [Allison Horst](https://openscapes.org/blog/2020-10-12-tidy-data/)](img/horst_tidydata-wrangle.jpg){fig-align="center"}
+![Source: [Allison Horst](https://openscapes.org/blog/2020-10-12-tidy-data/)](img/horst_tidydata-wrangle.jpg){fig-align="center" fig-alt="tidyr cartoon"}
 
 ## We need tidy data to visualize and model
 
-![Source: [Allison Horst](https://openscapes.org/blog/2020-10-12-tidy-data/)](img/horst_tidydata-pipeline.jpg){fig-align="center"}
+![Source: [Allison Horst](https://openscapes.org/blog/2020-10-12-tidy-data/)](img/horst_tidydata-pipeline.jpg){fig-align="center" fig-alt="tidyr cartoon"}
 
 ## Data: Sales
 
@@ -89,7 +89,7 @@ customers |>
 
 ::: {.columns}
 ::: {.column width = "25%"}
-![](img/tidyr-part-of-tidyverse.png)
+![](img/tidyr-part-of-tidyverse.png){fig-alt="tidyr package cartoon"}
 :::
 ::: {.column width="75%"}
 The goal of `tidyr` is to help you tidy your data via:
@@ -269,7 +269,7 @@ purchases |>
 
 ## Pivoting from wide to long back to wide 
 
-![](img/tidyr-longer-wider.gif)
+![](img/tidyr-longer-wider.gif){alt-text="pivot wider cartoon"}
 
 
 # More tidying functions
