@@ -419,3 +419,5 @@ stocks |>
 
 - Clone ae-05 into Posit Cloud
 - Practice data tidying!
+- Before you try to push any changes, don't forget to use `gitcreds::gitcreds_set()` to set your PAT.
+- Before pushing, make sure to *render, stage, commit* and then *push* to GitHub
