@@ -1,0 +1,681 @@
+---
+title: "Take charge of your data"
+subtitle: "<br><br> Environmental Data Analysis and Visualization"
+author: "[https://mrne222-sp26.github.io/website/](https://mrne222-sp26.github.io/website/)"
+format: 
+  revealjs:
+    theme: simple
+    width: 1500
+    margin: 0.05
+slide-number: c/t
+from: markdown+emoji
+editor: 
+  markdown: 
+    wrap: 72
+execute:
+  echo: true
+---
+
+```{r packages, echo=FALSE, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(DT)
+library(scales)
+library(palmerpenguins)
+```
+
+# Why do you have to "take charge of your data"?
+
+## Example: Cat lovers
+
+A survey asked respondents their name and number of cats. The instructions said to enter the number of cats as a numerical value.
+
+```{r message=FALSE}
+cat_lovers <- read_csv("data/cat-lovers.csv")
+```
+
+```{r echo=FALSE}
+cat_lovers
+```
+
+## What happened?
+
+```{r warning=TRUE}
+cat_lovers |> 
+  summarise(mean_cats = mean(number_of_cats))
+```
+
+
+## Take a closer look at the data
+
+What is the "type" of the `number_of_cats` variable?
+
+```{r}
+cat_lovers
+```
+
+
+## Why did `number_of_cats` read in as character data?
+
+```{r echo=FALSE}
+cat_lovers |> 
+  datatable()
+```
+
+## Sometimes you need to take charge of your data
+
+```{r}
+cat_lovers |> 
+  mutate(number_of_cats = case_when(
+    name == "Ginger Clark" ~ 2,
+    name == "Doug Bass"    ~ 3,
+    TRUE                   ~ as.numeric(number_of_cats))) |> 
+  summarise(mean_cats = mean(number_of_cats))
+```
+
+```{r echo=FALSE}
+cat_lovers <- cat_lovers |> 
+  mutate(number_of_cats = case_when(
+    name == "Ginger Clark" ~ 2,
+    name == "Doug Bass"    ~ 3,
+    TRUE                   ~ as.numeric(number_of_cats)))
+```
+
+
+## Moral of the story
+
+- If your data does not behave how you expect it to, incorrect type coercion when reading in the data might be the reason.
+
+- Go in and investigate your data, apply the fix, *save your data*, live happily ever after.
+
+# Data types
+
+## Data types in R
+
+- **logical**
+- **double**
+- **integer**
+- **character**
+- there are more, but we won't be focusing on those
+
+## Logical & character
+
+**logical** - boolean values `TRUE` and `FALSE`
+
+```{r}
+typeof(TRUE)
+```
+
+**character** - character strings
+
+```{r}
+typeof("hello")
+```
+
+## Double & integer
+
+**double** - floating point numerical values (default numerical type)
+
+```{r}
+typeof(1.335)
+```
+
+<br>
+```{r}
+typeof(7)
+```
+
+**integer** - integer numerical values (indicated with an `L`)
+
+```{r}
+typeof(7L)
+```
+
+<br>
+```{r}
+typeof(1:3)
+```
+
+## Concatenation
+
+Vectors can be constructed using the `c()` function.
+
+```{r}
+c(1, 2, 3)
+```
+
+<br>
+```{r}
+  
+c("Hello", "World!")
+```
+
+<br>
+```{r}
+
+c(c("hi", "hello"), c("bye", "jello"))
+```
+
+## Converting between types - numeric to character
+
+::: {.columns}
+::: {.column width = "50%"}
+```{r}
+x <- 1:3
+x
+```
+
+<br>
+```{r}
+typeof(x)
+```
+:::
+::: {.column width = "50%"}
+```{r}
+y <- as.character(x)
+y
+```
+
+<br>
+```{r}
+typeof(y)
+```
+:::
+:::
+
+## Converting between types - logical to double
+
+::: {.columns}
+::: {.column width = "50%"}
+```{r}
+x <- c(TRUE, FALSE)
+x
+```
+
+<br>
+```{r}
+typeof(x)
+```
+:::
+::: {.column width = "50%"}
+```{r}
+y <- as.numeric(x)
+y
+```
+
+<br>
+```{r}
+typeof(y)
+```
+:::
+:::
+
+## Be aware of what happens when you combine different data types in the same vector
+
+R will happily convert between various types without complaint when different types of data are concatenated in a vector, and that's not always a great thing!
+
+::: {.columns}
+::: {.column width = "50%"}
+```{r}
+c(1, "Hello")
+```
+
+<br>
+```{r}
+c(FALSE, 3L)
+```
+:::
+::: {.column width = "50%"}
+```{r}
+c(1.2, 3L)
+```
+
+<br>
+```{r}
+c(2L, "two")
+```
+:::
+:::
+
+## Explicit vs. implicit coercion
+
+Let's give formal names to what we've seen so far:
+
+- **Explicit coercion** is when you call a function like `as.logical()`, `as.numeric()`, `as.integer()`, `as.double()`, or `as.character()`
+
+- **Implicit coercion** happens when you use a vector in a specific context that expects a certain type of vector (like combining multiple data types in one)
+
+
+
+## Example of implicit coercion
+
+Suppose we want to know the type of `c(1, "a")`. 
+
+First, I'd look at: 
+
+```{r}
+typeof(1)
+```
+
+<br>
+```{r}
+typeof("a")
+```
+
+and make a guess about what type R thinks the vector is based on the type of each element of the vector.
+
+## Example of implicit coercion
+
+Suppose we want to know the type of `c(1, "a")`. 
+
+First, I'd look at: 
+
+```{r}
+typeof(1)
+```
+
+<br>
+```{r}
+typeof("a")
+```
+
+and make a guess based on these. Then finally I'd check:
+
+```{r}
+typeof(c(1, "a"))
+```
+
+# Special values
+
+## Special values
+
+- `NA`: Not available
+- `NaN`: Not a number
+- `Inf`: Positive infinity
+- `-Inf`: Negative infinity
+
+## Why might we end up with NaN or Inf?
+
+::: {.columns}
+::: {.column width = "50%"}
+```{r}
+pi / 0
+0 / 0
+```
+:::
+::: {.column width = "50%"}
+```{r}
+1/0 - 1/0
+1/0 + 1/0
+```
+:::
+:::
+
+## `NA`s are special `r emo::ji('snowflake')`s
+
+```{r}
+x <- c(1, 2, 3, 4, NA)
+```
+
+```{r}
+mean(x)
+mean(x, na.rm = TRUE)
+summary(x)
+```
+
+## `NA`s are special `r emo::ji('snowflake')`s
+
+Some functions will not execute if the data contains NAs. Usually, they include an optional argument to specify whether to remove NAs. Otherwise you can use the `drop_na()` function to remove them yourself.
+```{r}
+x <- c(1, 2, 3, 4, NA)
+```
+
+```{r}
+mean(x)
+mean(x, na.rm = TRUE)
+summary(x)
+```
+
+# Data classes: factors and dates
+
+## What are factors?
+
+R uses factors to handle categorical variables: variables that have a fixed and known set of possible values
+
+```{r}
+x <- factor(c("BS", "MS", "PhD", "MS"))
+x
+```
+
+## Factors under the hood
+
+We can think of factors like a character (level labels) and an integer (level numbers) glued together
+
+```{r}
+glimpse(x)
+```
+
+<br>
+```{r}
+as.integer(x)
+```
+
+# Working with factors
+
+```{r include=FALSE}
+cat_lovers <- read_csv("data/cat-lovers.csv")
+```
+
+## Data are often read in as character strings by default
+
+```{r}
+cat_lovers
+```
+
+## Defaut plot of "handedness" counts
+
+```{r}
+ggplot(cat_lovers, mapping = aes(x = handedness)) +
+  geom_bar()
+```
+
+## Use the forcats package to take charge of factors
+
+```{r}
+cat_lovers |>
+  mutate(handedness = fct_infreq(handedness)) |> 
+  ggplot(aes(x = handedness)) +
+  geom_bar()
+```
+
+## Come for the functionality
+
+... stay for the logo
+
+![](img/forcats-part-of-tidyverse.png)
+
+## Why use factors?
+
+- Factors are useful when you have true categorical data and you want to override the ordering of character vectors to improve display
+- They are also useful in modeling scenarios
+- The **forcats** package provides a suite of useful tools that solve common problems with factors
+
+## Forcats functions
+
+- fct_infreq(): Reordering a factor by the frequency of values.
+- fct_reorder(): Reordering a factor by another variable.
+- fct_relevel(): Changing the order of a factor by hand.
+- fct_lump(): Collapsing the least/most frequent values of a factor into “other”.
+
+
+## `fct_reorder()`
+
+```{r}
+penguins
+```
+
+## `fct_reorder()`
+
+By default species appears in alphabetical order. 
+
+```{r}
+ggplot(penguins, aes(x = species, y = body_mass_g)) +
+  geom_boxplot() +
+  labs(x = "Species", y = "Body mass (g)")
+```
+
+
+## `fct_reorder()`
+
+Use `fct_reorder()` to reorder the levels of a categorical variable (species) by the value of another variable (body mass)
+
+```{r}
+ggplot(penguins, aes(x = fct_reorder(species, body_mass_g, .desc = TRUE), y = body_mass_g)) +
+  geom_boxplot() +
+  labs(x = "Species", y = "Body mass (g)")
+```
+
+
+## `fct_relevel()`
+
+Use `fct_relevel()` to reorder the levels of a categorical variable (species) manually
+
+```{r}
+ggplot(penguins, aes(x = fct_relevel(species, "Chinstrap", "Gentoo", "Adelie"), y = body_mass_g)) +
+  geom_boxplot() +
+  labs(x = "Species", y = "Body mass (g)")
+```
+
+
+## You can also modify factors in a dataframe with `mutate()`
+
+```{r}
+levels(penguins$species)
+```
+
+<br>
+```{r}
+penguins_relevel <- penguins |>
+  mutate(species = fct_relevel(species, "Chinstrap", "Gentoo", "Adelie"))
+
+levels(penguins_relevel$species)
+```
+
+## See r4ds for more on factors!
+
+<br>
+[https://r4ds.hadley.nz/factors.html](https://r4ds.hadley.nz/factors.html)
+
+
+# Working with dates
+
+## Make a date
+::: {.columns}
+::: {.column width = "25%"}
+![](img/lubridate-not-part-of-tidyverse.png)
+:::
+::: {.column width = "70%"}
+- **lubridate** is the tidyverse-friendly package that makes dealing with dates easier
+:::
+:::
+
+
+## Dates and times in R
+
+- A **date**. Tibbles print this as <`date>`.
+
+- A **time** within a day. Tibbles print this as `<time>`.
+
+- A **date-time** is a date plus a time: it uniquely identifies an instant in time (typically to the nearest second). Tibbles print this as `<dttm>`. Elsewhere in R these are called POSIXct, but I don’t think that’s a very useful name.
+
+## When you read in data, check data types
+
+```{r}
+flats <- read_csv("data/flats_sub_2015.csv")
+flats
+```
+
+## When you read in data, check data types
+
+```{r}
+flats <- read_csv("data/flats_sub_2015.csv") |> 
+  print(n = 1)
+```
+
+- `date` was read in as a character
+- `time` was read in as a time
+- `datetime` was read in as a character
+
+## Why is this a problem?
+
+```{r}
+ggplot(flats, aes(x = datetime, y = depth_m)) +
+  geom_point()
+```
+
+## Using the `lubridate` functions
+
+- `Lubridate` works out the date/time format once you specify the order of components
+
+  - Identify the order in which year, month, and day appear in your dates
+  
+  - Then arrange “y”, “m”, and “d” (year, month, day) and "h", "m", and "s" (hour, minute, second) in the same order.
+  
+  - That gives you the name of the `lubridate` function that will parse your date.
+  
+  - The resulting output is always in **yyyy-mm-dd** format
+  
+## Using the `lubridate` functions
+
+::: {.columns}
+::: {.column width = "50%"}
+```{r}
+ymd("2017-01-31")
+```
+
+<br>
+```{r}
+mdy("January 31st, 2017")
+```
+
+<br>
+```{r}
+dmy("31-Jan-2017")
+```
+:::
+::: {.column width = "50%"}
+```{r}
+ymd_hms("2017-01-31 3:15:00")
+```
+
+<br>
+```{r}
+ymd_hm("2017-01-31 3:15")
+```
+
+<br>
+```{r}
+ymd(20170131)
+```
+:::
+:::
+
+## Coerce `flats` data into dates and datetimes
+
+```{r}
+flats
+```
+
+## Coerce `flats` data into dates and datetimes
+
+```{r}
+#| code-line-numbers: "2,3"
+
+flats |> 
+  mutate(datetime = mdy_hm(datetime),
+         date = mdy(date)) 
+```
+
+## Now it knows the dates are actually datetimes
+
+::: {.columns}
+::: {.column width = "45%"}
+```{r date-fix, fig.show = "hide", warning = FALSE}
+flats |> 
+  mutate(datetime = mdy_hm(datetime),
+         date = mdy(date)) |> 
+  ggplot(aes(x = datetime, y = depth_m)) +
+    geom_line() +
+    labs(x = "", y = "Depth (m)") +
+    theme_minimal()
+```
+
+:::
+::: {.column width = "55%"}
+```{r ref.label = "date-fix", echo = FALSE, warning = FALSE}
+```
+:::
+:::
+
+## What if your data contain year, month, day, etc. in separate columns?
+::: {.columns}
+::: {.column width = "50%"}
+```{r separate-date, eval=FALSE, warning = FALSE}
+flats2 <- flats |>
+  select(date, depth_m) |>
+  separate(date, c("year", "month", "day"))
+flats2
+```
+:::
+::: {.column width = "50%"}
+```{r ref.label = "separate-date", echo = FALSE, warning = FALSE}
+```
+:::
+:::
+
+## What if your data contain year, month, day, etc. in separate columns?
+
+Use the `make_date()` or `make_datetime` functions!
+
+::: {.columns}
+::: {.column width = "50%"}
+```{r make-date, eval=FALSE, warning = FALSE}
+#| code-line-numbers: "2"
+
+flats2 |>
+  mutate(date = make_date(year, month, day)) |> 
+  select(date, depth_m)
+```
+:::
+::: {.column width = "50%"}
+```{r ref.label = "make-date", echo = FALSE, warning = FALSE}
+```
+:::
+:::
+
+
+## What if you want to get individual components of date/time data?
+
+Use the `year()`, `month()`, `mday()` (day of the month), `yday()` (day of the year, also known as julian day), `wday()` (day of the week), `hour()`, `minute()` or `second()` functions
+
+::: {.columns}
+::: {.column width = "45%"}
+```{r}
+datetime <- ymd_hms("2022-02-14 12:34:56")
+```
+
+<br>
+```{r}
+year(datetime)
+```
+
+<br>
+
+```{r}
+month(datetime)
+```
+
+:::
+::: {.column width = "55%"}
+```{r}
+mday(datetime)
+```
+
+<br>
+```{r}
+yday(datetime)
+```
+
+<br>
+```{r}
+wday(datetime)
+```
+:::
+:::
+
+
+## AE-07
+
+- clone ae-07 from GitHub > open `type-coercion.qmd`
+- What is the type of the given vectors? First, guess. Then, try it out in R. 
+- 
+
