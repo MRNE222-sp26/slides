@@ -174,19 +174,11 @@ read_csv("/users/cbgurbisz/documents/project/data/biomass.csv")
 read_csv("data/biomass.csv")
 ```
 
-# Try it
+# Try it: reading csv files
 
-## ae-09 nobels-csv.qmd
+## ae-08 nobels-csv.qmd
 
 - Posit Cloud > open `nobels-csv.qmd`
-- Read in the `nobels.csv` file from the `data-raw/` folder.
-- Split into two (STEM and non-STEM): 
-  - Create a new data frame, `nobel_stem`, that filters for the STEM fields 
-(Physics, Medicine, Chemistry, and Economics).
-  - Create another data frame, `nobel_nonstem`, that filters for the remaining 
-fields.  
-- Write the two data frames to `nobel-stem.csv` and `nobel-nonstem.csv`, 
-respectively, to `data/`.
 
 **Hint:** Use the `%in%` operator when `filter()`ing.
 
@@ -510,9 +502,9 @@ The data frames `x` and `y` will now be loaded as objects in your global environ
 - **httr**: web APIs
 - **sparklyr**: data loaded into spark
 
-# Try it
+# Try it: reading excel files
 
-## ae-09 nobels-csv.qmd
+## ae-08 sales-excel.qmd
 
 - Open `sales-excel.qmd`. 
 - Load the `sales.xlsx` file from the `data-raw/` folder using appropriate arguments for the `read_excel()` function such that it looks like the output on the left.
