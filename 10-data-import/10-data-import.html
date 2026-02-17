@@ -9,7 +9,7 @@
 <link href="10-data-import_files/libs/quarto-html/quarto-syntax-highlighting-e26003cea8cd680ca0c55a263523d882.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
   <meta name="generator" content="quarto-1.6.39">
 
-  <meta name="author" content="https://mrne222-sp25.github.io/website/">
+  <meta name="author" content="https://mrne222-sp26.github.io/website/">
   <title>Importing data</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -199,7 +199,7 @@
 <div class="quarto-title-authors">
 <div class="quarto-title-author">
 <div class="quarto-title-author-name">
-<a href="https://mrne222-sp25.github.io/website/">https://mrne222-sp25.github.io/website/</a> 
+<a href="https://mrne222-sp26.github.io/website/">https://mrne222-sp26.github.io/website/</a> 
 </div>
 </div>
 </div>
@@ -323,7 +323,7 @@
 <div class="cell">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href=""></a><span class="fu">getwd</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] "/Users/cbgurbisz/Documents/Teaching/MRNE222-sp25/slides/10-data-import"</code></pre>
+<pre><code>[1] "/Users/cbgurbisz/Documents/Teaching/MRNE222-sp26/slides/10-data-import"</code></pre>
 </div>
 </div>
 </section>
@@ -360,7 +360,7 @@
 <div class="column" style="width:50%;">
 <ul>
 <li>Save .Rproj file in main project folder</li>
-<li>Make folders for data, scripts (.qmd files), figures, and docs (reports, etc.)</li>
+<li>Make subfolders for data, scripts (.qmd files), figures, and docs (reports, etc.) in the main project folder</li>
 </ul>
 </div><div class="column" style="width:50%;">
 <p><img data-src="img/rproj-organization.png"></p>
@@ -502,8 +502,8 @@
 </div>
 </div>
 </section>
-<section id="option-1---you-define-the-column-names-when-you-read-in-the-data" class="slide level2">
-<h2>Option 1 - You define the column names when you read in the data</h2>
+<section id="option-1---manually-define-the-column-names-when-you-read-in-the-data-using-the-col_names-argument" class="slide level2">
+<h2>Option 1 - Manually define the column names when you read in the data using the <code>col_names()</code> argument</h2>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href=""></a>edibnb_col_names <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/edibnb-badnames.csv"</span>,</span>
 <span id="cb22-2"><a href=""></a>                             <span class="at">col_names =</span> <span class="fu">c</span>(<span class="st">"id"</span>, <span class="st">"price"</span>, </span>
@@ -521,8 +521,8 @@
 </div>
 </div>
 </section>
-<section id="option-2---format-text-to-snake_case-using-the-clean_names-function-from-the-janitor-package" class="slide level2">
-<h2>Option 2 - Format text to snake_case using the <code>clean_names</code> function (from the <code>janitor</code> package)</h2>
+<section id="option-2---automatically-format-text-to-snake_case-using-the-clean_names-function-from-the-janitor-package" class="slide level2">
+<h2>Option 2 - Automatically format text to snake_case using the <code>clean_names</code> function (from the <code>janitor</code> package)</h2>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href=""></a><span class="fu">library</span>(janitor)</span>
 <span id="cb24-2"><a href=""></a></span>
@@ -567,8 +567,8 @@
 </div>
 </div></div>
 </section>
-<section id="option-1.-be-explicit-about-observations-that-are-actually-nas" class="slide level2">
-<h2>Option 1. Be explicit about observations that are actually NAs</h2>
+<section id="fix-when-reading-in-data-option-1.-tell-r-how-observations-are-coded-as-na-in-your-spreadsheet-using-the-na-argument" class="slide level2">
+<h2>Fix when reading in data option 1. Tell R how observations are coded as NA in your spreadsheet using the <code>na =</code> argument</h2>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href=""></a><span class="fu">read_csv</span>(<span class="st">"data/df-na.csv"</span>, </span>
 <span id="cb27-2"><a href=""></a>         <span class="at">na =</span> <span class="fu">c</span>(<span class="st">""</span>, <span class="st">"NA"</span>, <span class="st">"."</span>, <span class="st">"9999"</span>, <span class="st">"Not applicable"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -588,8 +588,8 @@
 </div>
 </div>
 </section>
-<section id="option-2.-specify-column-types" class="slide level2">
-<h2>Option 2. Specify column types</h2>
+<section id="fix-when-reading-in-data-option-2.-specify-column-types-using-the-col_types-argument" class="slide level2">
+<h2>Fix when reading in data option 2. Specify column types using the <code>col_types =</code> argument</h2>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href=""></a><span class="fu">read_csv</span>(<span class="st">"data/df-na.csv"</span>, <span class="at">col_types =</span> <span class="fu">list</span>(<span class="fu">col_double</span>(), </span>
 <span id="cb29-2"><a href=""></a>                                            <span class="fu">col_character</span>(), </span>
@@ -836,18 +836,18 @@
 </div>
 </div>
 </section>
-<section id="out-and-back-in" class="slide level2">
-<h2>Out and back in</h2>
+<section id="write-to-.csv-and-read-in-tidy-.csv" class="slide level2">
+<h2>Write to .csv and read in tidy .csv</h2>
 <p>Write data to .csv and read back in.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb45"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href=""></a><span class="fu">write_csv</span>(fav_food, <span class="at">file =</span> <span class="st">"data/fav-food-clean.csv"</span>)</span>
 <span id="cb45-2"><a href=""></a></span>
 <span id="cb45-3"><a href=""></a>fav_food_clean <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/fav-food-clean.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Often, we do data processing in one or more “processing” .qmd files, we write the output to file, and read the clean data into a different “analysis” .qmd file.</p>
+<p><br> - Often, we do data processing in one or more “processing” .qmd files, we write the output to file, and read the clean data into a different “analysis” .qmd file. - That way, we don’t have to rerun data wrangling code every time we want to work on our actual data analysis - It also makes reading the code easier and more efficient</p>
 </section>
 <section id="but-what-happened-to-ses-when-we-read-it-back-in" class="slide level2">
-<h2>But what happened to <code>ses</code> when we read it back in?</h2>
+<h2>BUT what happened to <code>ses</code> when we read it back in?</h2>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb46"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href=""></a>fav_food_clean <span class="sc">|&gt;</span></span>
 <span id="cb46-2"><a href=""></a>  <span class="fu">count</span>(ses)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -864,7 +864,7 @@
 <section id="read_rds-and-write_rds" class="slide level2">
 <h2><code>read_rds()</code> and <code>write_rds()</code></h2>
 <ul>
-<li><p>CSVs can be unreliable for saving interim results if there is specific variable type information you want to hold on to (factors, dates, etc.).</p></li>
+<li><p>CSVs can be unreliable for saving wrangled data if there is specific variable type information you want to keep (factors, dates, etc.).</p></li>
 <li><p>An alternative is RDS files. You can read and write them with <code>read_rds()</code> and <code>write_rds()</code>, respectively.</p></li>
 </ul>
 <div class="cell">
@@ -890,6 +890,35 @@
 3 High       2</code></pre>
 </div>
 </div>
+</section>
+<section id="saving-and-loading-multiple-data-frames" class="slide level2">
+<h2>Saving and loading multiple data frames</h2>
+<ul>
+<li>If your wrangling results in multiple data frames, you can save them together as an .RData file.</li>
+<li>You can then load them all at once using the <code>load()</code> function.</li>
+</ul>
+</section>
+<section id="make-two-data-frames-and-save-as-.rdata" class="slide level2">
+<h2>Make two data frames and save as .RData</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href=""></a>x <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">a =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>,</span>
+<span id="cb51-2"><a href=""></a>            <span class="at">b =</span> <span class="dv">5</span><span class="sc">:</span><span class="dv">7</span>)</span>
+<span id="cb51-3"><a href=""></a></span>
+<span id="cb51-4"><a href=""></a></span>
+<span id="cb51-5"><a href=""></a>y <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">c =</span> <span class="dv">10</span><span class="sc">:</span><span class="dv">12</span>,</span>
+<span id="cb51-6"><a href=""></a>            <span class="at">d =</span> <span class="dv">20</span><span class="sc">:</span><span class="dv">22</span>)</span>
+<span id="cb51-7"><a href=""></a></span>
+<span id="cb51-8"><a href=""></a></span>
+<span id="cb51-9"><a href=""></a><span class="fu">save</span>(x, y, <span class="at">file =</span> <span class="st">"data_processed.RData"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="load-.rdata-file" class="slide level2">
+<h2>Load .RData file</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href=""></a><span class="fu">load</span>(<span class="st">"data_processed.RData"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><br></p>
+<p>The data frames <code>x</code> and <code>y</code> will now be loaded as objects in your global environment.</p>
 </section></section>
 <section>
 <section id="other-types-of-data-sources" class="title-slide slide level1 center">
@@ -917,9 +946,9 @@
 <section id="ae-09-nobels-csv.qmd-1" class="slide level2">
 <h2>ae-09 nobels-csv.qmd</h2>
 <ul>
-<li>Posit Cloud &gt; <code>sales-excel.qmd</code>.</li>
-<li>Load the <code>sales.xlsx</code> file from the <code>data-raw/</code> folder, using appropriate arguments for the <code>read_excel()</code> function such that it looks like the output on the left.</li>
-<li><strong>Stretch goal:</strong> Manipulate the sales data such that it looks like the output on the right.</li>
+<li>Open <code>sales-excel.qmd</code>.</li>
+<li>Load the <code>sales.xlsx</code> file from the <code>data-raw/</code> folder using appropriate arguments for the <code>read_excel()</code> function such that it looks like the output on the left.</li>
+<li>Manipulate the sales data such that it looks like the output on the right.</li>
 </ul>
 <div class="columns">
 <div class="column" style="width:50%;">

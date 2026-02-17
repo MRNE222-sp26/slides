@@ -1,7 +1,7 @@
 ---
 title: "Importing data"
 subtitle: "<br><br> Environmental Data Analysis and Visualization"
-author: "[https://mrne222-sp25.github.io/website/](https://mrne222-sp25.github.io/website/)"
+author: "[https://mrne222-sp26.github.io/website/](https://mrne222-sp26.github.io/website/)"
 format: 
   revealjs:
     theme: simple
@@ -146,7 +146,7 @@ getwd()
 ::: {.columns}
 ::: {.column width = "50%"}
 - Save .Rproj file in main project folder
-- Make folders for data, scripts (.qmd files), figures, and docs (reports, etc.)
+- Make subfolders for data, scripts (.qmd files), figures, and docs (reports, etc.) in the main project folder
 :::
 ::: {.column width = "50%"}
 ![](img/rproj-organization.png)
@@ -251,7 +251,7 @@ ggplot(edibnb_badnames, aes(x = Number of bathrooms, y = Price)) +
   geom_point()
 ```
 
-## Option 1 - You define the column names when you read in the data
+## Option 1 - Manually define the column names when you read in the data using the `col_names()` argument
 
 ```{r}
 edibnb_col_names <- read_csv("data/edibnb-badnames.csv",
@@ -264,7 +264,7 @@ edibnb_col_names <- read_csv("data/edibnb-badnames.csv",
 names(edibnb_col_names)
 ```
 
-## Option 2 - Format text to snake_case using the `clean_names` function (from the `janitor` package)
+## Option 2 - Automatically format text to snake_case using the `clean_names` function (from the `janitor` package)
 
 ```{r warning=FALSE}
 library(janitor)
@@ -289,14 +289,14 @@ read_csv("data/df-na.csv") |> print(n = 10)
 :::
 :::
 
-## Option 1. Be explicit about observations that are actually NAs
+## Fix when reading in data option 1. Tell R how observations are coded as NA in your spreadsheet using the `na =` argument
 
 ```{r}
 read_csv("data/df-na.csv", 
          na = c("", "NA", ".", "9999", "Not applicable"))
 ```
 
-## Option 2. Specify column types
+## Fix when reading in data option 2. Specify column types using the `col_types = ` argument
 
 ```{r eval=FALSE}
 read_csv("data/df-na.csv", col_types = list(col_double(), 
@@ -425,7 +425,7 @@ fav_food <- read_excel("data/favourite-food.xlsx", na = c("N/A", "99999")) |>
 fav_food
 ```
 
-## Out and back in
+## Write to .csv and read in tidy .csv
 
 Write data to .csv and read back in. 
 
@@ -434,10 +434,12 @@ write_csv(fav_food, file = "data/fav-food-clean.csv")
 
 fav_food_clean <- read_csv("data/fav-food-clean.csv")
 ```
+<br>
+- Often, we do data processing in one or more "processing" .qmd files, we write the output to file, and read the clean data into a different "analysis" .qmd file. 
+- That way, we don't have to rerun data wrangling code every time we want to work on our actual data analysis
+- It also makes reading the code easier and more efficient
 
-Often, we do data processing in one or more "processing" .qmd files, we write the output to file, and read the clean data into a different "analysis" .qmd file.
-
-## But what happened to `ses` when we read it back in?
+## BUT what happened to `ses` when we read it back in?
 
 ```{r}
 fav_food_clean |>
@@ -446,7 +448,7 @@ fav_food_clean |>
 
 ## `read_rds()` and `write_rds()`
 
-- CSVs can be unreliable for saving interim results if there is specific variable type information you want to hold on to (factors, dates, etc.).
+- CSVs can be unreliable for saving wrangled data if there is specific variable type information you want to keep (factors, dates, etc.).
 
 - An alternative is RDS files. You can read and write them with `read_rds()` and `write_rds()`, respectively.
 
@@ -466,6 +468,35 @@ fav_food_clean |>
   count(ses)
 ```
 
+## Saving and loading multiple data frames
+
+- If your wrangling results in multiple data frames, you can save them together as an .RData file.
+- You can then load them all at once using the `load()` function.
+
+## Make two data frames and save as .RData
+
+```{r}
+x <- tibble(a = 1:3,
+            b = 5:7)
+
+
+y <- tibble(c = 10:12,
+            d = 20:22)
+
+
+save(x, y, file = "data_processed.RData")
+```
+
+## Load .RData file
+
+```{r}
+load("data_processed.RData")
+```
+
+<br> 
+
+The data frames `x` and `y` will now be loaded as objects in your global environment.
+
 # Other types of data sources
 
 ## Other data sources
@@ -483,9 +514,9 @@ fav_food_clean |>
 
 ## ae-09 nobels-csv.qmd
 
-- Posit Cloud > `sales-excel.qmd`. 
-- Load the `sales.xlsx` file from the `data-raw/` folder, using appropriate arguments for the `read_excel()` function such that it looks like the output on the left.
-- **Stretch goal:** Manipulate the sales data such that it looks like the output on the right.
+- Open `sales-excel.qmd`. 
+- Load the `sales.xlsx` file from the `data-raw/` folder using appropriate arguments for the `read_excel()` function such that it looks like the output on the left.
+- Manipulate the sales data such that it looks like the output on the right.
 
 ::: {.columns}
 ::: {.column width = "50%"}
