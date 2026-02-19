@@ -1,7 +1,7 @@
 ---
 title: "Recoding data"
 subtitle: "<br><br> Environmental Data Analysis and Visualization"
-author: "[https://mrne222-sp25.github.io/website/](https://mrne222-sp25.github.io/website/)"
+author: "[https://mrne222-sp26.github.io/website/](https://mrne222-sp26.github.io/website/)"
 format: 
   revealjs:
     theme: simple
@@ -17,13 +17,82 @@ execute:
   echo: true
 ---
 
-## There are a LOT of different ways to recode and transform your data in R. 
+## What is "recoding" data?
 
+You've already done some recoding!
+
+- Convert to factor data and recode/relevel using the forcats functions
+- Tell R how to handle missing values
+
+## What is "recoding" data?
+
+You might also:
+
+- Rename the levels of a categorical variable (e.g., convert species abbreviations to full species names or vice-versa)
+- Create categories based on continuous data values (e.g., convert nutrient concentrations to "low", "medium", and "high")
+- Combine multiple categories into fewer more meaningful categories
+- Convert text data into numeric codes (e.g., presence/absence to 1/0)
+
+
+## Recoding data: *adding* a new variable
+
+```{r  echo=FALSE}
+library(tidyverse)
+```
+
+*Adding* a variable keeps the original column and adds a new column containing the recoded data.
+
+::: {.columns}
+::: {.column width="50%"}
+
+```{r}
+data <- tibble(types = c("puppy", "dog", "kitten", "cat"))
+
+data
+```
+
+:::
+::: {.column width="50%"}
+
+```{r}
+data |>
+  mutate(age = case_match(types, c("puppy", "kitten") ~ "juvenile",
+                        c("dog", "cat") ~ "adult"))
+```
+::: 
+:::
+
+## Recoding data: *overwriting* and existing variable
+
+*Overwriting* a variable: the original data are overwritten with the recoded data.
+
+::: {.columns}
+::: {.column width="50%"}
+
+```{r}
+data <- tibble(types = c("puppy", "dog", "kitten", "cat"))
+
+data
+```
+
+:::
+::: {.column width="50%"}
+```{r}
+data |>
+  mutate(types = case_match(types, c("puppy", "kitten") ~ "juvenile",
+                        c("dog", "cat") ~ "adult"))
+```
+::: 
+:::
+
+
+## There are a LOT of different ways to recode and transform your data in R. 
+<br>
 We will cover a few of them, but Google is your friend to figure out how to recode in your own unique use cases.
 
-# Code-along: recoding functions
+# Recoding functions
 
-## Code-along using the `iris` dataset
+## Examples using the `iris` dataset
 ::: columns
 ::: {.column width = "50%" .fragment}
 First load packages:
@@ -43,7 +112,19 @@ iris
 ::: 
 :::
 
-## Recode species so that setosa = "a", versicolor = "b", and virginica = "c"
+## `case_match()` to recode values manually
+
+How to use in `mutate()`:
+
+```{r eval=FALSE}
+data |> mutate(new_variable, case_match(original_variable,
+                                "name1" ~ "new_name1",
+                                "name2" ~ "new_name2"))
+```
+
+                                                    
+
+## Use `case_match()` to recode species so that setosa = "a", versicolor = "b", and virginica = "c"
 
 ::: columns
 ::: {.column width = "40%" .fragment}
@@ -63,7 +144,7 @@ iris |>
 ::: 
 :::
 
-## Use .default argument if you want to keep some values the same
+## Use the `.default` argument if you want to keep some values the same
 
 ```{r}
 #| code-line-numbers: "3"
@@ -74,7 +155,17 @@ iris |>
   distinct(species)
 ```
 
-## Use `mutate()` and `if_else()` to replace values based on certain conditions 
+## `if_else()` to recode values based on conditional statements
+<br>
+Create a `new_variable` based on a `numeric_variable` so that if `numeric_variable` is greater than 10, `new_variable` = "large"; otherwise `new_variable` = "small".
+<br>
+```{r eval=FALSE}
+data |>
+  mutate(new_variable = if_else(numeric_variable > 10, "large", "small"))
+```
+
+
+## Use `mutate()` and `if_else()` to replace values based on conditional statement 
 
 **If** `petal_length` is less than three, recode `petal_length` to "short". **Otherwise** ("*else*") recode `petal_length` to "long".
 ```{r}
@@ -127,7 +218,74 @@ iris |>
   distinct(petal_category)
 ```
 
-# An example, with some data wrangling too
+## Use joins to recode when you have **many** different values that need to be recoded
+
+<b> For example, you your research collaborator may have used different sample ids than you and you need to recode your data in order for consistency. 
+
+::: {.columns}
+::: {.column width="50%"}
+```{r}
+their_data <- tibble(
+  site = c("piney_point", "smcm", "st_inigoes"),
+  temp_c = c(30, 24, 27))
+
+their_data
+```
+:::
+::: {.column width="50%"}
+```{r}
+my_data <- tibble(
+  station = c("station1", "station2", "station3"),
+  chl_a_ug_l = c(15, 12, 13))
+
+my_data
+```
+::: 
+:::
+
+## Use joins to recode when you have **many** different values that need to be recoded
+
+::: {.columns}
+::: {.column width="50%"}
+First create a data frame containing their site ids and your corresponding site ids.
+```{r}
+ids <- tibble(
+  site = c("piney_point", "smcm", "st_inigoes"),
+  station = c("station1", "station2", "station3"))
+```
+
+:::
+::: {.column width="50%"}
+Use `left_join()` to join the ids dataframe to your dataframe.
+```{r}
+my_data |>
+  left_join(ids)
+```
+::: 
+:::
+
+## Use joins to recode when you have **many** different values that need to be recoded
+
+::: {.columns}
+::: {.column width="50%"}
+You can keep the resulting dataframe as is:
+```{r}
+my_data |>
+  left_join(ids)
+```
+
+:::
+::: {.column width="50%"}
+Or remove your station names so your sample ids matches your collaborator's ids. 
+```{r}
+my_data |>
+  left_join(ids) |>
+  select(-station)
+```
+::: 
+:::
+
+# An example, with some data wrangling
 
 ## Calculate number of category 3, 4, and 5 storms each decade and plot the results. 
 ::: columns
@@ -145,19 +303,13 @@ The process:
 - filter to remove years from decades that have incomplete data
 - filter so storm category is greater than or equal to 3
 - create new variable (decade)
-- group by decade and use `summarize` to calculate total number of 
+- calculate total number of storms for each category and decade
 :::
 ::: 
 :::
 
-We'll need to create new categorical variable (decade), then group and summarize by that variable.
 
-```{r}
-storms |>
-  select(name, year, month, day, hour, category)
-```
-
-## First filter so year is between 1980 and 2020 and category >= 3 
+## Filter so year is between 1980 and 2020 and category >= 3 
 
 We need to remove years from decades where data is incomplete.
 ```{r}
@@ -170,7 +322,7 @@ storms |>
          category >= 3) 
 ```
 
-## Next group by year and storm name and calculate the max category reached for each storm and year
+## Group by year and storm name and calculate the max category reached for each storm and year
 ::: {.panel-tabset}
 
 ## Code
@@ -198,7 +350,7 @@ storms |>
 ```
 :::
 
-## Next, create a `decade` variable using `mutate()` and `case_when()` based on the `year` variable
+## Create a `decade` variable using `mutate()` and `case_when()` based on the `year` variable
 
 ::: {.panel-tabset}
 
@@ -234,7 +386,7 @@ storms |>
 ```
 :::
 
-## Finally, group by the new decade variable and count the number of storms in each decade
+## Group by the new decade variable and count the number of storms in each decade
 
 ::: {.panel-tabset}
 

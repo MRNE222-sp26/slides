@@ -9,7 +9,7 @@
 <link href="11-data-recode_files/libs/quarto-html/quarto-syntax-highlighting-e26003cea8cd680ca0c55a263523d882.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
   <meta name="generator" content="quarto-1.6.39">
 
-  <meta name="author" content="https://mrne222-sp25.github.io/website/">
+  <meta name="author" content="https://mrne222-sp26.github.io/website/">
   <title>Recoding data</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -199,37 +199,127 @@
 <div class="quarto-title-authors">
 <div class="quarto-title-author">
 <div class="quarto-title-author-name">
-<a href="https://mrne222-sp25.github.io/website/">https://mrne222-sp25.github.io/website/</a> 
+<a href="https://mrne222-sp26.github.io/website/">https://mrne222-sp26.github.io/website/</a> 
 </div>
 </div>
 </div>
 
+</section>
+<section id="what-is-recoding-data" class="slide level2">
+<h2>What is “recoding” data?</h2>
+<p>You’ve already done some recoding!</p>
+<ul>
+<li>Convert to factor data and recode/relevel using the forcats functions</li>
+<li>Tell R how to handle missing values</li>
+</ul>
+</section>
+<section id="what-is-recoding-data-1" class="slide level2">
+<h2>What is “recoding” data?</h2>
+<p>You might also:</p>
+<ul>
+<li>Rename the levels of a categorical variable (e.g., convert species abbreviations to full species names or vice-versa)</li>
+<li>Create categories based on continuous data values (e.g., convert nutrient concentrations to “low”, “medium”, and “high”)</li>
+<li>Combine multiple categories into fewer more meaningful categories</li>
+<li>Convert text data into numeric codes (e.g., presence/absence to 1/0)</li>
+</ul>
+</section>
+<section id="recoding-data-adding-a-new-variable" class="slide level2">
+<h2>Recoding data: <em>adding</em> a new variable</h2>
+<p><em>Adding</em> a variable keeps the original column and adds a new column containing the recoded data.</p>
+<div class="columns">
+<div class="column" style="width:50%;">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href=""></a>data <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">types =</span> <span class="fu">c</span>(<span class="st">"puppy"</span>, <span class="st">"dog"</span>, <span class="st">"kitten"</span>, <span class="st">"cat"</span>))</span>
+<span id="cb1-2"><a href=""></a></span>
+<span id="cb1-3"><a href=""></a>data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 1
+  types 
+  &lt;chr&gt; 
+1 puppy 
+2 dog   
+3 kitten
+4 cat   </code></pre>
+</div>
+</div>
+</div><div class="column" style="width:50%;">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href=""></a>data <span class="sc">|&gt;</span></span>
+<span id="cb3-2"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">age =</span> <span class="fu">case_match</span>(types, <span class="fu">c</span>(<span class="st">"puppy"</span>, <span class="st">"kitten"</span>) <span class="sc">~</span> <span class="st">"juvenile"</span>,</span>
+<span id="cb3-3"><a href=""></a>                        <span class="fu">c</span>(<span class="st">"dog"</span>, <span class="st">"cat"</span>) <span class="sc">~</span> <span class="st">"adult"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 2
+  types  age     
+  &lt;chr&gt;  &lt;chr&gt;   
+1 puppy  juvenile
+2 dog    adult   
+3 kitten juvenile
+4 cat    adult   </code></pre>
+</div>
+</div>
+</div></div>
+</section>
+<section id="recoding-data-overwriting-and-existing-variable" class="slide level2">
+<h2>Recoding data: <em>overwriting</em> and existing variable</h2>
+<p><em>Overwriting</em> a variable: the original data are overwritten with the recoded data.</p>
+<div class="columns">
+<div class="column" style="width:50%;">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href=""></a>data <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">types =</span> <span class="fu">c</span>(<span class="st">"puppy"</span>, <span class="st">"dog"</span>, <span class="st">"kitten"</span>, <span class="st">"cat"</span>))</span>
+<span id="cb5-2"><a href=""></a></span>
+<span id="cb5-3"><a href=""></a>data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 1
+  types 
+  &lt;chr&gt; 
+1 puppy 
+2 dog   
+3 kitten
+4 cat   </code></pre>
+</div>
+</div>
+</div><div class="column" style="width:50%;">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href=""></a>data <span class="sc">|&gt;</span></span>
+<span id="cb7-2"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">types =</span> <span class="fu">case_match</span>(types, <span class="fu">c</span>(<span class="st">"puppy"</span>, <span class="st">"kitten"</span>) <span class="sc">~</span> <span class="st">"juvenile"</span>,</span>
+<span id="cb7-3"><a href=""></a>                        <span class="fu">c</span>(<span class="st">"dog"</span>, <span class="st">"cat"</span>) <span class="sc">~</span> <span class="st">"adult"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 1
+  types   
+  &lt;chr&gt;   
+1 juvenile
+2 adult   
+3 juvenile
+4 adult   </code></pre>
+</div>
+</div>
+</div></div>
 </section>
 <section id="there-are-a-lot-of-different-ways-to-recode-and-transform-your-data-in-r." class="slide level2">
 <h2>There are a LOT of different ways to recode and transform your data in R.</h2>
-<p>We will cover a few of them, but Google is your friend to figure out how to recode in your own unique use cases.</p>
+<p><br> We will cover a few of them, but Google is your friend to figure out how to recode in your own unique use cases.</p>
 </section>
 <section>
-<section id="code-along-recoding-functions" class="title-slide slide level1 center">
-<h1>Code-along: recoding functions</h1>
+<section id="recoding-functions" class="title-slide slide level1 center">
+<h1>Recoding functions</h1>
 
 </section>
-<section id="code-along-using-the-iris-dataset" class="slide level2">
-<h2>Code-along using the <code>iris</code> dataset</h2>
+<section id="examples-using-the-iris-dataset" class="slide level2">
+<h2>Examples using the <code>iris</code> dataset</h2>
 <div class="columns">
 <div class="column fragment" style="width:50%;">
 <p>First load packages:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href=""></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb1-2"><a href=""></a><span class="fu">library</span>(janitor)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href=""></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb9-2"><a href=""></a><span class="fu">library</span>(janitor)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div><div class="column fragment" style="width:50%;">
 <p>Clean the data names (<code>iris</code> is a built-in dataset that comes with R)</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href=""></a>iris <span class="ot">&lt;-</span> <span class="fu">as_tibble</span>(iris) <span class="sc">|&gt;</span></span>
-<span id="cb2-2"><a href=""></a>  <span class="fu">clean_names</span>()</span>
-<span id="cb2-3"><a href=""></a></span>
-<span id="cb2-4"><a href=""></a>iris</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href=""></a>iris <span class="ot">&lt;-</span> <span class="fu">as_tibble</span>(iris) <span class="sc">|&gt;</span></span>
+<span id="cb10-2"><a href=""></a>  <span class="fu">clean_names</span>()</span>
+<span id="cb10-3"><a href=""></a></span>
+<span id="cb10-4"><a href=""></a>iris</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 150 × 5
    sepal_length sepal_width petal_length petal_width species
@@ -249,12 +339,21 @@
 </div>
 </div></div>
 </section>
-<section id="recode-species-so-that-setosa-a-versicolor-b-and-virginica-c" class="slide level2">
-<h2>Recode species so that setosa = “a”, versicolor = “b”, and virginica = “c”</h2>
+<section id="case_match-to-recode-values-manually" class="slide level2">
+<h2><code>case_match()</code> to recode values manually</h2>
+<p>How to use in <code>mutate()</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href=""></a>data <span class="sc">|&gt;</span> <span class="fu">mutate</span>(new_variable, <span class="fu">case_match</span>(original_variable,</span>
+<span id="cb12-2"><a href=""></a>                                <span class="st">"name1"</span> <span class="sc">~</span> <span class="st">"new_name1"</span>,</span>
+<span id="cb12-3"><a href=""></a>                                <span class="st">"name2"</span> <span class="sc">~</span> <span class="st">"new_name2"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="use-case_match-to-recode-species-so-that-setosa-a-versicolor-b-and-virginica-c" class="slide level2">
+<h2>Use <code>case_match()</code> to recode species so that setosa = “a”, versicolor = “b”, and virginica = “c”</h2>
 <div class="columns">
 <div class="column fragment" style="width:40%;">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href=""></a><span class="fu">distinct</span>(iris, species)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href=""></a><span class="fu">distinct</span>(iris, species)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 3 × 1
   species   
@@ -266,11 +365,11 @@
 </div>
 </div><div class="column fragment" style="width:60%;">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6" data-code-line-numbers="2,3,4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href=""></a>iris <span class="sc">|&gt;</span></span>
-<span id="cb6-2"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">species =</span> <span class="fu">case_match</span>(species, <span class="st">"setosa"</span> <span class="sc">~</span> <span class="st">"a"</span>, </span>
-<span id="cb6-3"><a href=""></a>                              <span class="st">"versicolor"</span> <span class="sc">~</span> <span class="st">"b"</span>, </span>
-<span id="cb6-4"><a href=""></a>                              <span class="st">"virginica"</span> <span class="sc">~</span> <span class="st">"c"</span>)) <span class="sc">|&gt;</span> </span>
-<span id="cb6-5"><a href=""></a>  <span class="fu">distinct</span>(species)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15" data-code-line-numbers="2,3,4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href=""></a>iris <span class="sc">|&gt;</span></span>
+<span id="cb15-2"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">species =</span> <span class="fu">case_match</span>(species, <span class="st">"setosa"</span> <span class="sc">~</span> <span class="st">"a"</span>, </span>
+<span id="cb15-3"><a href=""></a>                              <span class="st">"versicolor"</span> <span class="sc">~</span> <span class="st">"b"</span>, </span>
+<span id="cb15-4"><a href=""></a>                              <span class="st">"virginica"</span> <span class="sc">~</span> <span class="st">"c"</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb15-5"><a href=""></a>  <span class="fu">distinct</span>(species)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 3 × 1
   species
@@ -282,13 +381,13 @@
 </div>
 </div></div>
 </section>
-<section id="use-.default-argument-if-you-want-to-keep-some-values-the-same" class="slide level2">
-<h2>Use .default argument if you want to keep some values the same</h2>
+<section id="use-the-.default-argument-if-you-want-to-keep-some-values-the-same" class="slide level2">
+<h2>Use the <code>.default</code> argument if you want to keep some values the same</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8" data-code-line-numbers="3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href=""></a>iris <span class="sc">|&gt;</span></span>
-<span id="cb8-2"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">species =</span> <span class="fu">case_match</span>(species, <span class="st">"setosa"</span> <span class="sc">~</span> <span class="st">"a"</span>,</span>
-<span id="cb8-3"><a href=""></a>                              <span class="at">.default =</span> species)) <span class="sc">|&gt;</span> </span>
-<span id="cb8-4"><a href=""></a>  <span class="fu">distinct</span>(species)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17" data-code-line-numbers="3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href=""></a>iris <span class="sc">|&gt;</span></span>
+<span id="cb17-2"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">species =</span> <span class="fu">case_match</span>(species, <span class="st">"setosa"</span> <span class="sc">~</span> <span class="st">"a"</span>,</span>
+<span id="cb17-3"><a href=""></a>                              <span class="at">.default =</span> species)) <span class="sc">|&gt;</span> </span>
+<span id="cb17-4"><a href=""></a>  <span class="fu">distinct</span>(species)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 3 × 1
   species   
@@ -299,11 +398,19 @@
 </div>
 </div>
 </section>
-<section id="use-mutate-and-if_else-to-replace-values-based-on-certain-conditions" class="slide level2">
-<h2>Use <code>mutate()</code> and <code>if_else()</code> to replace values based on certain conditions</h2>
+<section id="if_else-to-recode-values-based-on-conditional-statements" class="slide level2">
+<h2><code>if_else()</code> to recode values based on conditional statements</h2>
+<p><br> Create a <code>new_variable</code> based on a <code>numeric_variable</code> so that if <code>numeric_variable</code> is greater than 10, <code>new_variable</code> = “large”; otherwise <code>new_variable</code> = “small”. <br></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href=""></a>data <span class="sc">|&gt;</span></span>
+<span id="cb19-2"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">new_variable =</span> <span class="fu">if_else</span>(numeric_variable <span class="sc">&gt;</span> <span class="dv">10</span>, <span class="st">"large"</span>, <span class="st">"small"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="use-mutate-and-if_else-to-replace-values-based-on-conditional-statement" class="slide level2">
+<h2>Use <code>mutate()</code> and <code>if_else()</code> to replace values based on conditional statement</h2>
 <p><strong>If</strong> <code>petal_length</code> is less than three, recode <code>petal_length</code> to “short”. <strong>Otherwise</strong> (“<em>else</em>”) recode <code>petal_length</code> to “long”.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href=""></a>iris</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href=""></a>iris</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 150 × 5
    sepal_length sepal_width petal_length petal_width species
@@ -322,12 +429,12 @@
 </div>
 </div>
 </section>
-<section id="use-mutate-and-if_else-to-replace-values-based-on-certain-conditions-1" class="slide level2">
+<section id="use-mutate-and-if_else-to-replace-values-based-on-certain-conditions" class="slide level2">
 <h2>Use <code>mutate()</code> and <code>if_else()</code> to replace values based on certain conditions</h2>
 <p><strong>If</strong> <code>petal_length</code> is less than three, recode <code>petal_length</code> to “short”. <strong>Otherwise</strong> (“<em>else</em>”) recode <code>petal_length</code> to “long”.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12" data-code-line-numbers="2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href=""></a>iris <span class="sc">|&gt;</span></span>
-<span id="cb12-2"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">petal_length =</span> <span class="fu">if_else</span>(petal_length <span class="sc">&lt;</span> <span class="dv">3</span>, <span class="st">"short"</span>, <span class="st">"long"</span>)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22" data-code-line-numbers="2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href=""></a>iris <span class="sc">|&gt;</span></span>
+<span id="cb22-2"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">petal_length =</span> <span class="fu">if_else</span>(petal_length <span class="sc">&lt;</span> <span class="dv">3</span>, <span class="st">"short"</span>, <span class="st">"long"</span>)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 150 × 5
    sepal_length sepal_width petal_length petal_width species
@@ -349,8 +456,8 @@
 <section id="create-a-new-variable-if-you-want-to-preserve-the-original-values" class="slide level2">
 <h2>Create a new variable if you want to preserve the original values</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14" data-code-line-numbers="2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href=""></a>iris <span class="sc">|&gt;</span></span>
-<span id="cb14-2"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">petal_category =</span> <span class="fu">if_else</span>(petal_length <span class="sc">&lt;</span> <span class="dv">3</span>, <span class="st">"short"</span>, <span class="st">"long"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24" data-code-line-numbers="2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href=""></a>iris <span class="sc">|&gt;</span></span>
+<span id="cb24-2"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">petal_category =</span> <span class="fu">if_else</span>(petal_length <span class="sc">&lt;</span> <span class="dv">3</span>, <span class="st">"short"</span>, <span class="st">"long"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 150 × 6
    sepal_length sepal_width petal_length petal_width species petal_category
@@ -373,11 +480,11 @@
 <h2>Use <code>case_when()</code> for more complicated conditional statements</h2>
 <p>If <code>petal_length</code> is less than or equal to 2, recode <code>petal_length</code> to “small”. If <code>petal_length</code> is greater than 2 and less than or equal to 5, recode to “medium”. If <code>petal_length</code> is greater than 5, recode to “large”.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16" data-code-line-numbers="2,3,4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href=""></a>iris <span class="sc">|&gt;</span></span>
-<span id="cb16-2"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">petal_category =</span> <span class="fu">case_when</span>(petal_length <span class="sc">&lt;=</span> <span class="dv">2</span> <span class="sc">~</span> <span class="st">"small"</span>, </span>
-<span id="cb16-3"><a href=""></a>                                    petal_length <span class="sc">&gt;</span> <span class="dv">2</span> <span class="sc">&amp;</span> sepal_length <span class="sc">&lt;=</span> <span class="dv">5</span> <span class="sc">~</span> <span class="st">"medium"</span>, </span>
-<span id="cb16-4"><a href=""></a>                                    petal_length <span class="sc">&gt;</span> <span class="dv">5</span> <span class="sc">~</span> <span class="st">"large"</span>)) <span class="sc">|&gt;</span> </span>
-<span id="cb16-5"><a href=""></a>  <span class="fu">distinct</span>(petal_category)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb26" data-code-line-numbers="2,3,4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href=""></a>iris <span class="sc">|&gt;</span></span>
+<span id="cb26-2"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">petal_category =</span> <span class="fu">case_when</span>(petal_length <span class="sc">&lt;=</span> <span class="dv">2</span> <span class="sc">~</span> <span class="st">"small"</span>, </span>
+<span id="cb26-3"><a href=""></a>                                    petal_length <span class="sc">&gt;</span> <span class="dv">2</span> <span class="sc">&amp;</span> sepal_length <span class="sc">&lt;=</span> <span class="dv">5</span> <span class="sc">~</span> <span class="st">"medium"</span>, </span>
+<span id="cb26-4"><a href=""></a>                                    petal_length <span class="sc">&gt;</span> <span class="dv">5</span> <span class="sc">~</span> <span class="st">"large"</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb26-5"><a href=""></a>  <span class="fu">distinct</span>(petal_category)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 4 × 1
   petal_category
@@ -393,12 +500,12 @@
 <h2>Use <code>TRUE</code> to index values that were not already defined</h2>
 <p>For all other values of <code>petal_length</code>, recode to “other”.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb18" data-code-line-numbers="5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href=""></a>iris <span class="sc">|&gt;</span></span>
-<span id="cb18-2"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">petal_category =</span> <span class="fu">case_when</span>(petal_length <span class="sc">&lt;=</span> <span class="dv">2</span> <span class="sc">~</span> <span class="st">"small"</span>, </span>
-<span id="cb18-3"><a href=""></a>                                    petal_length <span class="sc">&gt;</span> <span class="dv">2</span> <span class="sc">&amp;</span> sepal_length <span class="sc">&lt;=</span> <span class="dv">5</span> <span class="sc">~</span> <span class="st">"medium"</span>, </span>
-<span id="cb18-4"><a href=""></a>                                    petal_length <span class="sc">&gt;</span> <span class="dv">5</span> <span class="sc">~</span> <span class="st">"large"</span>,</span>
-<span id="cb18-5"><a href=""></a>                                    <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">"other"</span>)) <span class="sc">|&gt;</span> </span>
-<span id="cb18-6"><a href=""></a>  <span class="fu">distinct</span>(petal_category)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb28" data-code-line-numbers="5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href=""></a>iris <span class="sc">|&gt;</span></span>
+<span id="cb28-2"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">petal_category =</span> <span class="fu">case_when</span>(petal_length <span class="sc">&lt;=</span> <span class="dv">2</span> <span class="sc">~</span> <span class="st">"small"</span>, </span>
+<span id="cb28-3"><a href=""></a>                                    petal_length <span class="sc">&gt;</span> <span class="dv">2</span> <span class="sc">&amp;</span> sepal_length <span class="sc">&lt;=</span> <span class="dv">5</span> <span class="sc">~</span> <span class="st">"medium"</span>, </span>
+<span id="cb28-4"><a href=""></a>                                    petal_length <span class="sc">&gt;</span> <span class="dv">5</span> <span class="sc">~</span> <span class="st">"large"</span>,</span>
+<span id="cb28-5"><a href=""></a>                                    <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">"other"</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb28-6"><a href=""></a>  <span class="fu">distinct</span>(petal_category)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 4 × 1
   petal_category
@@ -409,10 +516,108 @@
 4 large         </code></pre>
 </div>
 </div>
-</section></section>
+</section>
+<section id="use-joins-to-recode-when-you-have-many-different-values-that-need-to-be-recoded" class="slide level2">
+<h2>Use joins to recode when you have <strong>many</strong> different values that need to be recoded</h2>
+<p><b> For example, you your research collaborator may have used different sample ids than you and you need to recode your data in order for consistency.</b></p><b>
+<div class="columns">
+<div class="column" style="width:50%;">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href=""></a>their_data <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb30-2"><a href=""></a>  <span class="at">site =</span> <span class="fu">c</span>(<span class="st">"piney_point"</span>, <span class="st">"smcm"</span>, <span class="st">"st_inigoes"</span>),</span>
+<span id="cb30-3"><a href=""></a>  <span class="at">temp_c =</span> <span class="fu">c</span>(<span class="dv">30</span>, <span class="dv">24</span>, <span class="dv">27</span>))</span>
+<span id="cb30-4"><a href=""></a></span>
+<span id="cb30-5"><a href=""></a>their_data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 2
+  site        temp_c
+  &lt;chr&gt;        &lt;dbl&gt;
+1 piney_point     30
+2 smcm            24
+3 st_inigoes      27</code></pre>
+</div>
+</div>
+</div><div class="column" style="width:50%;">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href=""></a>my_data <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb32-2"><a href=""></a>  <span class="at">station =</span> <span class="fu">c</span>(<span class="st">"station1"</span>, <span class="st">"station2"</span>, <span class="st">"station3"</span>),</span>
+<span id="cb32-3"><a href=""></a>  <span class="at">chl_a_ug_l =</span> <span class="fu">c</span>(<span class="dv">15</span>, <span class="dv">12</span>, <span class="dv">13</span>))</span>
+<span id="cb32-4"><a href=""></a></span>
+<span id="cb32-5"><a href=""></a>my_data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 2
+  station  chl_a_ug_l
+  &lt;chr&gt;         &lt;dbl&gt;
+1 station1         15
+2 station2         12
+3 station3         13</code></pre>
+</div>
+</div>
+</div></div>
+</b></section><b>
+<section id="use-joins-to-recode-when-you-have-many-different-values-that-need-to-be-recoded-1" class="slide level2">
+<h2>Use joins to recode when you have <strong>many</strong> different values that need to be recoded</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p>First create a data frame containing their site ids and your corresponding site ids.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href=""></a>ids <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb34-2"><a href=""></a>  <span class="at">site =</span> <span class="fu">c</span>(<span class="st">"piney_point"</span>, <span class="st">"smcm"</span>, <span class="st">"st_inigoes"</span>),</span>
+<span id="cb34-3"><a href=""></a>  <span class="at">station =</span> <span class="fu">c</span>(<span class="st">"station1"</span>, <span class="st">"station2"</span>, <span class="st">"station3"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div><div class="column" style="width:50%;">
+<p>Use <code>left_join()</code> to join the ids dataframe to your dataframe.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href=""></a>my_data <span class="sc">|&gt;</span></span>
+<span id="cb35-2"><a href=""></a>  <span class="fu">left_join</span>(ids)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 3
+  station  chl_a_ug_l site       
+  &lt;chr&gt;         &lt;dbl&gt; &lt;chr&gt;      
+1 station1         15 piney_point
+2 station2         12 smcm       
+3 station3         13 st_inigoes </code></pre>
+</div>
+</div>
+</div></div>
+</section>
+<section id="use-joins-to-recode-when-you-have-many-different-values-that-need-to-be-recoded-2" class="slide level2">
+<h2>Use joins to recode when you have <strong>many</strong> different values that need to be recoded</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p>You can keep the resulting dataframe as is:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href=""></a>my_data <span class="sc">|&gt;</span></span>
+<span id="cb37-2"><a href=""></a>  <span class="fu">left_join</span>(ids)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 3
+  station  chl_a_ug_l site       
+  &lt;chr&gt;         &lt;dbl&gt; &lt;chr&gt;      
+1 station1         15 piney_point
+2 station2         12 smcm       
+3 station3         13 st_inigoes </code></pre>
+</div>
+</div>
+</div><div class="column" style="width:50%;">
+<p>Or remove your station names so your sample ids matches your collaborator’s ids.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href=""></a>my_data <span class="sc">|&gt;</span></span>
+<span id="cb39-2"><a href=""></a>  <span class="fu">left_join</span>(ids) <span class="sc">|&gt;</span></span>
+<span id="cb39-3"><a href=""></a>  <span class="fu">select</span>(<span class="sc">-</span>station)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 2
+  chl_a_ug_l site       
+       &lt;dbl&gt; &lt;chr&gt;      
+1         15 piney_point
+2         12 smcm       
+3         13 st_inigoes </code></pre>
+</div>
+</div>
+</div></div>
+</section></b></section><b>
 <section>
-<section id="an-example-with-some-data-wrangling-too" class="title-slide slide level1 center">
-<h1>An example, with some data wrangling too</h1>
+<section id="an-example-with-some-data-wrangling" class="title-slide slide level1 center">
+<h1>An example, with some data wrangling</h1>
 
 </section>
 <section id="calculate-number-of-category-3-4-and-5-storms-each-decade-and-plot-the-results." class="slide level2">
@@ -421,8 +626,8 @@
 <div class="column" style="width:50%;">
 <p>The data:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href=""></a>storms <span class="sc">|&gt;</span></span>
-<span id="cb20-2"><a href=""></a>  <span class="fu">select</span>(name, year, month, day, hour, category)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href=""></a>storms <span class="sc">|&gt;</span></span>
+<span id="cb41-2"><a href=""></a>  <span class="fu">select</span>(name, year, month, day, hour, category)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 19,537 × 6
    name   year month   day  hour category
@@ -447,41 +652,20 @@
 <li class="fragment">filter to remove years from decades that have incomplete data</li>
 <li class="fragment">filter so storm category is greater than or equal to 3</li>
 <li class="fragment">create new variable (decade)</li>
-<li class="fragment">group by decade and use <code>summarize</code> to calculate total number of</li>
+<li class="fragment">calculate total number of storms for each category and decade</li>
 </ul>
 </div>
 </div></div>
-<p>We’ll need to create new categorical variable (decade), then group and summarize by that variable.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href=""></a>storms <span class="sc">|&gt;</span></span>
-<span id="cb22-2"><a href=""></a>  <span class="fu">select</span>(name, year, month, day, hour, category)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 19,537 × 6
-   name   year month   day  hour category
-   &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt;    &lt;dbl&gt;
- 1 Amy    1975     6    27     0       NA
- 2 Amy    1975     6    27     6       NA
- 3 Amy    1975     6    27    12       NA
- 4 Amy    1975     6    27    18       NA
- 5 Amy    1975     6    28     0       NA
- 6 Amy    1975     6    28     6       NA
- 7 Amy    1975     6    28    12       NA
- 8 Amy    1975     6    28    18       NA
- 9 Amy    1975     6    29     0       NA
-10 Amy    1975     6    29     6       NA
-# ℹ 19,527 more rows</code></pre>
-</div>
-</div>
 </section>
-<section id="first-filter-so-year-is-between-1980-and-2020-and-category-3" class="slide level2">
-<h2>First filter so year is between 1980 and 2020 and category &gt;= 3</h2>
+<section id="filter-so-year-is-between-1980-and-2020-and-category-3" class="slide level2">
+<h2>Filter so year is between 1980 and 2020 and category &gt;= 3</h2>
 <p>We need to remove years from decades where data is incomplete.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb24" data-code-line-numbers="3,4,5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href=""></a>storms <span class="sc">|&gt;</span></span>
-<span id="cb24-2"><a href=""></a>  <span class="fu">select</span>(name, year, month, day, hour, category) <span class="sc">|&gt;</span> </span>
-<span id="cb24-3"><a href=""></a>  <span class="fu">filter</span>(year <span class="sc">&gt;=</span> <span class="dv">1980</span>, </span>
-<span id="cb24-4"><a href=""></a>         year <span class="sc">&lt;</span> <span class="dv">2020</span>, </span>
-<span id="cb24-5"><a href=""></a>         category <span class="sc">&gt;=</span> <span class="dv">3</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb43" data-code-line-numbers="3,4,5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href=""></a>storms <span class="sc">|&gt;</span></span>
+<span id="cb43-2"><a href=""></a>  <span class="fu">select</span>(name, year, month, day, hour, category) <span class="sc">|&gt;</span> </span>
+<span id="cb43-3"><a href=""></a>  <span class="fu">filter</span>(year <span class="sc">&gt;=</span> <span class="dv">1980</span>, </span>
+<span id="cb43-4"><a href=""></a>         year <span class="sc">&lt;</span> <span class="dv">2020</span>, </span>
+<span id="cb43-5"><a href=""></a>         category <span class="sc">&gt;=</span> <span class="dv">3</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1,090 × 6
    name   year month   day  hour category
@@ -500,20 +684,20 @@
 </div>
 </div>
 </section>
-<section id="next-group-by-year-and-storm-name-and-calculate-the-max-category-reached-for-each-storm-and-year" class="slide level2">
-<h2>Next group by year and storm name and calculate the max category reached for each storm and year</h2>
+<section id="group-by-year-and-storm-name-and-calculate-the-max-category-reached-for-each-storm-and-year" class="slide level2">
+<h2>Group by year and storm name and calculate the max category reached for each storm and year</h2>
 <div class="panel-tabset">
 <ul id="tabset-1" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-1-1">Code</a></li><li><a href="#tabset-1-2">Output</a></li></ul>
 <div class="tab-content">
 <div id="tabset-1-1">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb26" data-code-line-numbers="6,7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href=""></a>storms <span class="sc">|&gt;</span></span>
-<span id="cb26-2"><a href=""></a>  <span class="fu">select</span>(name, year, month, day, hour, category) <span class="sc">|&gt;</span> </span>
-<span id="cb26-3"><a href=""></a>  <span class="fu">filter</span>(year <span class="sc">&gt;=</span> <span class="dv">1980</span>, </span>
-<span id="cb26-4"><a href=""></a>         year <span class="sc">&lt;</span> <span class="dv">2020</span>, </span>
-<span id="cb26-5"><a href=""></a>         category <span class="sc">&gt;</span> <span class="dv">3</span>) <span class="sc">|&gt;</span></span>
-<span id="cb26-6"><a href=""></a>  <span class="fu">group_by</span>(name, year) <span class="sc">|&gt;</span> </span>
-<span id="cb26-7"><a href=""></a>  <span class="fu">summarize</span>(<span class="at">maxcat =</span> <span class="fu">max</span>(category))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb45" data-code-line-numbers="6,7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href=""></a>storms <span class="sc">|&gt;</span></span>
+<span id="cb45-2"><a href=""></a>  <span class="fu">select</span>(name, year, month, day, hour, category) <span class="sc">|&gt;</span> </span>
+<span id="cb45-3"><a href=""></a>  <span class="fu">filter</span>(year <span class="sc">&gt;=</span> <span class="dv">1980</span>, </span>
+<span id="cb45-4"><a href=""></a>         year <span class="sc">&lt;</span> <span class="dv">2020</span>, </span>
+<span id="cb45-5"><a href=""></a>         category <span class="sc">&gt;</span> <span class="dv">3</span>) <span class="sc">|&gt;</span></span>
+<span id="cb45-6"><a href=""></a>  <span class="fu">group_by</span>(name, year) <span class="sc">|&gt;</span> </span>
+<span id="cb45-7"><a href=""></a>  <span class="fu">summarize</span>(<span class="at">maxcat =</span> <span class="fu">max</span>(category))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <div id="tabset-1-2">
@@ -540,24 +724,24 @@
 </div>
 </div>
 </section>
-<section id="next-create-a-decade-variable-using-mutate-and-case_when-based-on-the-year-variable" class="slide level2">
-<h2>Next, create a <code>decade</code> variable using <code>mutate()</code> and <code>case_when()</code> based on the <code>year</code> variable</h2>
+<section id="create-a-decade-variable-using-mutate-and-case_when-based-on-the-year-variable" class="slide level2">
+<h2>Create a <code>decade</code> variable using <code>mutate()</code> and <code>case_when()</code> based on the <code>year</code> variable</h2>
 <div class="panel-tabset">
 <ul id="tabset-2" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-2-1">Code</a></li><li><a href="#tabset-2-2">Output</a></li></ul>
 <div class="tab-content">
 <div id="tabset-2-1">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb28" data-code-line-numbers="8,9,10,11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href=""></a>storms <span class="sc">|&gt;</span></span>
-<span id="cb28-2"><a href=""></a>  <span class="fu">select</span>(name, year, month, day, hour, category) <span class="sc">|&gt;</span></span>
-<span id="cb28-3"><a href=""></a>  <span class="fu">filter</span>(year <span class="sc">&gt;=</span> <span class="dv">1980</span>, </span>
-<span id="cb28-4"><a href=""></a>         year <span class="sc">&lt;</span> <span class="dv">2020</span>, </span>
-<span id="cb28-5"><a href=""></a>         category <span class="sc">&gt;</span> <span class="dv">3</span>) <span class="sc">|&gt;</span></span>
-<span id="cb28-6"><a href=""></a>  <span class="fu">group_by</span>(name, year) <span class="sc">|&gt;</span></span>
-<span id="cb28-7"><a href=""></a>  <span class="fu">summarize</span>(<span class="at">maxcat =</span> <span class="fu">max</span>(category)) <span class="sc">|&gt;</span></span>
-<span id="cb28-8"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">decade =</span> <span class="fu">case_when</span>(year <span class="sc">%in%</span> <span class="dv">1980</span><span class="sc">:</span><span class="dv">1989</span> <span class="sc">~</span> <span class="st">"1980s"</span>, </span>
-<span id="cb28-9"><a href=""></a>                            year <span class="sc">%in%</span> <span class="dv">1990</span><span class="sc">:</span><span class="dv">1999</span> <span class="sc">~</span> <span class="st">"1990s"</span>,</span>
-<span id="cb28-10"><a href=""></a>                            year <span class="sc">%in%</span> <span class="dv">2000</span><span class="sc">:</span><span class="dv">2009</span> <span class="sc">~</span> <span class="st">"2000s"</span>, </span>
-<span id="cb28-11"><a href=""></a>                            year <span class="sc">%in%</span> <span class="dv">2010</span><span class="sc">:</span><span class="dv">2019</span> <span class="sc">~</span> <span class="st">"2010s"</span>)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb47" data-code-line-numbers="8,9,10,11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href=""></a>storms <span class="sc">|&gt;</span></span>
+<span id="cb47-2"><a href=""></a>  <span class="fu">select</span>(name, year, month, day, hour, category) <span class="sc">|&gt;</span></span>
+<span id="cb47-3"><a href=""></a>  <span class="fu">filter</span>(year <span class="sc">&gt;=</span> <span class="dv">1980</span>, </span>
+<span id="cb47-4"><a href=""></a>         year <span class="sc">&lt;</span> <span class="dv">2020</span>, </span>
+<span id="cb47-5"><a href=""></a>         category <span class="sc">&gt;</span> <span class="dv">3</span>) <span class="sc">|&gt;</span></span>
+<span id="cb47-6"><a href=""></a>  <span class="fu">group_by</span>(name, year) <span class="sc">|&gt;</span></span>
+<span id="cb47-7"><a href=""></a>  <span class="fu">summarize</span>(<span class="at">maxcat =</span> <span class="fu">max</span>(category)) <span class="sc">|&gt;</span></span>
+<span id="cb47-8"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">decade =</span> <span class="fu">case_when</span>(year <span class="sc">%in%</span> <span class="dv">1980</span><span class="sc">:</span><span class="dv">1989</span> <span class="sc">~</span> <span class="st">"1980s"</span>, </span>
+<span id="cb47-9"><a href=""></a>                            year <span class="sc">%in%</span> <span class="dv">1990</span><span class="sc">:</span><span class="dv">1999</span> <span class="sc">~</span> <span class="st">"1990s"</span>,</span>
+<span id="cb47-10"><a href=""></a>                            year <span class="sc">%in%</span> <span class="dv">2000</span><span class="sc">:</span><span class="dv">2009</span> <span class="sc">~</span> <span class="st">"2000s"</span>, </span>
+<span id="cb47-11"><a href=""></a>                            year <span class="sc">%in%</span> <span class="dv">2010</span><span class="sc">:</span><span class="dv">2019</span> <span class="sc">~</span> <span class="st">"2010s"</span>)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <div id="tabset-2-2">
@@ -584,26 +768,26 @@
 </div>
 </div>
 </section>
-<section id="finally-group-by-the-new-decade-variable-and-count-the-number-of-storms-in-each-decade" class="slide level2">
-<h2>Finally, group by the new decade variable and count the number of storms in each decade</h2>
+<section id="group-by-the-new-decade-variable-and-count-the-number-of-storms-in-each-decade" class="slide level2">
+<h2>Group by the new decade variable and count the number of storms in each decade</h2>
 <div class="panel-tabset">
 <ul id="tabset-3" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-3-1">Code</a></li><li><a href="#tabset-3-2">Output</a></li></ul>
 <div class="tab-content">
 <div id="tabset-3-1">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb30" data-code-line-numbers="12,13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href=""></a>storms <span class="sc">|&gt;</span></span>
-<span id="cb30-2"><a href=""></a>  <span class="fu">select</span>(name, year, month, day, hour, category) <span class="sc">|&gt;</span> </span>
-<span id="cb30-3"><a href=""></a>  <span class="fu">filter</span>(year <span class="sc">&gt;=</span> <span class="dv">1980</span>, </span>
-<span id="cb30-4"><a href=""></a>         year <span class="sc">&lt;</span> <span class="dv">2020</span>, </span>
-<span id="cb30-5"><a href=""></a>         category <span class="sc">&gt;</span> <span class="dv">3</span>) <span class="sc">|&gt;</span></span>
-<span id="cb30-6"><a href=""></a>  <span class="fu">group_by</span>(name, year) <span class="sc">|&gt;</span></span>
-<span id="cb30-7"><a href=""></a>  <span class="fu">summarize</span>(<span class="at">maxcat =</span> <span class="fu">max</span>(category)) <span class="sc">|&gt;</span></span>
-<span id="cb30-8"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">decade =</span> <span class="fu">case_when</span>(year <span class="sc">%in%</span> <span class="dv">1980</span><span class="sc">:</span><span class="dv">1989</span> <span class="sc">~</span> <span class="st">"1980s"</span>,</span>
-<span id="cb30-9"><a href=""></a>                            year <span class="sc">%in%</span> <span class="dv">1990</span><span class="sc">:</span><span class="dv">1999</span> <span class="sc">~</span> <span class="st">"1990s"</span>,</span>
-<span id="cb30-10"><a href=""></a>                            year <span class="sc">%in%</span> <span class="dv">2000</span><span class="sc">:</span><span class="dv">2009</span> <span class="sc">~</span> <span class="st">"2000s"</span>,</span>
-<span id="cb30-11"><a href=""></a>                            year <span class="sc">%in%</span> <span class="dv">2010</span><span class="sc">:</span><span class="dv">2019</span> <span class="sc">~</span> <span class="st">"2010s"</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb30-12"><a href=""></a>  <span class="fu">group_by</span>(decade) <span class="sc">|&gt;</span> </span>
-<span id="cb30-13"><a href=""></a>  <span class="fu">summarize</span>(<span class="at">n =</span> <span class="fu">n</span>()) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb49" data-code-line-numbers="12,13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href=""></a>storms <span class="sc">|&gt;</span></span>
+<span id="cb49-2"><a href=""></a>  <span class="fu">select</span>(name, year, month, day, hour, category) <span class="sc">|&gt;</span> </span>
+<span id="cb49-3"><a href=""></a>  <span class="fu">filter</span>(year <span class="sc">&gt;=</span> <span class="dv">1980</span>, </span>
+<span id="cb49-4"><a href=""></a>         year <span class="sc">&lt;</span> <span class="dv">2020</span>, </span>
+<span id="cb49-5"><a href=""></a>         category <span class="sc">&gt;</span> <span class="dv">3</span>) <span class="sc">|&gt;</span></span>
+<span id="cb49-6"><a href=""></a>  <span class="fu">group_by</span>(name, year) <span class="sc">|&gt;</span></span>
+<span id="cb49-7"><a href=""></a>  <span class="fu">summarize</span>(<span class="at">maxcat =</span> <span class="fu">max</span>(category)) <span class="sc">|&gt;</span></span>
+<span id="cb49-8"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">decade =</span> <span class="fu">case_when</span>(year <span class="sc">%in%</span> <span class="dv">1980</span><span class="sc">:</span><span class="dv">1989</span> <span class="sc">~</span> <span class="st">"1980s"</span>,</span>
+<span id="cb49-9"><a href=""></a>                            year <span class="sc">%in%</span> <span class="dv">1990</span><span class="sc">:</span><span class="dv">1999</span> <span class="sc">~</span> <span class="st">"1990s"</span>,</span>
+<span id="cb49-10"><a href=""></a>                            year <span class="sc">%in%</span> <span class="dv">2000</span><span class="sc">:</span><span class="dv">2009</span> <span class="sc">~</span> <span class="st">"2000s"</span>,</span>
+<span id="cb49-11"><a href=""></a>                            year <span class="sc">%in%</span> <span class="dv">2010</span><span class="sc">:</span><span class="dv">2019</span> <span class="sc">~</span> <span class="st">"2010s"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb49-12"><a href=""></a>  <span class="fu">group_by</span>(decade) <span class="sc">|&gt;</span> </span>
+<span id="cb49-13"><a href=""></a>  <span class="fu">summarize</span>(<span class="at">n =</span> <span class="fu">n</span>()) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <div id="tabset-3-2">
@@ -629,22 +813,22 @@
 <div class="tab-content">
 <div id="tabset-4-1">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb32" data-code-line-numbers="13,14,15,16,17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href=""></a>storms <span class="sc">|&gt;</span></span>
-<span id="cb32-2"><a href=""></a>  <span class="fu">filter</span>(year <span class="sc">&gt;=</span> <span class="dv">1980</span>,</span>
-<span id="cb32-3"><a href=""></a>         year <span class="sc">&lt;</span> <span class="dv">2020</span>,</span>
-<span id="cb32-4"><a href=""></a>         category <span class="sc">&gt;</span> <span class="dv">3</span>) <span class="sc">|&gt;</span></span>
-<span id="cb32-5"><a href=""></a>  <span class="fu">group_by</span>(name, year) <span class="sc">|&gt;</span></span>
-<span id="cb32-6"><a href=""></a>  <span class="fu">summarize</span>(<span class="at">maxcat =</span> <span class="fu">max</span>(category)) <span class="sc">|&gt;</span></span>
-<span id="cb32-7"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">decade =</span> <span class="fu">case_when</span>(year <span class="sc">%in%</span> <span class="dv">1980</span><span class="sc">:</span><span class="dv">1989</span> <span class="sc">~</span> <span class="st">"1980s"</span>,</span>
-<span id="cb32-8"><a href=""></a>                            year <span class="sc">%in%</span> <span class="dv">1990</span><span class="sc">:</span><span class="dv">1999</span> <span class="sc">~</span> <span class="st">"1990s"</span>,</span>
-<span id="cb32-9"><a href=""></a>                            year <span class="sc">%in%</span> <span class="dv">2000</span><span class="sc">:</span><span class="dv">2009</span> <span class="sc">~</span> <span class="st">"2000s"</span>,</span>
-<span id="cb32-10"><a href=""></a>                            year <span class="sc">%in%</span> <span class="dv">2010</span><span class="sc">:</span><span class="dv">2019</span> <span class="sc">~</span> <span class="st">"2010s"</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb32-11"><a href=""></a>  <span class="fu">group_by</span>(decade) <span class="sc">|&gt;</span></span>
-<span id="cb32-12"><a href=""></a>  <span class="fu">summarize</span>(<span class="at">n =</span> <span class="fu">n</span>()) <span class="sc">|&gt;</span></span>
-<span id="cb32-13"><a href=""></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> decade, <span class="at">y =</span> n)) <span class="sc">+</span> </span>
-<span id="cb32-14"><a href=""></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>) <span class="sc">+</span> </span>
-<span id="cb32-15"><a href=""></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">""</span>, <span class="at">y =</span> <span class="st">"Number of category 3+ hurricanes"</span>) <span class="sc">+</span> </span>
-<span id="cb32-16"><a href=""></a>  <span class="fu">theme_light</span>() </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb51" data-code-line-numbers="13,14,15,16,17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href=""></a>storms <span class="sc">|&gt;</span></span>
+<span id="cb51-2"><a href=""></a>  <span class="fu">filter</span>(year <span class="sc">&gt;=</span> <span class="dv">1980</span>,</span>
+<span id="cb51-3"><a href=""></a>         year <span class="sc">&lt;</span> <span class="dv">2020</span>,</span>
+<span id="cb51-4"><a href=""></a>         category <span class="sc">&gt;</span> <span class="dv">3</span>) <span class="sc">|&gt;</span></span>
+<span id="cb51-5"><a href=""></a>  <span class="fu">group_by</span>(name, year) <span class="sc">|&gt;</span></span>
+<span id="cb51-6"><a href=""></a>  <span class="fu">summarize</span>(<span class="at">maxcat =</span> <span class="fu">max</span>(category)) <span class="sc">|&gt;</span></span>
+<span id="cb51-7"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">decade =</span> <span class="fu">case_when</span>(year <span class="sc">%in%</span> <span class="dv">1980</span><span class="sc">:</span><span class="dv">1989</span> <span class="sc">~</span> <span class="st">"1980s"</span>,</span>
+<span id="cb51-8"><a href=""></a>                            year <span class="sc">%in%</span> <span class="dv">1990</span><span class="sc">:</span><span class="dv">1999</span> <span class="sc">~</span> <span class="st">"1990s"</span>,</span>
+<span id="cb51-9"><a href=""></a>                            year <span class="sc">%in%</span> <span class="dv">2000</span><span class="sc">:</span><span class="dv">2009</span> <span class="sc">~</span> <span class="st">"2000s"</span>,</span>
+<span id="cb51-10"><a href=""></a>                            year <span class="sc">%in%</span> <span class="dv">2010</span><span class="sc">:</span><span class="dv">2019</span> <span class="sc">~</span> <span class="st">"2010s"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb51-11"><a href=""></a>  <span class="fu">group_by</span>(decade) <span class="sc">|&gt;</span></span>
+<span id="cb51-12"><a href=""></a>  <span class="fu">summarize</span>(<span class="at">n =</span> <span class="fu">n</span>()) <span class="sc">|&gt;</span></span>
+<span id="cb51-13"><a href=""></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> decade, <span class="at">y =</span> n)) <span class="sc">+</span> </span>
+<span id="cb51-14"><a href=""></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>) <span class="sc">+</span> </span>
+<span id="cb51-15"><a href=""></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">""</span>, <span class="at">y =</span> <span class="st">"Number of category 3+ hurricanes"</span>) <span class="sc">+</span> </span>
+<span id="cb51-16"><a href=""></a>  <span class="fu">theme_light</span>() </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <div id="tabset-4-2">
@@ -652,7 +836,7 @@
 <div class="cell-output-display">
 <div>
 <figure>
-<p><img data-src="11-data-recode_files/figure-revealjs/unnamed-chunk-19-1.png" style="width:60.0%"></p>
+<p><img data-src="11-data-recode_files/figure-revealjs/unnamed-chunk-31-1.png" style="width:60.0%"></p>
 </figure>
 </div>
 </div>
@@ -662,12 +846,12 @@
 </div>
 
 </section></section>
-    </div>
-  <div class="quarto-auto-generated-content" style="display: none;">
+    </b></div><b>
+  </b><div class="quarto-auto-generated-content" style="display: none;">
 <div class="footer footer-default">
 
 </div>
-</div></div>
+</div></div><b>
 
   <script>window.backupDefine = window.define; window.define = undefined;</script>
   <script src="11-data-recode_files/libs/revealjs/dist/reveal.js"></script>
@@ -1102,4 +1286,4 @@
     </script>
     
 
-</body></html>
+</b></body></html>
