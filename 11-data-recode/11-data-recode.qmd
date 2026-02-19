@@ -191,9 +191,11 @@ iris |>
   mutate(petal_category = if_else(petal_length < 3, "short", "long"))
 ```
 
+
 ## Use `case_when()` for more complicated conditional statements
 
 If `petal_length` is less than or equal to 2, recode `petal_length` to "small". If `petal_length` is greater than 2 and less than or equal to 5, recode to "medium". If `petal_length` is greater than 5, recode to "large".
+
 ```{r}
 #| code-line-numbers: "2,3,4"
 
@@ -203,6 +205,7 @@ iris |>
                                     petal_length > 5 ~ "large")) |> 
   distinct(petal_category)
 ```
+
 
 ## Use `TRUE` to index values that were not already defined
 
@@ -218,9 +221,10 @@ iris |>
   distinct(petal_category)
 ```
 
+
 ## Use joins to recode when you have **many** different values that need to be recoded
 
-<b> For example, you your research collaborator may have used different sample ids than you and you need to recode your data in order for consistency. 
+For example, you your research collaborator may have used different sample ids than you and you need to recode your data in order for consistency. 
 
 ::: {.columns}
 ::: {.column width="50%"}
@@ -232,6 +236,7 @@ their_data <- tibble(
 their_data
 ```
 :::
+
 ::: {.column width="50%"}
 ```{r}
 my_data <- tibble(
@@ -247,15 +252,17 @@ my_data
 
 ::: {.columns}
 ::: {.column width="50%"}
+
 First create a data frame containing their site ids and your corresponding site ids.
 ```{r}
 ids <- tibble(
   site = c("piney_point", "smcm", "st_inigoes"),
   station = c("station1", "station2", "station3"))
 ```
-
 :::
+
 ::: {.column width="50%"}
+
 Use `left_join()` to join the ids dataframe to your dataframe.
 ```{r}
 my_data |>
@@ -273,8 +280,8 @@ You can keep the resulting dataframe as is:
 my_data |>
   left_join(ids)
 ```
-
 :::
+
 ::: {.column width="50%"}
 Or remove your station names so your sample ids matches your collaborator's ids. 
 ```{r}
@@ -285,9 +292,11 @@ my_data |>
 ::: 
 :::
 
+
 # An example, with some data wrangling
 
 ## Calculate number of category 3, 4, and 5 storms each decade and plot the results. 
+
 ::: columns
 ::: {.column width = "50%"}
 The data:
@@ -296,18 +305,18 @@ storms |>
   select(name, year, month, day, hour, category)
 ```
 :::
+
 ::: {.column width = "50%"}
+
 The process:
 
-::: {.incremental}
 - filter to remove years from decades that have incomplete data
 - filter so storm category is greater than or equal to 3
 - create new variable (decade)
 - calculate total number of storms for each category and decade
-:::
+
 ::: 
 :::
-
 
 ## Filter so year is between 1980 and 2020 and category >= 3 
 
@@ -323,12 +332,13 @@ storms |>
 ```
 
 ## Group by year and storm name and calculate the max category reached for each storm and year
+
 ::: {.panel-tabset}
 
 ## Code
 ```{r, eval = FALSE}
 #| code-line-numbers: "6,7"
-#| 
+
 storms |>
   select(name, year, month, day, hour, category) |> 
   filter(year >= 1980, 
@@ -431,6 +441,7 @@ storms |>
 ::: {.panel-tabset}
 
 ## Code
+
 ```{r "storm-plot", fig.show="hide"}
 #| code-line-numbers: "13,14,15,16,17"
 storms |>
@@ -452,6 +463,7 @@ storms |>
 ```
 
 ## Plot
+
 ```{r ref.label="storm-plot", echo = FALSE, out.width="60%"}
 ```
 :::
