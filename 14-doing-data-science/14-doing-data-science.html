@@ -9,7 +9,7 @@
 <link href="14-doing-data-science_files/libs/quarto-html/quarto-syntax-highlighting-e26003cea8cd680ca0c55a263523d882.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
   <meta name="generator" content="quarto-1.6.39">
 
-  <title>Doing data science</title>
+  <title>Doing data science: Exploratory data analysis</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
@@ -192,7 +192,7 @@
     <div class="slides">
 
 <section id="title-slide" class="quarto-title-block center">
-  <h1 class="title">Doing data science</h1>
+  <h1 class="title">Doing data science: Exploratory data analysis</h1>
   <p class="subtitle"><br><br> Environmental Data Analysis and Visualization</p>
 
 <div class="quarto-title-authors">
@@ -208,7 +208,7 @@
 <h2>Five core activities of data analysis</h2>
 <ol type="1">
 <li>Stating and refining the question</li>
-<li>Exploring the data</li>
+<li>Exploring the data (exploratory data analysis)</li>
 <li>Building formal statistical models</li>
 <li>Interpreting the results</li>
 <li>Communicating the results</li>
@@ -232,23 +232,28 @@
 </ol>
 <p><em>Jeffery T. Leek and Roger D. Peng. “What is the question?.” Science 347.6228 (2015): 1314-1315.</em></p>
 </section>
-<section id="ex-covid-19-and-vitamin-d" class="slide level2 scrollable">
-<h2>Ex: COVID-19 and Vitamin D</h2>
+<section id="examples-of-research-questions-does-vitamin-d-prevent-covid-19-infection" class="slide level2 scrollable">
+<h2>Examples of research questions: Does Vitamin D prevent COVID-19 infection?</h2>
 <div>
 <ol type="1">
 <li class="fragment"><strong>Descriptive:</strong> frequency of hospitalizations due to COVID-19 in a data set collected from a group of individuals</li>
 <li class="fragment"><strong>Exploratory:</strong> examine relationships between a range of dietary factors and COVID-19 hospitalizations</li>
-<li class="fragment"><strong>Inferential:</strong> examine whether any relationships between taking Vitamin D supplements and COVID-19 hospitalizations found in the sample hold for the population at large</li>
-<li class="fragment"><strong>Predictive:</strong> predict what types of people will take Vitamin D supplements during the next year</li>
-<li class="fragment"><strong>Causal:</strong> test whether the hospitalization rate differs for people with COVID-19 who were randomly assigned to take Vitamin D supplements vs.&nbsp;those who were not assigned to take Vitamin D</li>
+<li class="fragment"><strong>Inferential:</strong> conduct statistical test to test whether relationships between taking Vitamin D supplements and COVID-19 hospitalizations found in the sample hold for the population at large</li>
+<li class="fragment"><strong>Predictive:</strong> predict what types of people will take Vitamin D supplements during the next year using statistical testing</li>
+<li class="fragment"><strong>Causal:</strong> conduct an experiment to test whether the hospitalization rate differs for people with COVID-19 who were randomly assigned to take Vitamin D supplements vs.&nbsp;those who were not assigned to take Vitamin D</li>
 <li class="fragment"><strong>Mechanistic:</strong> investigate the physiological mechanism by which increased vitamin D intake leads to a reduction in the number of viral illnesses</li>
 </ol>
 </div>
+</section></section>
+<section>
+<section id="exploratory-data-analysis" class="title-slide slide level1 center">
+<h1>Exploratory data analysis</h1>
+
 </section>
-<section id="questions-to-ask-when-begining-an-analysis" class="slide level2">
-<h2>Questions to ask when begining an analysis</h2>
+<section id="questions-to-ask-when-beginning-an-analysis" class="slide level2">
+<h2>Questions to ask when beginning an analysis</h2>
 <ul>
-<li><p>Do you have appropriate data to answer your question?</p></li>
+<li><p>Do you have right data to answer your question?</p></li>
 <li><p>Do you have information on confounding variables (other variables that can affect the variable(s) of interest)?</p></li>
 <li><p>Was the data you’re working with collected in a way that introduces bias?</p></li>
 </ul>
@@ -275,276 +280,335 @@
 <li class="fragment">How can we minimze bias in our analyses?</li>
 </ul>
 </div>
-</section></section>
-<section>
-<section id="exploratory-data-analysis" class="title-slide slide level1 center">
-<h1>Exploratory data analysis</h1>
-
 </section>
 <section id="exploratory-data-analysis-checklist" class="slide level2">
 <h2>Exploratory data analysis checklist</h2>
 <ul>
 <li>Formulate your question</li>
 <li>Read in your data</li>
+<li>Get to know your data
+<ul>
 <li>Check the dimensions</li>
 <li>Look at the top and the bottom of your data</li>
-<li>Validate with at least one external data source</li>
-<li>Make a plot</li>
-<li>Try the easy solution first</li>
+<li>Understand sampling unit scales, units of measure, etc.</li>
+</ul></li>
+<li>Wrangle</li>
+<li>Plot</li>
 </ul>
+</section>
+<section id="australian-coral-cover-dataset" class="slide level2">
+<h2>Australian coral cover dataset</h2>
+<p>Read in the data:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href=""></a>url1  <span class="ot">&lt;-</span> <span class="st">"https://pasta.lternet.edu/package/data/eml/edi/952/1/f6212784c45d0a077f2c863868d22c4b"</span> </span>
+<span id="cb1-2"><a href=""></a>cover <span class="ot">&lt;-</span><span class="fu">read_csv</span>(url1)</span>
+<span id="cb1-3"><a href=""></a></span>
+<span id="cb1-4"><a href=""></a>cover</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 159 × 18
+   System        Reef   Location     `Year (decimal)` `Soft Coral` Millepora
+   &lt;chr&gt;         &lt;chr&gt;  &lt;chr&gt;                   &lt;dbl&gt;        &lt;dbl&gt;     &lt;dbl&gt;
+ 1 Rowley Shoals Clerke Outer Clerke            1996.         0.95      1.58
+ 2 Rowley Shoals Clerke Outer Clerke            1997.         0.84      3.31
+ 3 Rowley Shoals Clerke Outer Clerke            1998.         0.77      4.67
+ 4 Rowley Shoals Clerke Outer Clerke            1999.         0.5       4.98
+ 5 Rowley Shoals Clerke Outer Clerke            2002.         0.81      4.7 
+ 6 Rowley Shoals Clerke Outer Clerke            2005.         0.81      6.26
+ 7 Rowley Shoals Clerke Outer Clerke            2009.         0.05      4.72
+ 8 Rowley Shoals Clerke Outer Clerke            2011.         0.5       4.07
+ 9 Rowley Shoals Clerke Outer Clerke            2014.         0.27      4.98
+10 Rowley Shoals Clerke Outer Clerke            2016.         0.4       5.84
+# ℹ 149 more rows
+# ℹ 12 more variables: `Echinopora and other foliose corals` &lt;dbl&gt;,
+#   `Merulinidae and other massives` &lt;dbl&gt;, Fungiidae &lt;dbl&gt;, Isopora &lt;dbl&gt;,
+#   `Montipora and other encrusting coral` &lt;dbl&gt;, Pocilloporidae &lt;dbl&gt;,
+#   `Porites Branching` &lt;dbl&gt;, `Porites Massive` &lt;dbl&gt;, Acropora &lt;dbl&gt;,
+#   Diploastrea &lt;dbl&gt;, Pavona &lt;dbl&gt;, `Other Hard Coral` &lt;dbl&gt;</code></pre>
+</div>
+</div>
 </section>
 <section id="formulate-your-question" class="slide level2">
 <h2>Formulate your question</h2>
-<p>Consider scope:</p>
 <ul>
-<li>Are air pollution levels higher on the east coast than on the west coast?</li>
-<li>Are hourly ozone levels on average higher in New York City than they are in Los Angeles?</li>
-<li>Do counties in the eastern United States have higher ozone levels than counties in the western United States?</li>
-<li>Most importantly: “Do I have the right data to answer this question?”</li>
+<li>Which species are dominant at each system and location?</li>
+<li>Are there differences in coral cover over time in Rowley Shoals vs.&nbsp;Scott reefs?</li>
+<li>Are there differences in coral cover over time depending on species?</li>
+<li>Most importantly: Do I have the right data to answer these questions?</li>
 </ul>
 </section>
-<section id="read-in-your-data" class="slide level2">
-<h2>Read in your data</h2>
+<section id="get-to-know-your-data-look-at-the-dimensions-and-variables" class="slide level2">
+<h2>Get to know your data: look at the dimensions and variables</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href=""></a><span class="fu">glimpse</span>(cover)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 159
+Columns: 18
+$ System                                 &lt;chr&gt; "Rowley Shoals", "Rowley Shoals…
+$ Reef                                   &lt;chr&gt; "Clerke", "Clerke", "Clerke", "…
+$ Location                               &lt;chr&gt; "Outer Clerke", "Outer Clerke",…
+$ `Year (decimal)`                       &lt;dbl&gt; 1995.83, 1996.83, 1997.92, 1998…
+$ `Soft Coral`                           &lt;dbl&gt; 0.95, 0.84, 0.77, 0.50, 0.81, 0…
+$ Millepora                              &lt;dbl&gt; 1.58, 3.31, 4.67, 4.98, 4.70, 6…
+$ `Echinopora and other foliose corals`  &lt;dbl&gt; 0.50, 0.37, 0.17, 0.10, 0.16, 0…
+$ `Merulinidae and other massives`       &lt;dbl&gt; 4.60, 5.65, 7.20, 5.24, 4.97, 1…
+$ Fungiidae                              &lt;dbl&gt; 0.03, 0.00, 0.00, 0.00, 0.00, 0…
+$ Isopora                                &lt;dbl&gt; 0.46, 0.94, 0.50, 0.74, 1.01, 3…
+$ `Montipora and other encrusting coral` &lt;dbl&gt; 9.78, 5.85, 7.60, 6.71, 5.32, 6…
+$ Pocilloporidae                         &lt;dbl&gt; 1.48, 0.54, 0.73, 0.63, 2.53, 5…
+$ `Porites Branching`                    &lt;dbl&gt; 0.00, 0.00, 0.03, 0.00, 0.00, 0…
+$ `Porites Massive`                      &lt;dbl&gt; 4.20, 4.64, 2.33, 4.04, 4.87, 7…
+$ Acropora                               &lt;dbl&gt; 11.70, 1.64, 1.27, 1.80, 11.04,…
+$ Diploastrea                            &lt;dbl&gt; 0.57, 0.37, 0.17, 0.20, 0.23, 0…
+$ Pavona                                 &lt;dbl&gt; 0.63, 0.60, 0.00, 1.40, 3.54, 0…
+$ `Other Hard Coral`                     &lt;dbl&gt; 0.85, 0.90, 1.30, 2.14, 1.01, 1…</code></pre>
+</div>
+</div>
+</section>
+<section id="understand-sampling-unit-scales-units-of-measure-etc." class="slide level2">
+<h2>Understand sampling unit scales, units of measure, etc.</h2>
+<p>Go to the metadata and read! Make sure you fully understand it.</p>
+<p><a href="https://portal.edirepository.org/nis/metadataviewer?packageid=edi.952.1">Data overview</a></p>
+<p><em>We illustrate how coral bleaching is altering reefs by contrasting the dynamics of adjacent reef systems over more than two decades. Both reef systems sit near the edge of the northwest Australia’s continental shelf, have escaped chronic local pressures and are regularly affected by tropical storms and cyclones. The Scott reef system has experienced multiple bleaching events, including mass bleaching in 1998 and 2016, from which it is unlikely to fully recover. The Rowley Shoals has maintained a high cover and diversity of corals and has not yet been impacted by mass bleaching.</em></p>
+</section>
+<section id="understand-sampling-unit-scales-units-of-measure-etc.-1" class="slide level2">
+<h2>Understand sampling unit scales, units of measure, etc.</h2>
+<p>Based on the data overview, questions might revolve around assessing differences in coral cover across systems. <code>System</code> is one sample id variable:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href=""></a>cover <span class="sc">|&gt;</span></span>
+<span id="cb5-2"><a href=""></a>  <span class="fu">distinct</span>(System)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 1
+  System       
+  &lt;chr&gt;        
+1 Rowley Shoals
+2 Scott reefs  </code></pre>
+</div>
+</div>
+</section>
+<section id="understand-sampling-unit-scales-units-of-measure-etc.-2" class="slide level2">
+<h2>Understand sampling unit scales, units of measure, etc.</h2>
+<p><code>Reef</code> is a sample id variable:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href=""></a>cover <span class="sc">|&gt;</span></span>
+<span id="cb7-2"><a href=""></a>  <span class="fu">distinct</span>(Reef)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 1
+  Reef        
+  &lt;chr&gt;       
+1 Clerke      
+2 Imperieuse  
+3 Mermaid     
+4 North       
+5 Seringapatam
+6 South       </code></pre>
+</div>
+</div>
+</section>
+<section id="understand-sampling-unit-scales-units-of-measure-etc.-3" class="slide level2">
+<h2>Understand sampling unit scales, units of measure, etc.</h2>
+<p><code>Location</code> is a sample id variable:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href=""></a>cover <span class="sc">|&gt;</span></span>
+<span id="cb9-2"><a href=""></a>  <span class="fu">distinct</span>(Location)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 10 × 1
+   Location          
+   &lt;chr&gt;             
+ 1 Outer Clerke      
+ 2 Outer Imperieuse  
+ 3 Outer Mermaid     
+ 4 Channel           
+ 5 Outer North East  
+ 6 Outer Seringapatam
+ 7 Inner South East  
+ 8 Inner South West  
+ 9 Outer South East  
+10 South Lagoon      </code></pre>
+</div>
+</div>
+</section>
+<section id="understand-sampling-unit-scales-units-of-measure-etc.-4" class="slide level2">
+<h2>Understand sampling unit scales, units of measure, etc.</h2>
+<p><code>Year</code> is a sample id variable:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href=""></a><span class="fu">head</span>(cover<span class="sc">$</span><span class="st">`</span><span class="at">Year (decimal)</span><span class="st">`</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1995.83 1996.83 1997.92 1998.92 2001.83 2005.33</code></pre>
+</div>
+</div>
+</section>
+<section id="understand-sampling-unit-scales-units-of-measure-etc.-5" class="slide level2">
+<h2>Understand sampling unit scales, units of measure, etc.</h2>
+<p>The remaining variable names are coral species groups and values are % cover (units are % bottom cover)</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href=""></a><span class="fu">names</span>(cover[,<span class="dv">5</span><span class="sc">:</span><span class="dv">18</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "Soft Coral"                          
+ [2] "Millepora"                           
+ [3] "Echinopora and other foliose corals" 
+ [4] "Merulinidae and other massives"      
+ [5] "Fungiidae"                           
+ [6] "Isopora"                             
+ [7] "Montipora and other encrusting coral"
+ [8] "Pocilloporidae"                      
+ [9] "Porites Branching"                   
+[10] "Porites Massive"                     
+[11] "Acropora"                            
+[12] "Diploastrea"                         
+[13] "Pavona"                              
+[14] "Other Hard Coral"                    </code></pre>
+</div>
+</div>
+</section>
+<section id="wrangle-the-obvious" class="slide level2">
+<h2>Wrangle the obvious</h2>
+<p>Some wrangling needs may be obvious, but other wrangling pipelines may depend on the question.</p>
 <ul>
-<li>Place your data in a folder called <code>data</code></li>
-<li>Read it into R with <code>read_csv()</code> or friends (<code>read_delim()</code>, <code>read_excel()</code>, etc.)</li>
+<li>We definitely need to pivot longer to convert to tidy format (every row is an observation, every column is a variable), and clean the variable names:</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href=""></a><span class="fu">library</span>(readxl)</span>
-<span id="cb1-2"><a href=""></a>fav_food <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">"data/favourite-food.xlsx"</span>)</span>
-<span id="cb1-3"><a href=""></a>fav_food</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href=""></a>cover_tidy <span class="ot">&lt;-</span> cover <span class="sc">|&gt;</span></span>
+<span id="cb15-2"><a href=""></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="dv">5</span><span class="sc">:</span><span class="dv">18</span>, <span class="at">names_to =</span> <span class="st">"species"</span>, <span class="at">values_to =</span> <span class="st">"cover"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb15-3"><a href=""></a>  <span class="fu">clean_names</span>()</span>
+<span id="cb15-4"><a href=""></a></span>
+<span id="cb15-5"><a href=""></a>cover_tidy</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 5 × 6
-  `Student ID` `Full Name`      favourite.food     mealPlan          AGE   SES  
-         &lt;dbl&gt; &lt;chr&gt;            &lt;chr&gt;              &lt;chr&gt;             &lt;chr&gt; &lt;chr&gt;
-1            1 Sunil Huffmann   Strawberry yoghurt Lunch only        4     High 
-2            2 Barclay Lynn     French fries       Lunch only        5     Midd…
-3            3 Jayendra Lyne    N/A                Breakfast and lu… 7     Low  
-4            4 Leon Rossini     Anchovies          Lunch only        99999 Midd…
-5            5 Chidiegwu Dunkel Pizza              Breakfast and lu… five  High </code></pre>
+<pre><code># A tibble: 2,226 × 6
+   system        reef   location     year_decimal species                  cover
+   &lt;chr&gt;         &lt;chr&gt;  &lt;chr&gt;               &lt;dbl&gt; &lt;chr&gt;                    &lt;dbl&gt;
+ 1 Rowley Shoals Clerke Outer Clerke        1996. Soft Coral                0.95
+ 2 Rowley Shoals Clerke Outer Clerke        1996. Millepora                 1.58
+ 3 Rowley Shoals Clerke Outer Clerke        1996. Echinopora and other fo…  0.5 
+ 4 Rowley Shoals Clerke Outer Clerke        1996. Merulinidae and other m…  4.6 
+ 5 Rowley Shoals Clerke Outer Clerke        1996. Fungiidae                 0.03
+ 6 Rowley Shoals Clerke Outer Clerke        1996. Isopora                   0.46
+ 7 Rowley Shoals Clerke Outer Clerke        1996. Montipora and other enc…  9.78
+ 8 Rowley Shoals Clerke Outer Clerke        1996. Pocilloporidae            1.48
+ 9 Rowley Shoals Clerke Outer Clerke        1996. Porites Branching         0   
+10 Rowley Shoals Clerke Outer Clerke        1996. Porites Massive           4.2 
+# ℹ 2,216 more rows</code></pre>
 </div>
 </div>
 </section>
-<section id="clean_names" class="slide level2">
-<h2><code>clean_names()</code></h2>
-<p>If the variable names are not formatted in snake_case, use <code>janitor::clean_names()</code></p>
+<section id="wrangle-to-answer-a-specific-question" class="slide level2">
+<h2>Wrangle to answer a specific question</h2>
+<p>If we want to ask if there are differences in coral cover over time at Rowley Shoals vs.&nbsp;Scott reefs, grouping by hard and soft coral cover to simplify things. We want to make a plot like this (minus the DHW and TC index data):</p>
+
+<img data-src="img/soft_hard_cover.jpg" class="r-stretch"></section>
+<section id="we-need-to-be-sure-we-are-summarizing-our-data-at-the-appropriate-sampling-unit" class="slide level2">
+<h2>We need to be sure we are summarizing our data at the appropriate sampling unit</h2>
+<p>Sometimes, there is more than one observation per year:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href=""></a><span class="fu">library</span>(janitor)</span>
-<span id="cb3-2"><a href=""></a>fav_food <span class="sc">%&gt;%</span> <span class="fu">clean_names</span>()  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href=""></a>cover_tidy <span class="sc">|&gt;</span></span>
+<span id="cb17-2"><a href=""></a>  <span class="fu">distinct</span>(year_decimal) <span class="sc">|&gt;</span></span>
+<span id="cb17-3"><a href=""></a>  <span class="fu">arrange</span>(year_decimal) <span class="sc">|&gt;</span></span>
+<span id="cb17-4"><a href=""></a>  <span class="fu">print</span>(<span class="at">n =</span> <span class="dv">26</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 5 × 6
-  student_id full_name        favourite_food     meal_plan           age   ses  
-       &lt;dbl&gt; &lt;chr&gt;            &lt;chr&gt;              &lt;chr&gt;               &lt;chr&gt; &lt;chr&gt;
-1          1 Sunil Huffmann   Strawberry yoghurt Lunch only          4     High 
-2          2 Barclay Lynn     French fries       Lunch only          5     Midd…
-3          3 Jayendra Lyne    N/A                Breakfast and lunch 7     Low  
-4          4 Leon Rossini     Anchovies          Lunch only          99999 Midd…
-5          5 Chidiegwu Dunkel Pizza              Breakfast and lunch five  High </code></pre>
+<pre><code># A tibble: 26 × 1
+   year_decimal
+          &lt;dbl&gt;
+ 1        1995.
+ 2        1996.
+ 3        1997.
+ 4        1998.
+ 5        1999.
+ 6        1999.
+ 7        2000.
+ 8        2002.
+ 9        2002.
+10        2004 
+11        2005.
+12        2005.
+13        2008.
+14        2009.
+15        2011.
+16        2013.
+17        2014.
+18        2015.
+19        2016.
+20        2016.
+21        2017.
+22        2018.
+23        2018.
+24        2019.
+25        2020.
+26        2021.</code></pre>
 </div>
 </div>
 </section>
-<section id="case-study-nyc-squirrels" class="slide level2">
-<h2>Case study: NYC Squirrels!</h2>
-<ul>
-<li><a href="https://www.thesquirrelcensus.com/">The Squirrel Census</a> is a multimedia science, design, and storytelling project focusing on the Eastern gray (<em>Sciurus carolinensis</em>). They count squirrels and present their findings to the public.</li>
-<li>This table contains squirrel data for each of the 3,023 sightings, including location coordinates, age, primary and secondary fur color, elevation, activities, communications, and interactions between squirrels and with humans.</li>
-</ul>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href=""></a><span class="co"># devtools::install_github("mine-cetinkaya-rundel/nycsquirrels18")</span></span>
-<span id="cb5-2"><a href=""></a><span class="fu">library</span>(nycsquirrels18)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</section>
-<section id="look-at-dataset-info" class="slide level2">
-<h2>Look at dataset info</h2>
-<p><br></p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href=""></a>?squirrels</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</section>
-<section id="check-the-dimensions" class="slide level2">
-<h2>Check the dimensions</h2>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href=""></a><span class="fu">dim</span>(squirrels)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 3023   35</code></pre>
-</div>
-</div>
-</section>
-<section id="look-at-the-top" class="slide level2">
-<h2>Look at the top…</h2>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href=""></a>squirrels <span class="sc">|&gt;</span></span>
-<span id="cb9-2"><a href=""></a>  <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 6 × 35
-   long   lat unique_squirrel_id hectare shift date       hectare_squirrel_num…¹
-  &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;              &lt;chr&gt;   &lt;chr&gt; &lt;date&gt;                      &lt;dbl&gt;
-1 -74.0  40.8 13A-PM-1014-04     13A     PM    2018-10-14                      4
-2 -74.0  40.8 15F-PM-1010-06     15F     PM    2018-10-10                      6
-3 -74.0  40.8 19C-PM-1018-02     19C     PM    2018-10-18                      2
-4 -74.0  40.8 21B-AM-1019-04     21B     AM    2018-10-19                      4
-5 -74.0  40.8 23A-AM-1018-02     23A     AM    2018-10-18                      2
-6 -74.0  40.8 38H-PM-1012-01     38H     PM    2018-10-12                      1
-# ℹ abbreviated name: ¹​hectare_squirrel_number
-# ℹ 28 more variables: age &lt;chr&gt;, primary_fur_color &lt;chr&gt;,
-#   highlight_fur_color &lt;chr&gt;,
-#   combination_of_primary_and_highlight_color &lt;chr&gt;, color_notes &lt;chr&gt;,
-#   location &lt;chr&gt;, above_ground_sighter_measurement &lt;chr&gt;,
-#   specific_location &lt;chr&gt;, running &lt;lgl&gt;, chasing &lt;lgl&gt;, climbing &lt;lgl&gt;,
-#   eating &lt;lgl&gt;, foraging &lt;lgl&gt;, other_activities &lt;chr&gt;, kuks &lt;lgl&gt;, …</code></pre>
-</div>
-</div>
-</section>
-<section id="and-the-bottom" class="slide level2">
-<h2>…and the bottom</h2>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href=""></a>squirrels <span class="sc">|&gt;</span> </span>
-<span id="cb11-2"><a href=""></a>  <span class="fu">tail</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 6 × 35
-   long   lat unique_squirrel_id hectare shift date       hectare_squirrel_num…¹
-  &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;              &lt;chr&gt;   &lt;chr&gt; &lt;date&gt;                      &lt;dbl&gt;
-1 -74.0  40.8 6D-PM-1020-01      06D     PM    2018-10-20                      1
-2 -74.0  40.8 21H-PM-1018-01     21H     PM    2018-10-18                      1
-3 -74.0  40.8 31D-PM-1006-02     31D     PM    2018-10-06                      2
-4 -74.0  40.8 37B-AM-1018-04     37B     AM    2018-10-18                      4
-5 -74.0  40.8 21C-PM-1006-01     21C     PM    2018-10-06                      1
-6 -74.0  40.8 7G-PM-1018-04      07G     PM    2018-10-18                      4
-# ℹ abbreviated name: ¹​hectare_squirrel_number
-# ℹ 28 more variables: age &lt;chr&gt;, primary_fur_color &lt;chr&gt;,
-#   highlight_fur_color &lt;chr&gt;,
-#   combination_of_primary_and_highlight_color &lt;chr&gt;, color_notes &lt;chr&gt;,
-#   location &lt;chr&gt;, above_ground_sighter_measurement &lt;chr&gt;,
-#   specific_location &lt;chr&gt;, running &lt;lgl&gt;, chasing &lt;lgl&gt;, climbing &lt;lgl&gt;,
-#   eating &lt;lgl&gt;, foraging &lt;lgl&gt;, other_activities &lt;chr&gt;, kuks &lt;lgl&gt;, …</code></pre>
-</div>
-</div>
-</section>
-<section id="validate-with-at-least-one-external-data-source" class="slide level2">
-<h2>Validate with at least one external data source</h2>
+<section id="plot-to-further-explore-sampling-units" class="slide level2">
+<h2>Plot to further explore sampling units</h2>
+<p>Plot to quickly look at cover observations across spatial groupings. There is only location per reef at Rowley Shoals:</p>
 <div class="columns">
-<div class="column" style="width:50%;">
+<div class="column" style="width:40%;">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href=""></a>squirrels <span class="sc">%&gt;%</span></span>
-<span id="cb13-2"><a href=""></a>  <span class="fu">select</span>(long, lat) <span class="sc">%&gt;%</span></span>
-<span id="cb13-3"><a href=""></a>  <span class="fu">print</span>(<span class="at">n =</span> <span class="dv">15</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 3,023 × 2
-    long   lat
-   &lt;dbl&gt; &lt;dbl&gt;
- 1 -74.0  40.8
- 2 -74.0  40.8
- 3 -74.0  40.8
- 4 -74.0  40.8
- 5 -74.0  40.8
- 6 -74.0  40.8
- 7 -74.0  40.8
- 8 -74.0  40.8
- 9 -74.0  40.8
-10 -74.0  40.8
-11 -74.0  40.8
-12 -74.0  40.8
-13 -74.0  40.8
-14 -74.0  40.8
-15 -74.0  40.8
-# ℹ 3,008 more rows</code></pre>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href=""></a>cover_tidy <span class="sc">|&gt;</span></span>
+<span id="cb19-2"><a href=""></a>  <span class="fu">filter</span>(system <span class="sc">==</span> <span class="st">"Rowley Shoals"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb19-3"><a href=""></a><span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> year_decimal, <span class="at">y =</span> cover, <span class="at">fill =</span> species)) <span class="sc">+</span></span>
+<span id="cb19-4"><a href=""></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>) <span class="sc">+</span></span>
+<span id="cb19-5"><a href=""></a>  <span class="fu">facet_wrap</span>(location<span class="sc">~</span>reef)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div><div class="column" style="width:60%;">
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="14-doing-data-science_files/figure-revealjs/unnamed-chunk-12-1.png" width="960"></p>
+</figure>
 </div>
 </div>
-</div><div class="column" style="width:50%;">
-<p><img data-src="img/central-park-coords.png"></p>
+</div>
 </div></div>
 </section>
-<section id="make-a-plot" class="slide level2">
-<h2>Make a plot</h2>
+<section id="plot-to-further-explore-sampling-units-1" class="slide level2">
+<h2>Plot to further explore sampling units</h2>
+<p>There are multiple locations for some reefs at Scott reefs. Also there are overall more sampling locations at Scott reefs compared to Rowley Shoals:</p>
+<div class="columns">
+<div class="column" style="width:40%;">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href=""></a><span class="fu">ggplot</span>(squirrels, <span class="fu">aes</span>(<span class="at">x =</span> long, <span class="at">y =</span> lat)) <span class="sc">+</span></span>
-<span id="cb15-2"><a href=""></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href=""></a>cover_tidy <span class="sc">|&gt;</span></span>
+<span id="cb20-2"><a href=""></a>  <span class="fu">filter</span>(system <span class="sc">==</span> <span class="st">"Scott reefs"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb20-3"><a href=""></a><span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">y =</span> location, <span class="at">fill =</span> species)) <span class="sc">+</span></span>
+<span id="cb20-4"><a href=""></a>  <span class="fu">geom_bar</span>() <span class="sc">+</span></span>
+<span id="cb20-5"><a href=""></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>reef)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<img data-src="14-doing-data-science_files/figure-revealjs/unnamed-chunk-9-1.png" width="960" class="r-stretch"></section></section>
-<section>
-<section id="hypothesis-there-will-be-a-higher-density-of-sightings-on-the-perimeter-than-inside-the-park." class="title-slide slide level1 center">
-<h1><strong>Hypothesis:</strong> There will be a higher density of sightings on the perimeter than inside the park.</h1>
-
-</section>
-<section id="try-the-easy-solution-first" class="slide level2">
-<h2>Try the easy solution first</h2>
-<div class="panel-tabset">
-<ul id="tabset-1" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-1-1">Plot</a></li><li><a href="#tabset-1-2">Code</a></li></ul>
-<div class="tab-content">
-<div id="tabset-1-1">
+</div><div class="column" style="width:60%;">
 <div class="cell">
 <div class="cell-output-display">
 <div>
 <figure>
-<p><img data-src="14-doing-data-science_files/figure-revealjs/unnamed-chunk-10-1.png" width="960"></p>
+<p><img data-src="14-doing-data-science_files/figure-revealjs/unnamed-chunk-14-1.png" width="960"></p>
 </figure>
 </div>
 </div>
 </div>
-</div>
-<div id="tabset-1-2">
-<div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href=""></a>squirrels <span class="ot">&lt;-</span> squirrels <span class="sc">%&gt;%</span></span>
-<span id="cb16-2"><a href=""></a>  <span class="fu">separate</span>(hectare, <span class="at">into =</span> <span class="fu">c</span>(<span class="st">"NS"</span>, <span class="st">"EW"</span>), <span class="at">sep =</span> <span class="dv">2</span>, <span class="at">remove =</span> <span class="cn">FALSE</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb16-3"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">where =</span> <span class="fu">if_else</span>(NS <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"01"</span>, <span class="st">"42"</span>) <span class="sc">|</span> EW <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"A"</span>, <span class="st">"I"</span>), <span class="st">"perimeter"</span>, <span class="st">"inside"</span>)) </span>
-<span id="cb16-4"><a href=""></a></span>
-<span id="cb16-5"><a href=""></a><span class="fu">ggplot</span>(squirrels, <span class="fu">aes</span>(<span class="at">x =</span> long, <span class="at">y =</span> lat, <span class="at">color =</span> where)) <span class="sc">+</span></span>
-<span id="cb16-6"><a href=""></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</div>
-</div>
-</div>
+</div></div>
 </section>
-<section id="then-go-deeper" class="slide level2">
-<h2>Then go deeper…</h2>
-<div class="panel-tabset">
-<ul id="tabset-2" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-2-1">Plot</a></li><li><a href="#tabset-2-2">Code</a></li></ul>
-<div class="tab-content">
-<div id="tabset-2-1">
-<div class="cell">
-<div class="cell-output-display">
-<div>
-<figure>
-<p><img data-src="14-doing-data-science_files/figure-revealjs/unnamed-chunk-11-1.png" width="960"></p>
-</figure>
-</div>
-</div>
-</div>
-</div>
-<div id="tabset-2-2">
-<div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href=""></a>hectare_counts <span class="ot">&lt;-</span> squirrels <span class="sc">%&gt;%</span></span>
-<span id="cb17-2"><a href=""></a>  <span class="fu">group_by</span>(hectare) <span class="sc">%&gt;%</span></span>
-<span id="cb17-3"><a href=""></a>  <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>()) </span>
-<span id="cb17-4"><a href=""></a></span>
-<span id="cb17-5"><a href=""></a>hectare_centroids <span class="ot">&lt;-</span> squirrels <span class="sc">%&gt;%</span></span>
-<span id="cb17-6"><a href=""></a>  <span class="fu">group_by</span>(hectare) <span class="sc">%&gt;%</span></span>
-<span id="cb17-7"><a href=""></a>  <span class="fu">summarise</span>(</span>
-<span id="cb17-8"><a href=""></a>    <span class="at">centroid_x =</span> <span class="fu">mean</span>(long),</span>
-<span id="cb17-9"><a href=""></a>    <span class="at">centroid_y =</span> <span class="fu">mean</span>(lat)</span>
-<span id="cb17-10"><a href=""></a>  )</span>
-<span id="cb17-11"><a href=""></a></span>
-<span id="cb17-12"><a href=""></a>squirrels <span class="sc">%&gt;%</span></span>
-<span id="cb17-13"><a href=""></a>  <span class="fu">left_join</span>(hectare_counts, <span class="at">by =</span> <span class="st">"hectare"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb17-14"><a href=""></a>  <span class="fu">left_join</span>(hectare_centroids, <span class="at">by =</span> <span class="st">"hectare"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb17-15"><a href=""></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> centroid_x, <span class="at">y =</span> centroid_y, <span class="at">color =</span> n)) <span class="sc">+</span></span>
-<span id="cb17-16"><a href=""></a>  <span class="fu">geom_hex</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</div>
-</div>
-</div>
-</section>
-<section id="communicating-for-your-audience" class="slide level2">
-<h2>Communicating for your audience</h2>
+<section id="understanding-the-data-structure-is-crucial" class="slide level2">
+<h2>Understanding the data structure is crucial</h2>
+<p>Get a handle on the observational scales. For field data like this, think about what the researchers measured during each sampling trip and how we identify each sampling trip:</p>
 <ul>
-<li><p>Avoid: Jargon, uninterpreted results, lengthy output</p></li>
-<li><p>Pay attention to: Organization, presentation, flow</p></li>
-<li><p>Don’t forget about: Code style, coding best practices, meaningful commits</p></li>
-<li><p>Be open to: Suggestions, feedback, taking (calculated) risks</p></li>
+<li>There are multiple <code>reefs</code> per <code>system</code> and multiple <code>locations</code> per <code>reef</code>. Therefore <code>location</code> is our smallest spatial sampling unit - the researchers repeated the same set of measurements at each location.</li>
+<li><code>reef</code> indicates larger spatial groupings of <code>location</code></li>
+<li><code>system</code> indicates even larger spatial groupings of <code>reef</code></li>
+<li>The researchers also repeated these measurements each decimal year. <code>year_decimal</code> is our smallest temporal sampling unit.</li>
 </ul>
+</section>
+<section id="wrangle-to-answer-a-specific-question-1" class="slide level2 scrollable">
+<h2>Wrangle to answer a specific question</h2>
+<p>If we want to know the mean and standard error (SE) coral cover for hard and soft corals for each <em>year</em> and <em>system</em>, we first need to calculate how much <em>total</em> hard and soft coral there was (since percent cover was measured for more than one hard coral species) for the <em>smallest spatial and temporal sampling units</em>. Then calculate the mean and SE for each species, decimal year, and system:</p>
+<ol type="1">
+<li>Recode species so that species is either hard coral or soft coral.</li>
+<li>Calculate total cover for each recoded species group (hard_coral and soft_coral), <code>year_decimal</code> and <code>location</code>. Keep <code>system</code> as a grouping variable so it is preserved in the output for the next step.</li>
+<li>Calculate mean and SE coral cover for hard and soft corals for each year and system.</li>
+</ol>
+</section>
+<section id="plot-to-answer-a-specific-question" class="slide level2">
+<h2>Plot to answer a specific question</h2>
+<p>Do hard and soft coral cover trends differ at Rowley Shoals vs.&nbsp;Scott reefs?</p>
 
-</section></section>
+
+<img data-src="14-doing-data-science_files/figure-revealjs/unnamed-chunk-15-1.png" width="960" class="r-stretch"></section></section>
     </div>
   <div class="quarto-auto-generated-content" style="display: none;">
 <div class="footer footer-default">
